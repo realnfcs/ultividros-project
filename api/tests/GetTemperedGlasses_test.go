@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/NicolasSales0101/ultividros-project/api/domain/usecases"
-	"github.com/NicolasSales0101/ultividros-project/api/infra/repository"
+	"github.com/realnfcs/ultividros-project/api/domain/usecases"
+	"github.com/realnfcs/ultividros-project/api/infra/repository"
 )
 
 func TestExecute(t *testing.T) {

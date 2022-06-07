@@ -3,8 +3,8 @@ package repository
 import (
 	"errors"
 
-	"github.com/NicolasSales0101/ultividros-project/api/domain/entities"
 	"github.com/google/uuid"
+	"github.com/realnfcs/ultividros-project/api/domain/entities"
 )
 
 // Estrutura de dados (Struct) para o armazenamento de dados em memória

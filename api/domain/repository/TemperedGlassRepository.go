@@ -1,6 +1,6 @@
 package repository
 
-import "github.com/NicolasSales0101/ultividros-project/api/domain/entities"
+import "github.com/realnfcs/ultividros-project/api/domain/entities"
 
 // A interface TemperedGlassRepository provém os métodos necessários para
 // que o repositório a ser usado realiza o objetivo do usecase

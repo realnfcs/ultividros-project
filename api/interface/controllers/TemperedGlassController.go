@@ -1,9 +1,9 @@
 package controllers
 
 import (
-	"github.com/NicolasSales0101/ultividros-project/api/domain/entities"
-	"github.com/NicolasSales0101/ultividros-project/api/domain/repository"
-	"github.com/NicolasSales0101/ultividros-project/api/domain/usecases"
+	"github.com/realnfcs/ultividros-project/api/domain/entities"
+	"github.com/realnfcs/ultividros-project/api/domain/repository"
+	"github.com/realnfcs/ultividros-project/api/domain/usecases"
 )
 
 // Stuct para iniciar a controller dos vidros temperados necessitando

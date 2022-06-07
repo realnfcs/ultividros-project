@@ -1,8 +1,8 @@
 package adapters
 
 import (
-	"github.com/NicolasSales0101/ultividros-project/api/domain/entities"
-	"github.com/NicolasSales0101/ultividros-project/api/interface/contracts"
+	"github.com/realnfcs/ultividros-project/api/domain/entities"
+	"github.com/realnfcs/ultividros-project/api/interface/contracts"
 )
 
 // Adaptador do fiber responsável pela obtenção de dados do vidro temperado no

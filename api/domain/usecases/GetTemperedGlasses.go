@@ -1,8 +1,8 @@
 package usecases
 
 import (
-	"github.com/NicolasSales0101/ultividros-project/api/domain/entities"
-	"github.com/NicolasSales0101/ultividros-project/api/domain/repository"
+	"github.com/realnfcs/ultividros-project/api/domain/entities"
+	"github.com/realnfcs/ultividros-project/api/domain/repository"
 )
 
 // Usecase responsável pela obtenção de todos os vidros temperados de um

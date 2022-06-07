@@ -1,9 +1,9 @@
 package web
 
 import (
-	"github.com/NicolasSales0101/ultividros-project/api/interface/adapters"
-	"github.com/NicolasSales0101/ultividros-project/api/interface/controllers"
 	"github.com/gofiber/fiber/v2"
+	"github.com/realnfcs/ultividros-project/api/interface/adapters"
+	"github.com/realnfcs/ultividros-project/api/interface/controllers"
 )
 
 // Função para executar o sentup de routes usando a biblioteca fiber

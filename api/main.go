@@ -1,6 +1,6 @@
 package main
 
-import "github.com/NicolasSales0101/ultividros-project/api/infra/web"
+import "github.com/realnfcs/ultividros-project/api/infra/web"
 
 func main() {
 	app := web.Fiber()

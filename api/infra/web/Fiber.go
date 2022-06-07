@@ -3,9 +3,9 @@
 package web
 
 import (
-	"github.com/NicolasSales0101/ultividros-project/api/infra/repository"
-	"github.com/NicolasSales0101/ultividros-project/api/interface/controllers"
 	"github.com/gofiber/fiber/v2"
+	"github.com/realnfcs/ultividros-project/api/infra/repository"
+	"github.com/realnfcs/ultividros-project/api/interface/controllers"
 )
 
 // Função para iniciar o servidor Fiber

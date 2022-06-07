@@ -1,4 +1,4 @@
-module github.com/NicolasSales0101/ultividros-project/api
+module github.com/realnfcs/ultividros-project/api
 
 go 1.18
 

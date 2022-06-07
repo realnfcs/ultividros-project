@@ -4,7 +4,7 @@
 // do Go para haver uma facilidade no gerenciamento de datas.
 package model
 
-import "github.com/NicolasSales0101/ultividros-project/api/domain/entities"
+import "github.com/realnfcs/ultividros-project/api/domain/entities"
 
 // Essa struct provém as informações base contidas na entidade de vidros
 // temperados porém com mais enfâse nas bibliotecas usadas.
