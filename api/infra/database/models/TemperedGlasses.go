@@ -2,14 +2,18 @@
 // estrutura de dados que fica entre as entidades, os viewmodels e as
 // tabelas do banco de dados. Por exemplo, nele terá a biblioteca time
 // do Go para haver uma facilidade no gerenciamento de datas.
-package model
+package models
 
 import (
 	"database/sql"
+	"errors"
+	"strings"
 	"sync"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/realnfcs/ultividros-project/api/domain/entities"
+	"gorm.io/gorm"
 )
 
 // Essa struct provém as informações base contidas na entidade de vidros
@@ -29,6 +33,19 @@ type ModelTemperedGlass struct {
 	CreatedAt   time.Time    `json:"created_at"`
 	UpdatedAt   time.Time    `json:"updated_at"`
 	DeletedAt   sql.NullTime `json:"deleted_at" gorm:"index"`
+}
+
+// Método para criar um uuid antes de salvar no banco de dados
+func (m *ModelTemperedGlass) BeforeCreate(scope *gorm.DB) error {
+	id := uuid.New().String()
+	if id == "" {
+		return errors.New("Cannot create uuid")
+	}
+
+	m.ID = strings.Replace(id, "-", "", -1)
+	// scope.Statement.SetColumn("ID", uuid)
+
+	return nil
 }
 
 // Método responsável por transformar o model em entidade
@@ -51,7 +68,7 @@ func (m *ModelTemperedGlass) TranformToEntity() *entities.TemperedGlass {
 // Método responsável por transformar um Slice de Models em um Slice de entidades
 func (*ModelTemperedGlass) TranformToSliceOfEntity(m []ModelTemperedGlass) *[]entities.TemperedGlass {
 
-	var tempGlasses []entities.TemperedGlass
+	tempGlasses := make([]entities.TemperedGlass, len(m))
 
 	var wg sync.WaitGroup
 

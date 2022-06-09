@@ -13,5 +13,6 @@ func Routes(app *fiber.App, c controllers.TemperedGlassController, ctx *fiber.Ct
 	TemperedGlassRoute.Get("/", adapters.GetTemperedGlasses(c.GetTemperedGlasses, ctx))
 	TemperedGlassRoute.Post("/", adapters.SaveTemperedGlasses(c.SaveTemperedGlasses, ctx))
 	TemperedGlassRoute.Put("/", adapters.UpdateTemperedGlasses(c.UpdateTemperedGlasses, ctx))
+	TemperedGlassRoute.Delete("/", adapters.DeleteTemperedGlass(c.DeleteTemperedGlass, ctx))
 	return app
 }

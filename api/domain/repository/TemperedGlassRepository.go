@@ -9,4 +9,5 @@ type TemperedGlassRepository interface {
 	GetTemperedGlasses() *[]entities.TemperedGlass
 	SaveTemperedGlass(entities.TemperedGlass) (string, int, error)
 	UpdateTemperedGlass(entities.TemperedGlass) (string, int, error)
+	DeleteTemperedGlass(entities.TemperedGlass) (int, error)
 }

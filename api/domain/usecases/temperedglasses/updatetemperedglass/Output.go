@@ -1,5 +1,6 @@
 package updatetemperedglass
 
+// Usecase Output Port responsável pelos dados que serão retornados
 type Output struct {
 	Id     string
 	Status int

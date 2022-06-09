@@ -2,8 +2,8 @@ package repository
 
 import (
 	"github.com/realnfcs/ultividros-project/api/domain/entities"
+	"github.com/realnfcs/ultividros-project/api/infra/database/models"
 	databasemysql "github.com/realnfcs/ultividros-project/api/infra/database/mysql"
-	"github.com/realnfcs/ultividros-project/api/interface/model"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -35,10 +35,12 @@ func (t *TemperedGlassRepositoryMySql) Init() (*TemperedGlassRepositoryMySql, er
 	return t, nil
 }
 
+// Método que pega um vidro temperado no banco de dados de acordo com o id passado
+// no parâmetro e o retorna
 func (t *TemperedGlassRepositoryMySql) GetTemperedGlass(id string) *entities.TemperedGlass {
-	tempGlss := model.ModelTemperedGlass{}
+	tempGlss := models.ModelTemperedGlass{}
 
-	err := t.GormDb.First(&tempGlss, id).Error
+	err := t.GormDb.Where("id = ?", id).First(&tempGlss).Error
 	if err != nil {
 		return nil
 	}
@@ -46,19 +48,22 @@ func (t *TemperedGlassRepositoryMySql) GetTemperedGlass(id string) *entities.Tem
 	return tempGlss.TranformToEntity()
 }
 
+// Método que pega todos os vidros temperados no banco de dados e o retorna
 func (t *TemperedGlassRepositoryMySql) GetTemperedGlasses() *[]entities.TemperedGlass {
-	tempGlss := []model.ModelTemperedGlass{}
+	tempGlss := []models.ModelTemperedGlass{}
 
 	err := t.GormDb.Find(&tempGlss).Error
 	if err != nil {
 		return nil
 	}
 
-	return new(model.ModelTemperedGlass).TranformToSliceOfEntity(tempGlss)
+	return new(models.ModelTemperedGlass).TranformToSliceOfEntity(tempGlss)
 }
 
+// Método que salva um vidro temperado no banco de dados de acordo com os dados passados
+// no parâmetro
 func (t *TemperedGlassRepositoryMySql) SaveTemperedGlass(e entities.TemperedGlass) (string, int, error) {
-	tempGlass := new(model.ModelTemperedGlass).TransformToModel(e)
+	tempGlass := new(models.ModelTemperedGlass).TransformToModel(e)
 
 	err := t.GormDb.Create(tempGlass).Error
 	if err != nil {
@@ -68,13 +73,27 @@ func (t *TemperedGlassRepositoryMySql) SaveTemperedGlass(e entities.TemperedGlas
 	return tempGlass.ID, 201, nil
 }
 
+// Método que atualiza os campos de um vidro temperado de acordo com os dados passados
+// no parâmetro
 func (t *TemperedGlassRepositoryMySql) UpdateTemperedGlass(e entities.TemperedGlass) (string, int, error) {
-	tempGlass := new(model.ModelTemperedGlass).TransformToModel(e)
+	tempGlass := new(models.ModelTemperedGlass).TransformToModel(e)
 
-	err := t.GormDb.Save(tempGlass).Error
+	err := t.GormDb.Where("id = ?", tempGlass.ID).Omit("created_at").Save(tempGlass).Error
 	if err != nil {
 		return "", 401, err
 	}
 
 	return tempGlass.ID, 401, nil
+}
+
+// Método que exclui um vidro temperado no banco de dados de acordo com os dados passados
+// no parâmetro
+func (t *TemperedGlassRepositoryMySql) DeleteTemperedGlass(e entities.TemperedGlass) (int, error) {
+	tempGlass := new(models.ModelTemperedGlass).TransformToModel(e)
+
+	err := t.GormDb.Delete(tempGlass).Error
+	if err != nil {
+		return 401, err
+	}
+	return 201, nil
 }

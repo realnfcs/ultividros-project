@@ -1,6 +1,7 @@
 package adapters
 
 import (
+	"github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/deletetemperedglass"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/gettemperedglass"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/gettemperedglasses"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/savetemperedglass"
@@ -39,9 +40,21 @@ func SaveTemperedGlasses[T contracts.Adapters](req func(savetemperedglass.Input)
 	}
 }
 
+// Adaptador do fiber responsável por atualizar os campos de um vidro temperado no repositório
 func UpdateTemperedGlasses[T contracts.Adapters](req func(updatetemperedglass.Input) *updatetemperedglass.Output, ctx T) func(T) error {
 	return func(c T) error {
 		input := updatetemperedglass.Input{}
+		c.BodyParser(&input)
+
+		output := req(input)
+		return c.JSON(output)
+	}
+}
+
+// Adaptador do fiber responsável por deletar o vidro temperado no repositório
+func DeleteTemperedGlass[T contracts.Adapters](req func(deletetemperedglass.Input) *deletetemperedglass.Output, ctx T) func(T) error {
+	return func(c T) error {
+		input := deletetemperedglass.Input{}
 		c.BodyParser(&input)
 
 		output := req(input)

@@ -1,4 +1,4 @@
-package updatetemperedglass
+package deletetemperedglass
 
 import "github.com/realnfcs/ultividros-project/api/domain/entities"
 
@@ -17,23 +17,7 @@ type Input struct {
 	Width       float32 `json:"width"`
 }
 
-func (*Input) Init(e entities.TemperedGlass) *Input {
-	return &Input{
-		e.Id,
-		e.Name,
-		e.Description,
-		e.Price,
-		e.Quantity,
-		e.Type,
-		e.Color,
-		e.GlassSheets,
-		e.Milimeter,
-		e.Height,
-		e.Width,
-	}
-}
-
-// Método responsável em converter um input em uma entidade de vidro temperado
+// Método que converte um input em uma entidade de vidro temperado
 func (i *Input) ConvertToTempGlss() *entities.TemperedGlass {
 	return &entities.TemperedGlass{
 		i.ID,

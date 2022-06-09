@@ -1,14 +1,16 @@
+// Pacote responsável pelos controllers que, neste caso, se comunicam
+// com os Input e Output ports dos usecases e se encontra na camada
+// Interface and Adapters Layer
 package controllers
 
 import (
 	"github.com/realnfcs/ultividros-project/api/domain/repository"
+	"github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/deletetemperedglass"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/gettemperedglass"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/gettemperedglasses"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/savetemperedglass"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/updatetemperedglass"
 )
-
-// TODO: Insert Input and Output ports in each controller's functions
 
 // Stuct para iniciar a controller dos vidros temperados necessitando
 // de um repository para funcionar
@@ -44,11 +46,13 @@ func (t *TemperedGlassController) SaveTemperedGlasses(i savetemperedglass.Input)
 // acordo com os dados passados no parâmetro
 func (t *TemperedGlassController) UpdateTemperedGlasses(i updatetemperedglass.Input) *updatetemperedglass.Output {
 	updateTempGlss := updatetemperedglass.UpdateTemperedGlass{TemperedGlassRepository: t.Repo}
+	output := updateTempGlss.Execute(i)
+	return output
+}
 
-	err := updateTempGlss.Execute(i)
-	if err != nil {
-		return err
-	}
-
-	return nil
+// Método da controller que comunica com o usacase para deletar um objeto
+func (t *TemperedGlassController) DeleteTemperedGlass(i deletetemperedglass.Input) *deletetemperedglass.Output {
+	deleteTempGlss := deletetemperedglass.DeleteTemperedGlass{TemperedGlassRepository: t.Repo}
+	output := deleteTempGlss.Execute(i)
+	return output
 }
