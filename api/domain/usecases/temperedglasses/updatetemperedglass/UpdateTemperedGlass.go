@@ -1,7 +1,6 @@
-package usecases
+package updatetemperedglass
 
 import (
-	"github.com/realnfcs/ultividros-project/api/domain/entities"
 	"github.com/realnfcs/ultividros-project/api/domain/repository"
 )
 
@@ -11,6 +10,7 @@ type UpdateTemperedGlass struct {
 	TemperedGlassRepository repository.TemperedGlassRepository
 }
 
-func (u *UpdateTemperedGlass) Execute(e entities.TemperedGlass) error {
-	return u.TemperedGlassRepository.UpdateTemperedGlass(e)
+func (u *UpdateTemperedGlass) Execute(i Input) *Output {
+	id, status, err := u.TemperedGlassRepository.UpdateTemperedGlass(*i.ConvertToTempGlss())
+	return new(Output).Init(id, status, err)
 }

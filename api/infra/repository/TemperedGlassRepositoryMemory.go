@@ -77,17 +77,17 @@ func (t *TemperedGlassRepositoryMemory) GetTemperedGlasses() *[]entities.Tempere
 }
 
 // Método que salva o vidro temperado no repositório em memória
-func (t *TemperedGlassRepositoryMemory) SaveTemperedGlass(e entities.TemperedGlass) error {
+func (t *TemperedGlassRepositoryMemory) SaveTemperedGlass(e entities.TemperedGlass) (string, int, error) {
 	e.Id = uuid.New().String()
 	t.TemperedGlasses = append(t.TemperedGlasses, e)
-	return nil
+	return e.Id, 201, nil
 }
 
 // Método que atualiza o vidro temperado no repositório em memória
-func (t *TemperedGlassRepositoryMemory) UpdateTemperedGlass(e entities.TemperedGlass) error {
+func (t *TemperedGlassRepositoryMemory) UpdateTemperedGlass(e entities.TemperedGlass) (string, int, error) {
 	temperedGlass := t.GetTemperedGlass(e.Id)
 	if temperedGlass == nil {
-		return errors.New("a nil pointer is received: this glass in this id not exist")
+		return "", 401, errors.New("a nil pointer is received: this glass in this id not exist")
 	}
 
 	ent := entities.TemperedGlass{}
@@ -111,11 +111,11 @@ func (t *TemperedGlassRepositoryMemory) UpdateTemperedGlass(e entities.TemperedG
 			t.TemperedGlasses = removeIt(v, t.TemperedGlasses)
 			t.TemperedGlasses = append(t.TemperedGlasses, ent)
 
-			return nil
+			return ent.Id, 401, nil
 		}
 	}
 
-	return errors.New("cannot save the tempered glass")
+	return "", 401, errors.New("cannot save the tempered glass")
 }
 
 func removeIt(e entities.TemperedGlass, t []entities.TemperedGlass) []entities.TemperedGlass {

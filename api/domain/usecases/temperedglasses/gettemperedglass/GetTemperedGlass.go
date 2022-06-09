@@ -1,7 +1,6 @@
-package usecases
+package gettemperedglass
 
 import (
-	"github.com/realnfcs/ultividros-project/api/domain/entities"
 	"github.com/realnfcs/ultividros-project/api/domain/repository"
 )
 
@@ -12,6 +11,7 @@ type GetTemperedGlass struct {
 	TemperedGlassRepository repository.TemperedGlassRepository
 }
 
-func (g *GetTemperedGlass) Execute(id string) *entities.TemperedGlass {
-	return g.TemperedGlassRepository.GetTemperedGlass(id)
+func (g *GetTemperedGlass) Execute(i Input) *Output {
+	e := g.TemperedGlassRepository.GetTemperedGlass(i.ID)
+	return new(Output).Init(e)
 }

@@ -4,29 +4,106 @@
 // do Go para haver uma facilidade no gerenciamento de datas.
 package model
 
-import "github.com/realnfcs/ultividros-project/api/domain/entities"
+import (
+	"database/sql"
+	"sync"
+	"time"
+
+	"github.com/realnfcs/ultividros-project/api/domain/entities"
+)
 
 // Essa struct provém as informações base contidas na entidade de vidros
 // temperados porém com mais enfâse nas bibliotecas usadas.
-
-// TODO: Criar os Input e Output do DTO que estamos criando e implementa-los
-// nos arquivos dentro da pasta interface que representa a camada Interface
-// and Adapters
 type ModelTemperedGlass struct {
-	Id          string  `json:"id"`
-	Name        string  `json:"name"`
-	Description string  `json:"description"`
-	Price       float32 `json:"price"`
-	Quantity    uint32  `json:"quantity"`
-	Type        string  `json:"type"`
-	Color       string  `json:"color"`
-	GlassSheets uint8   `json:"glass_sheets"`
-	Milimeter   float32 `json:"milimeter"`
-	Height      float32 `json:"height"`
-	Width       float32 `json:"width"`
+	ID          string       `json:"id" gorm:"primaryKey"`
+	Name        string       `json:"name"`
+	Description string       `json:"description"`
+	Price       float32      `json:"price"`
+	Quantity    uint32       `json:"quantity"`
+	Type        string       `json:"type"`
+	Color       string       `json:"color"`
+	GlassSheets uint8        `json:"glass_sheets"`
+	Milimeter   float32      `json:"milimeter"`
+	Height      float32      `json:"height"`
+	Width       float32      `json:"width"`
+	CreatedAt   time.Time    `json:"created_at"`
+	UpdatedAt   time.Time    `json:"updated_at"`
+	DeletedAt   sql.NullTime `json:"deleted_at" gorm:"index"`
 }
 
-func (m *ModelTemperedGlass) Init(e entities.TemperedGlass) *ModelTemperedGlass {
+// Método responsável por transformar o model em entidade
+func (m *ModelTemperedGlass) TranformToEntity() *entities.TemperedGlass {
+	return &entities.TemperedGlass{
+		Id:          m.ID,
+		Name:        m.Name,
+		Description: m.Description,
+		Price:       m.Price,
+		Quantity:    m.Quantity,
+		Type:        m.Type,
+		Color:       m.Color,
+		GlassSheets: m.GlassSheets,
+		Milimeter:   m.Milimeter,
+		Height:      m.Height,
+		Width:       m.Width,
+	}
+}
+
+// Método responsável por transformar um Slice de Models em um Slice de entidades
+func (*ModelTemperedGlass) TranformToSliceOfEntity(m []ModelTemperedGlass) *[]entities.TemperedGlass {
+
+	var tempGlasses []entities.TemperedGlass
+
+	var wg sync.WaitGroup
+
+	for i, v := range m {
+
+		wg.Add(1)
+
+		go func() {
+			tempGlasses[i].Id = v.ID
+			tempGlasses[i].Name = v.Name
+			tempGlasses[i].Description = v.Description
+			tempGlasses[i].Price = v.Price
+			tempGlasses[i].Quantity = v.Quantity
+			tempGlasses[i].Type = v.Type
+			tempGlasses[i].Color = v.Color
+			tempGlasses[i].GlassSheets = v.GlassSheets
+			tempGlasses[i].Milimeter = v.Milimeter
+			tempGlasses[i].Height = v.Height
+			tempGlasses[i].Width = v.Width
+
+			wg.Done()
+		}()
+
+		if index := i + 1; len(m)-1 > index {
+
+			wg.Add(1)
+
+			go func() {
+				tempGlasses[i+1].Id = m[i+1].ID
+				tempGlasses[i+1].Name = m[i+1].Name
+				tempGlasses[i+1].Description = m[i+1].Description
+				tempGlasses[i+1].Price = m[i+1].Price
+				tempGlasses[i+1].Quantity = m[i+1].Quantity
+				tempGlasses[i+1].Type = m[i+1].Type
+				tempGlasses[i+1].Color = m[i+1].Color
+				tempGlasses[i+1].GlassSheets = m[i+1].GlassSheets
+				tempGlasses[i+1].Milimeter = m[i+1].Milimeter
+				tempGlasses[i+1].Height = m[i+1].Height
+				tempGlasses[i+1].Width = m[i+1].Width
+
+				wg.Done()
+			}()
+		}
+
+		wg.Wait()
+	}
+
+	return &tempGlasses
+}
+
+// Método que transforma uma entidade em model
+func (m *ModelTemperedGlass) TransformToModel(e entities.TemperedGlass) *ModelTemperedGlass {
 	return &ModelTemperedGlass{
 		e.Id,
 		e.Name,
@@ -39,15 +116,24 @@ func (m *ModelTemperedGlass) Init(e entities.TemperedGlass) *ModelTemperedGlass 
 		e.Milimeter,
 		e.Height,
 		e.Width,
+		time.Time{},
+		time.Time{},
+		sql.NullTime{},
 	}
 }
 
-func (*ModelTemperedGlass) Map(e []entities.TemperedGlass) *[]ModelTemperedGlass {
+// Método que transfoma um Slice de entidades em Slice de models
+func (*ModelTemperedGlass) TransformToSliceOfModel(e []entities.TemperedGlass) *[]ModelTemperedGlass {
 	var m []ModelTemperedGlass
 
+	var wg sync.WaitGroup
+
 	for i, v := range e {
+
+		wg.Add(1)
+
 		go func() {
-			m[i].Id = v.Id
+			m[i].ID = v.Id
 			m[i].Name = v.Name
 			m[i].Description = v.Description
 			m[i].Price = v.Price
@@ -58,11 +144,16 @@ func (*ModelTemperedGlass) Map(e []entities.TemperedGlass) *[]ModelTemperedGlass
 			m[i].Milimeter = v.Milimeter
 			m[i].Height = v.Height
 			m[i].Width = v.Width
+
+			wg.Done()
 		}()
 
-		if index := i + 1; len(e) > index {
+		if index := i + 1; len(e)-1 > index {
+
+			wg.Add(1)
+
 			go func() {
-				m[i+1].Id = e[i+1].Id
+				m[i+1].ID = e[i+1].Id
 				m[i+1].Name = e[i+1].Name
 				m[i+1].Description = e[i+1].Description
 				m[i+1].Price = e[i+1].Price
@@ -73,8 +164,12 @@ func (*ModelTemperedGlass) Map(e []entities.TemperedGlass) *[]ModelTemperedGlass
 				m[i+1].Milimeter = e[i+1].Milimeter
 				m[i+1].Height = e[i+1].Height
 				m[i+1].Width = e[i+1].Width
+
+				wg.Done()
 			}()
 		}
+
+		wg.Wait()
 	}
 
 	return &m

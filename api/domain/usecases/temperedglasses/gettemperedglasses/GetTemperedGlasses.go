@@ -1,7 +1,6 @@
-package usecases
+package gettemperedglasses
 
 import (
-	"github.com/realnfcs/ultividros-project/api/domain/entities"
 	"github.com/realnfcs/ultividros-project/api/domain/repository"
 )
 
@@ -12,6 +11,7 @@ type GetTemperedGlasses struct {
 }
 
 // Método que executa o procedimento de pegar os vidros temperados
-func (g *GetTemperedGlasses) Execute() *[]entities.TemperedGlass {
-	return g.TemperedGlassRepository.GetTemperedGlasses()
+func (g *GetTemperedGlasses) Execute() *Output {
+	e := g.TemperedGlassRepository.GetTemperedGlasses()
+	return new(Output).Init(e)
 }

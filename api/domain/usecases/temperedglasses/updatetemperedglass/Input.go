@@ -1,10 +1,9 @@
-package gettemperedglass
+package updatetemperedglass
 
 import "github.com/realnfcs/ultividros-project/api/domain/entities"
 
-// Usecase Output Port responsável pelos dados que serão retornados
-type Output struct {
-	Id          string  `json:"id"`
+// Usecase Input Port responsável pelos dados que entrarão
+type Input struct {
 	Name        string  `json:"name"`
 	Description string  `json:"description"`
 	Price       float32 `json:"price"`
@@ -17,9 +16,8 @@ type Output struct {
 	Width       float32 `json:"width"`
 }
 
-func (*Output) Init(e *entities.TemperedGlass) *Output {
-	return &Output{
-		e.Id,
+func (*Input) Init(e entities.TemperedGlass) *Input {
+	return &Input{
 		e.Name,
 		e.Description,
 		e.Price,
@@ -30,5 +28,21 @@ func (*Output) Init(e *entities.TemperedGlass) *Output {
 		e.Milimeter,
 		e.Height,
 		e.Width,
+	}
+}
+
+func (i *Input) ConvertToTempGlss() *entities.TemperedGlass {
+	return &entities.TemperedGlass{
+		"",
+		i.Name,
+		i.Description,
+		i.Price,
+		i.Quantity,
+		i.Type,
+		i.Color,
+		i.GlassSheets,
+		i.Milimeter,
+		i.Height,
+		i.Width,
 	}
 }

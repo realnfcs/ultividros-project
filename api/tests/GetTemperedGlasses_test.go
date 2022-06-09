@@ -6,13 +6,13 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/realnfcs/ultividros-project/api/domain/usecases"
+	"github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/gettemperedglasses"
 	"github.com/realnfcs/ultividros-project/api/infra/repository"
 )
 
 func TestExecute(t *testing.T) {
 	memoryRepo := new(repository.TemperedGlassRepositoryMemory).Init()
-	g := usecases.GetTemperedGlasses{TemperedGlassRepository: memoryRepo}
+	g := gettemperedglasses.GetTemperedGlasses{TemperedGlassRepository: memoryRepo}
 
 	res := g.Execute()
 	if res == nil {
