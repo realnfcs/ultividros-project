@@ -9,19 +9,19 @@ import (
 	"testing"
 )
 
-func TestUpdateTemperedGlasses(t *testing.T) {
+func TestDeleteTemperedGlass(t *testing.T) {
 	reqBody := map[string]any{
-		"id":           "15f0002cf27744efa213caf18e7ae54c",
-		"name":         "Porta",
-		"description":  "Uma porta transparente 1 folhas 10mm",
-		"price":        600,
-		"quantity":     1,
+		"id":           "718f4814b432453fb28526b514ede25b",
+		"name":         "basculhante",
+		"description":  "Um peça de vidro temperado muito comum em banheiros",
+		"price":        180,
+		"quantity":     3,
 		"type":         "tempered",
-		"color":        "transparent",
-		"glass_sheets": 1,
-		"milimeter":    10,
-		"height":       2.5,
-		"width":        1.4,
+		"color":        "smoked",
+		"glass_sheets": 0,
+		"milimeter":    8,
+		"height":       0.5,
+		"width":        1,
 	}
 
 	body, err := json.Marshal(reqBody)
@@ -29,7 +29,7 @@ func TestUpdateTemperedGlasses(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	req, err := http.NewRequest("PUT", "http://localhost:3000/tempered-glasses", bytes.NewReader(body))
+	req, err := http.NewRequest("DELETE", "http://localhost:3000/tempered-glasses", bytes.NewReader(body))
 	if err != nil {
 		t.Fatal(err)
 	}

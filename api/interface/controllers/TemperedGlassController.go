@@ -8,6 +8,7 @@ import (
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/deletetemperedglass"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/gettemperedglass"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/gettemperedglasses"
+	patchtemperedglass "github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/patchtempetedglass"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/savetemperedglass"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/updatetemperedglass"
 )
@@ -47,6 +48,14 @@ func (t *TemperedGlassController) SaveTemperedGlasses(i savetemperedglass.Input)
 func (t *TemperedGlassController) UpdateTemperedGlasses(i updatetemperedglass.Input) *updatetemperedglass.Output {
 	updateTempGlss := updatetemperedglass.UpdateTemperedGlass{TemperedGlassRepository: t.Repo}
 	output := updateTempGlss.Execute(i)
+	return output
+}
+
+// Método da controller que comunica com o usacase para atualizar os campos alterados do objeto de
+// acordo com os dados passados no parâmetro
+func (t *TemperedGlassController) PatchTemperedGlasses(i patchtemperedglass.Input) *patchtemperedglass.Output {
+	patchTempGlss := patchtemperedglass.PatchTemperedGlass{TemperedGlassRepository: t.Repo}
+	output := patchTempGlss.Execute(i)
 	return output
 }
 

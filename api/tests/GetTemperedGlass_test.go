@@ -8,7 +8,7 @@ import (
 )
 
 func TestGetTemperedGlass(t *testing.T) {
-	res, err := http.Get("http://localhost:3000/tempered-glasses/id=b220daae-f3e4-4aa4-9cd5-be00dcb1325f")
+	res, err := http.Get("http://localhost:3000/tempered-glasses/id=15f0002cf27744efa213caf18e7ae54c")
 	if err != nil {
 		t.Fatal(err)
 	}

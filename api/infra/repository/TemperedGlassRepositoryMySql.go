@@ -86,6 +86,19 @@ func (t *TemperedGlassRepositoryMySql) UpdateTemperedGlass(e entities.TemperedGl
 	return tempGlass.ID, 401, nil
 }
 
+// Método que atualiza os campos de um vidro temperado de acordo com os dados passados
+// no parâmetro
+func (t *TemperedGlassRepositoryMySql) PatchTemperedGlass(e entities.TemperedGlass) (string, int, error) {
+	tempGlass := new(models.ModelTemperedGlass).TransformToModel(e)
+
+	err := t.GormDb.Where("id = ?", tempGlass.ID).Omit("created_at").Updates(tempGlass).Error
+	if err != nil {
+		return "", 401, err
+	}
+
+	return tempGlass.ID, 401, nil
+}
+
 // Método que exclui um vidro temperado no banco de dados de acordo com os dados passados
 // no parâmetro
 func (t *TemperedGlassRepositoryMySql) DeleteTemperedGlass(e entities.TemperedGlass) (int, error) {

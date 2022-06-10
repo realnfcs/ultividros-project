@@ -4,6 +4,7 @@ import (
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/deletetemperedglass"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/gettemperedglass"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/gettemperedglasses"
+	patchtemperedglass "github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/patchtempetedglass"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/savetemperedglass"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/updatetemperedglass"
 	"github.com/realnfcs/ultividros-project/api/interface/contracts"
@@ -44,6 +45,17 @@ func SaveTemperedGlasses[T contracts.Adapters](req func(savetemperedglass.Input)
 func UpdateTemperedGlasses[T contracts.Adapters](req func(updatetemperedglass.Input) *updatetemperedglass.Output, ctx T) func(T) error {
 	return func(c T) error {
 		input := updatetemperedglass.Input{}
+		c.BodyParser(&input)
+
+		output := req(input)
+		return c.JSON(output)
+	}
+}
+
+// Adaptador do fiber responsável por atualizar os campos alterados de um vidro temperado no repositório
+func PatchTemperedGlasses[T contracts.Adapters](req func(patchtemperedglass.Input) *patchtemperedglass.Output, ctx T) func(T) error {
+	return func(c T) error {
+		input := patchtemperedglass.Input{}
 		c.BodyParser(&input)
 
 		output := req(input)
