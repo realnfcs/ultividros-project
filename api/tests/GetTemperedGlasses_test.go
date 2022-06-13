@@ -20,5 +20,9 @@ func TestFiber(t *testing.T) {
 		t.Fatal(err)
 	}
 
+	if s := res.StatusCode; s != 200 {
+		t.Fatalf("want status code 200, got %v", s)
+	}
+
 	fmt.Println(string(body))
 }

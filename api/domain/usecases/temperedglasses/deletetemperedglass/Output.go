@@ -2,10 +2,14 @@ package deletetemperedglass
 
 // Usecase Output Port responsável pelos dados que serão retornados
 type Output struct {
-	status int
-	err    error
+	Status int    `json:"-"`
+	Err    string `json:"error"`
 }
 
 func (*Output) Init(status int, err error) *Output {
-	return &Output{status, err}
+	if err != nil {
+		return &Output{status, err.Error()}
+	}
+
+	return &Output{status, ""}
 }

@@ -12,6 +12,6 @@ type GetTemperedGlass struct {
 }
 
 func (g *GetTemperedGlass) Execute(i Input) *Output {
-	e := g.TemperedGlassRepository.GetTemperedGlass(i.ID)
-	return new(Output).Init(e)
+	e, status, err := g.TemperedGlassRepository.GetTemperedGlass(i.ID)
+	return new(Output).Init(e, status, err)
 }

@@ -11,11 +11,11 @@ import (
 
 func TestUpdateTemperedGlasses(t *testing.T) {
 	reqBody := map[string]any{
-		"id":           "15f0002cf27744efa213caf18e7ae54c",
+		"id":           "09a49643554f462da01cc9ec471af7d6",
 		"name":         "Porta",
 		"description":  "Uma porta transparente 1 folhas 10mm",
-		"price":        600,
-		"quantity":     1,
+		"price":        430,
+		"quantity":     3,
 		"type":         "tempered",
 		"color":        "transparent",
 		"glass_sheets": 1,
@@ -42,9 +42,9 @@ func TestUpdateTemperedGlasses(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	fmt.Print(res)
-	if res.StatusCode != 200 {
-		t.Fatal("some error happened")
+
+	if s := res.StatusCode; s != 200 {
+		t.Fatalf("want status code 200, got %v", s)
 	}
 
 	defer req.Body.Close()

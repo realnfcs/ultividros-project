@@ -8,7 +8,8 @@ import (
 )
 
 func TestGetTemperedGlass(t *testing.T) {
-	res, err := http.Get("http://localhost:3000/tempered-glasses/id=15f0002cf27744efa213caf18e7ae54c")
+
+	res, err := http.Get("http://localhost:3000/tempered-glasses/id=09a49643554f462da01cc9ec471af7d6")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -18,6 +19,10 @@ func TestGetTemperedGlass(t *testing.T) {
 	body, err := io.ReadAll(res.Body)
 	if err != nil {
 		t.Fatal(err)
+	}
+
+	if s := res.StatusCode; s != 200 {
+		t.Fatalf("wanted status code 200, got %v", s)
 	}
 
 	fmt.Println(string(body))

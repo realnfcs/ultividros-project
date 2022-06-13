@@ -11,8 +11,8 @@ import (
 
 func TestPatchTemperedGlasses(t *testing.T) {
 	reqBody := map[string]any{
-		"id":           "1257f07c52244c9cbf246a8cf5ba32aa",
-		"glass_sheets": 1,
+		"id":    "09a49643554f462da01cc9ec471af7d6",
+		"price": 900,
 	}
 
 	body, err := json.Marshal(reqBody)
@@ -33,9 +33,9 @@ func TestPatchTemperedGlasses(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	fmt.Print(res)
-	if res.StatusCode != 200 {
-		t.Fatal("some error happened")
+
+	if s := res.StatusCode; s != 200 {
+		t.Fatalf("want status code 200, got %v", s)
 	}
 
 	defer req.Body.Close()

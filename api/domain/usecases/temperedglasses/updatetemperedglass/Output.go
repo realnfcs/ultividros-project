@@ -2,11 +2,15 @@ package updatetemperedglass
 
 // Usecase Output Port responsável pelos dados que serão retornados
 type Output struct {
-	Id     string
-	Status int
-	Error  error
+	Id     string `json:"id"`
+	Status int    `json:"-"`
+	Error  string `json:"error"`
 }
 
 func (*Output) Init(id string, status int, err error) *Output {
-	return &Output{id, status, err}
+	if err != nil {
+		return &Output{id, status, err.Error()}
+	}
+
+	return &Output{id, status, ""}
 }

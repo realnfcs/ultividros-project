@@ -11,16 +11,16 @@ import (
 
 func TestDeleteTemperedGlass(t *testing.T) {
 	reqBody := map[string]any{
-		"id":           "718f4814b432453fb28526b514ede25b",
-		"name":         "basculhante",
-		"description":  "Um peça de vidro temperado muito comum em banheiros",
-		"price":        180,
-		"quantity":     3,
+		"id":           "5e78e83e52ff4f4fab13678a17d81a74",
+		"name":         "Janela",
+		"description":  "Janela 4 folhas 8mm fumê",
+		"price":        500,
+		"quantity":     1,
 		"type":         "tempered",
 		"color":        "smoked",
 		"glass_sheets": 0,
 		"milimeter":    8,
-		"height":       0.5,
+		"height":       1.2,
 		"width":        1,
 	}
 
@@ -43,8 +43,8 @@ func TestDeleteTemperedGlass(t *testing.T) {
 		t.Fatal(err)
 	}
 	fmt.Print(res)
-	if res.StatusCode != 200 {
-		t.Fatal("some error happened")
+	if s := res.StatusCode; s != 200 {
+		t.Fatalf("want status code 200, got %v", s)
 	}
 
 	defer req.Body.Close()

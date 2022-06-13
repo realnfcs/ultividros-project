@@ -12,6 +12,6 @@ type GetTemperedGlasses struct {
 
 // Método que executa o procedimento de pegar os vidros temperados
 func (g *GetTemperedGlasses) Execute() *Output {
-	e := g.TemperedGlassRepository.GetTemperedGlasses()
-	return new(Output).Init(e)
+	e, status, err := g.TemperedGlassRepository.GetTemperedGlasses()
+	return new(Output).Init(e, status, err)
 }

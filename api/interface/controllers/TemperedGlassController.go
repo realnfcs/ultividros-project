@@ -23,16 +23,16 @@ type TemperedGlassController struct {
 // único vidro temperado trazendo a resposta ao cliente
 func (t *TemperedGlassController) GetTemperedGlass(i gettemperedglass.Input) *gettemperedglass.Output {
 	getTempGlss := gettemperedglass.GetTemperedGlass{TemperedGlassRepository: t.Repo}
-	temperedGlass := getTempGlss.Execute(i)
-	return temperedGlass
+	output := getTempGlss.Execute(i)
+	return output
 }
 
 // Método da controller que comunica com o usecase para a obtenção de dados e pela
 // resposta ao cliente
 func (t *TemperedGlassController) GetTemperedGlasses() *gettemperedglasses.Output {
 	getTempGlss := gettemperedglasses.GetTemperedGlasses{TemperedGlassRepository: t.Repo}
-	temperedGlasses := getTempGlss.Execute()
-	return temperedGlasses
+	output := getTempGlss.Execute()
+	return output
 }
 
 // Método da controller que comunica com o usecase para salvar um objeto de acordo

@@ -9,7 +9,9 @@ import (
 
 // Usecase Output Port responsável pelos dados que serão retornados
 type Output struct {
-	Data []OutputData
+	Data   []OutputData `json:"data"`
+	Status int          `json:"-"`
+	Err    string       `json:"error"`
 }
 
 // OutputData é a estrutura de dados que será retornado em um array
@@ -28,9 +30,17 @@ type OutputData struct {
 	Width       float32 `json:"width"`
 }
 
-func (*Output) Init(i *[]entities.TemperedGlass) *Output {
+func (*Output) Init(i *[]entities.TemperedGlass, status int, err error) *Output {
 
 	output := make([]OutputData, len(*i))
+
+	if i == nil {
+		return &Output{output, status, err.Error()}
+	}
+
+	if err != nil {
+		return &Output{output, status, err.Error()}
+	}
 
 	for i, v := range *i {
 		output[i].Id = v.Id
@@ -46,5 +56,5 @@ func (*Output) Init(i *[]entities.TemperedGlass) *Output {
 		output[i].Width = v.Width
 	}
 
-	return &Output{output}
+	return &Output{output, status, ""}
 }

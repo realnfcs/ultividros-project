@@ -18,7 +18,7 @@ import (
 
 // Essa struct provém as informações base contidas na entidade de vidros
 // temperados porém com mais enfâse nas bibliotecas usadas.
-type ModelTemperedGlass struct {
+type TemperedGlass struct {
 	ID          string       `json:"id" gorm:"primaryKey"`
 	Name        string       `json:"name"`
 	Description string       `json:"description"`
@@ -36,7 +36,7 @@ type ModelTemperedGlass struct {
 }
 
 // Método para criar um uuid antes de salvar no banco de dados
-func (m *ModelTemperedGlass) BeforeCreate(scope *gorm.DB) error {
+func (m *TemperedGlass) BeforeCreate(scope *gorm.DB) error {
 	id := uuid.New().String()
 	if id == "" {
 		return errors.New("Cannot create uuid")
@@ -49,7 +49,7 @@ func (m *ModelTemperedGlass) BeforeCreate(scope *gorm.DB) error {
 }
 
 // Método responsável por transformar o model em entidade
-func (m *ModelTemperedGlass) TranformToEntity() *entities.TemperedGlass {
+func (m *TemperedGlass) TranformToEntity() *entities.TemperedGlass {
 	return &entities.TemperedGlass{
 		Id:          m.ID,
 		Name:        m.Name,
@@ -66,7 +66,7 @@ func (m *ModelTemperedGlass) TranformToEntity() *entities.TemperedGlass {
 }
 
 // Método responsável por transformar um Slice de Models em um Slice de entidades
-func (*ModelTemperedGlass) TranformToSliceOfEntity(m []ModelTemperedGlass) *[]entities.TemperedGlass {
+func (*TemperedGlass) TranformToSliceOfEntity(m []TemperedGlass) *[]entities.TemperedGlass {
 
 	tempGlasses := make([]entities.TemperedGlass, len(m))
 
@@ -120,8 +120,8 @@ func (*ModelTemperedGlass) TranformToSliceOfEntity(m []ModelTemperedGlass) *[]en
 }
 
 // Método que transforma uma entidade em model
-func (m *ModelTemperedGlass) TransformToModel(e entities.TemperedGlass) *ModelTemperedGlass {
-	return &ModelTemperedGlass{
+func (m *TemperedGlass) TransformToModel(e entities.TemperedGlass) *TemperedGlass {
+	return &TemperedGlass{
 		e.Id,
 		e.Name,
 		e.Description,
@@ -140,8 +140,8 @@ func (m *ModelTemperedGlass) TransformToModel(e entities.TemperedGlass) *ModelTe
 }
 
 // Método que transfoma um Slice de entidades em Slice de models
-func (*ModelTemperedGlass) TransformToSliceOfModel(e []entities.TemperedGlass) *[]ModelTemperedGlass {
-	var m []ModelTemperedGlass
+func (*TemperedGlass) TransformToSliceOfModel(e []entities.TemperedGlass) *[]TemperedGlass {
+	var m []TemperedGlass
 
 	var wg sync.WaitGroup
 

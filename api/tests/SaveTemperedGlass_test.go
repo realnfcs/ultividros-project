@@ -9,15 +9,15 @@ import (
 
 func TestSaveTemperedGlass(t *testing.T) {
 	reqBody := map[string]any{
-		"name":        "basculhante",
-		"description": "Um peça de vidro temperado muito comum em banheiros",
-		"price":       180,
-		"quantity":    3,
+		"name":        "Janela",
+		"description": "Janela 4 folhas 8mm fumê",
+		"price":       500,
+		"quantity":    1,
 		"type":        "tempered",
 		"color":       "smoked",
-		"GlassSheets": 1,
+		"GlassSheets": 4,
 		"milimeter":   8,
-		"height":      0.5,
+		"height":      1.20,
 		"width":       1,
 	}
 
@@ -31,8 +31,8 @@ func TestSaveTemperedGlass(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if res.StatusCode != 200 {
-		t.Fatal("some error happened")
+	if s := res.StatusCode; s != 201 {
+		t.Fatalf("want status code 201, got %v", s)
 	}
 
 	res.Body.Close()

@@ -7,5 +7,5 @@ import (
 
 // Função que executa as migrations e cria as tabelas no banco de dados
 func RunMigrations(db *gorm.DB) {
-	db.AutoMigrate(models.ModelTemperedGlass{})
+	db.AutoMigrate(models.TemperedGlass{})
 }

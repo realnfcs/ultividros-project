@@ -12,64 +12,64 @@ import (
 
 // Adaptador do fiber responsável pela obtenção de dados do vidro temperado no
 // repositório de acordo com o parâmetro e pelo retorno dos mesmos para o cliente
-func GetTemperedGlass[T contracts.Adapters](req func(gettemperedglass.Input) *gettemperedglass.Output, ctx T) func(T) error {
+func GetTemperedGlass[T contracts.FiberAdapterContract[T]](req func(gettemperedglass.Input) *gettemperedglass.Output, ctx T) func(T) error {
 	return func(c T) error {
 		p := c.Params("id")
 		i := gettemperedglass.Input{ID: p}
-		obj := req(i)
-		return c.JSON(obj)
+		output := req(i)
+		return c.Status(output.Status).JSON(output)
 	}
 }
 
 // Adaptador do fiber responsável por trazer ao cliente todos os dados dos vidros
 // temperados no repositório
-func GetTemperedGlasses[T contracts.Adapters](req func() *gettemperedglasses.Output, ctx T) func(T) error {
+func GetTemperedGlasses[T contracts.FiberAdapterContract[T]](req func() *gettemperedglasses.Output, ctx T) func(T) error {
 	return func(c T) error {
-		obj := req()
-		return c.JSON(obj)
+		output := req()
+		return c.Status(output.Status).JSON(output)
 	}
 }
 
 // Adaptador do fiber responsável por salvar o vidro temperado no repositório
-func SaveTemperedGlasses[T contracts.Adapters](req func(savetemperedglass.Input) *savetemperedglass.Output, ctx T) func(T) error {
+func SaveTemperedGlasses[T contracts.FiberAdapterContract[T]](req func(savetemperedglass.Input) *savetemperedglass.Output, ctx T) func(T) error {
 	return func(c T) error {
 		input := savetemperedglass.Input{}
 		c.BodyParser(&input)
 
 		output := req(input)
-		return c.JSON(output)
+		return c.Status(output.Status).JSON(output)
 	}
 }
 
 // Adaptador do fiber responsável por atualizar os campos de um vidro temperado no repositório
-func UpdateTemperedGlasses[T contracts.Adapters](req func(updatetemperedglass.Input) *updatetemperedglass.Output, ctx T) func(T) error {
+func UpdateTemperedGlasses[T contracts.FiberAdapterContract[T]](req func(updatetemperedglass.Input) *updatetemperedglass.Output, ctx T) func(T) error {
 	return func(c T) error {
 		input := updatetemperedglass.Input{}
 		c.BodyParser(&input)
 
 		output := req(input)
-		return c.JSON(output)
+		return c.Status(output.Status).JSON(output)
 	}
 }
 
 // Adaptador do fiber responsável por atualizar os campos alterados de um vidro temperado no repositório
-func PatchTemperedGlasses[T contracts.Adapters](req func(patchtemperedglass.Input) *patchtemperedglass.Output, ctx T) func(T) error {
+func PatchTemperedGlasses[T contracts.FiberAdapterContract[T]](req func(patchtemperedglass.Input) *patchtemperedglass.Output, ctx T) func(T) error {
 	return func(c T) error {
 		input := patchtemperedglass.Input{}
 		c.BodyParser(&input)
 
 		output := req(input)
-		return c.JSON(output)
+		return c.Status(output.Status).JSON(output)
 	}
 }
 
 // Adaptador do fiber responsável por deletar o vidro temperado no repositório
-func DeleteTemperedGlass[T contracts.Adapters](req func(deletetemperedglass.Input) *deletetemperedglass.Output, ctx T) func(T) error {
+func DeleteTemperedGlass[T contracts.FiberAdapterContract[T]](req func(deletetemperedglass.Input) *deletetemperedglass.Output, ctx T) func(T) error {
 	return func(c T) error {
 		input := deletetemperedglass.Input{}
 		c.BodyParser(&input)
 
 		output := req(input)
-		return c.JSON(output)
+		return c.Status(output.Status).JSON(output)
 	}
 }
