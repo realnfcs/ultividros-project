@@ -52,9 +52,9 @@ func (t *TemperedGlassRepositoryMySql) Init() (*TemperedGlassRepositoryMySql, er
 // Método para auxiliar nos tests / Método para pegar um id aleatório no repositório (DEMO)
 func (t *TemperedGlassRepositoryMySql) GetRandomId() (string, error) {
 
-	tId := tempdGlssId{}
+	tId := new(tempdGlssId)
 
-	err := t.GormDb.Model(&models.TemperedGlass{}).Take(&tId).Error
+	err := t.GormDb.Model(&models.TemperedGlass{}).Take(tId).Error
 	if err != nil {
 		return "", err
 	}
@@ -99,7 +99,13 @@ func (t *TemperedGlassRepositoryMySql) GetTemperedGlasses() (*[]entities.Tempere
 // Método que salva um vidro temperado no banco de dados de acordo com os dados passados
 // no parâmetro
 func (t *TemperedGlassRepositoryMySql) SaveTemperedGlass(e entities.TemperedGlass) (string, int, error) {
+
 	tempGlass := new(models.TemperedGlass).TransformToModel(e)
+
+	// DEMO
+	if tempGlass.Name == "" || tempGlass.Price == 0 || tempGlass.Type == "" || tempGlass.Color == "" || tempGlass.GlassSheets == 0 || tempGlass.Milimeter == 0 || tempGlass.Height == 0 || tempGlass.Width == 0 {
+		return tempGlass.ID, 400, errors.New("Empty field error: some field no got a value")
+	}
 
 	err := t.GormDb.Create(tempGlass).Error
 	if err != nil {
@@ -112,6 +118,12 @@ func (t *TemperedGlassRepositoryMySql) SaveTemperedGlass(e entities.TemperedGlas
 // Método que atualiza os campos de um vidro temperado de acordo com os dados passados
 // no parâmetro
 func (t *TemperedGlassRepositoryMySql) UpdateTemperedGlass(e entities.TemperedGlass) (string, int, error) {
+
+	// DEMO
+	if e.Name == "" || e.Price == 0 || e.Type == "" || e.Color == "" || e.GlassSheets == 0 || e.Milimeter == 0 || e.Height == 0 || e.Width == 0 {
+		return e.Id, 400, errors.New("Empty field error: some field no got a value")
+	}
+
 	tempGlass := new(models.TemperedGlass).TransformToModel(e)
 
 	id := tempdGlssId{}

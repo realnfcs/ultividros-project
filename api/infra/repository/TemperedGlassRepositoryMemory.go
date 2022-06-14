@@ -59,21 +59,29 @@ func (*TemperedGlassRepositoryMemory) Init() *TemperedGlassRepositoryMemory {
 	}
 }
 
+func (*TemperedGlassRepositoryMemory) EmptyInit() *TemperedGlassRepositoryMemory {
+	return &TemperedGlassRepositoryMemory{[]entities.TemperedGlass{{}}}
+}
+
 // Método que retorna os dados do vidro temperado no repositório em memório
 // de acordo com o ID passado no parâmetro
-func (t *TemperedGlassRepositoryMemory) GetTemperedGlass(id string) *entities.TemperedGlass {
+func (t *TemperedGlassRepositoryMemory) GetTemperedGlass(id string) (*entities.TemperedGlass, int, error) {
 	for i, v := range t.TemperedGlasses {
 		if v.Id == id {
-			return &t.TemperedGlasses[i]
+			return &t.TemperedGlasses[i], 200, nil
 		}
 	}
 
-	return nil
+	return nil, 404, errors.New("None tempered glasses in repository with that id")
 }
 
 // Método que retorna todos os dados armazenado no repositório em memória
-func (t *TemperedGlassRepositoryMemory) GetTemperedGlasses() *[]entities.TemperedGlass {
-	return &t.TemperedGlasses
+func (t *TemperedGlassRepositoryMemory) GetTemperedGlasses() (*[]entities.TemperedGlass, int, error) {
+	if len(t.TemperedGlasses) > 0 {
+		return &t.TemperedGlasses, 200, nil
+	}
+
+	return nil, 404, nil
 }
 
 // Método que salva o vidro temperado no repositório em memória
@@ -85,7 +93,7 @@ func (t *TemperedGlassRepositoryMemory) SaveTemperedGlass(e entities.TemperedGla
 
 // Método que atualiza o vidro temperado no repositório em memória
 func (t *TemperedGlassRepositoryMemory) UpdateTemperedGlass(e entities.TemperedGlass) (string, int, error) {
-	temperedGlass := t.GetTemperedGlass(e.Id)
+	temperedGlass, _, _ := t.GetTemperedGlass(e.Id)
 	if temperedGlass == nil {
 		return "", 401, errors.New("a nil pointer is received: this glass in this id not exist")
 	}
@@ -118,6 +126,10 @@ func (t *TemperedGlassRepositoryMemory) UpdateTemperedGlass(e entities.TemperedG
 	return "", 401, errors.New("cannot save the tempered glass")
 }
 
+func (*TemperedGlassRepositoryMemory) PatchTemperedGlass(entities.TemperedGlass) (string, int, error) {
+	return "", 0, nil
+}
+
 func removeIt(e entities.TemperedGlass, t []entities.TemperedGlass) []entities.TemperedGlass {
 	for i, v := range t {
 		if v == e {
@@ -125,4 +137,8 @@ func removeIt(e entities.TemperedGlass, t []entities.TemperedGlass) []entities.T
 		}
 	}
 	return t
+}
+
+func (*TemperedGlassRepositoryMemory) DeleteTemperedGlass(e entities.TemperedGlass) (int, error) {
+	return 0, nil
 }
