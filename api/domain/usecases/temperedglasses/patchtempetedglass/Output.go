@@ -1,5 +1,6 @@
-package savetemperedglass
+package patchtemperedglass
 
+// Usecase Output Port responsável pelos dados que serão retornados
 type Output struct {
 	Id     string `json:"id"`
 	Status int    `json:"-"`

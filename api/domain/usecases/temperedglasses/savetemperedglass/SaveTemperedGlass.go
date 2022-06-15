@@ -1,7 +1,6 @@
-package usecases
+package savetemperedglass
 
 import (
-	"github.com/realnfcs/ultividros-project/api/domain/entities"
 	"github.com/realnfcs/ultividros-project/api/domain/repository"
 )
 
@@ -12,6 +11,7 @@ type SaveTemperedGlass struct {
 }
 
 // Método que executa o procedimento de salvamento do vidro temperado
-func (s *SaveTemperedGlass) Execute(e entities.TemperedGlass) error {
-	return s.TemperedGlassRepository.SaveTemperedGlass(e)
+func (s *SaveTemperedGlass) Execute(i Input) *Output {
+	id, status, err := s.TemperedGlassRepository.SaveTemperedGlass(*i.ConvertToTempGlss())
+	return new(Output).Init(id, status, err)
 }

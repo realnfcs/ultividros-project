@@ -1,3 +1,5 @@
+// Pacote responsável por estabalecer as funções necessárias para se tornar um
+// adaptador
 package contracts
 
 // Interface para que bibliotecas de servidor HTTP externas (Frameworks and Drivers Layer)
