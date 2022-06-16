@@ -48,7 +48,7 @@ func (m *TemperedGlass) BeforeCreate(scope *gorm.DB) error {
 	return nil
 }
 
-// Método responsável por transformar o model em entidade
+// Método responsável por transformar o model TemperedGlass em entidade
 func (m *TemperedGlass) TranformToEntity() *entities.TemperedGlass {
 	return &entities.TemperedGlass{
 		Id:          m.ID,
@@ -65,7 +65,7 @@ func (m *TemperedGlass) TranformToEntity() *entities.TemperedGlass {
 	}
 }
 
-// Método responsável por transformar um Slice de Models em um Slice de entidades
+// Método responsável por transformar um Slice de Models em um Slice de entidades TemperedGlass
 func (*TemperedGlass) TranformToSliceOfEntity(m []TemperedGlass) *[]entities.TemperedGlass {
 
 	tempGlasses := make([]entities.TemperedGlass, len(m))
@@ -119,7 +119,7 @@ func (*TemperedGlass) TranformToSliceOfEntity(m []TemperedGlass) *[]entities.Tem
 	return &tempGlasses
 }
 
-// Método que transforma uma entidade em model
+// Método responsável por transformar o entidade TemperedGlass em model
 func (m *TemperedGlass) TransformToModel(e entities.TemperedGlass) *TemperedGlass {
 	return &TemperedGlass{
 		e.Id,

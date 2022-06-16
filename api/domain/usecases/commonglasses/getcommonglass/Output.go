@@ -1,4 +1,4 @@
-package gettemperedglass
+package getcommonglass
 
 import "github.com/realnfcs/ultividros-project/api/domain/entities"
 
@@ -11,20 +11,18 @@ type Output struct {
 
 // OutpurData respnsável pelo dado da entitite em si que será passado pelas camadas externas
 type OutputData struct {
-	Id          string  `json:"id"`
-	Name        string  `json:"name"`
-	Description string  `json:"description"`
-	Price       float32 `json:"price"`
-	Quantity    uint32  `json:"quantity"`
-	Type        string  `json:"type"`
-	Color       string  `json:"color"`
-	GlassSheets uint8   `json:"glass_sheets"`
-	Milimeter   float32 `json:"milimeter"`
-	Height      float32 `json:"height"`
-	Width       float32 `json:"width"`
+	Id              string  `json:"id"`
+	Name            string  `json:"name"`
+	Description     string  `json:"description"`
+	Price           float32 `json:"price"`
+	Type            string  `json:"type"`
+	Color           string  `json:"color"`
+	Milimeter       float32 `json:"milimeter"`
+	HeightAvailable float32 `json:"height_available"`
+	WidthAvailable  float32 `json:"width_available"`
 }
 
-func (*Output) Init(e *entities.TemperedGlass, status int, err error) *Output {
+func (*Output) Init(e *entities.CommonGlass, status int, err error) *Output {
 	if e != nil {
 		return &Output{
 			OutputData{
@@ -32,13 +30,11 @@ func (*Output) Init(e *entities.TemperedGlass, status int, err error) *Output {
 				e.Name,
 				e.Description,
 				e.Price,
-				e.Quantity,
 				e.Type,
 				e.Color,
-				e.GlassSheets,
 				e.Milimeter,
-				e.Height,
-				e.Width,
+				e.HeightAvailable,
+				e.WidthAvailable,
 			},
 			status,
 			"",
