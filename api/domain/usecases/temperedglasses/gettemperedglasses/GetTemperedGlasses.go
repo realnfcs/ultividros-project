@@ -1,3 +1,6 @@
+// Pacote responsável pela o usecase GetTemperedGlasses que executa
+// a ação de pegar todos os vidro temperados e retornar os dados ao
+// cliente
 package gettemperedglasses
 
 import (

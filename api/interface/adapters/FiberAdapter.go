@@ -1,7 +1,10 @@
 package adapters
 
 import (
+	"github.com/realnfcs/ultividros-project/api/domain/usecases/commonglasses/deletecommonglass"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/commonglasses/getcommonglass"
+	"github.com/realnfcs/ultividros-project/api/domain/usecases/commonglasses/getcommonglasses"
+	"github.com/realnfcs/ultividros-project/api/domain/usecases/commonglasses/patchcommonglass"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/commonglasses/savecommonglass"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/deletetemperedglass"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/gettemperedglass"
@@ -91,10 +94,41 @@ func GetCommonGlass[T contracts.FiberAdapterContract[T]](req func(getcommonglass
 	}
 }
 
+// Adaptador do fiber responsável por trazer ao cliente todos os dados dos vidros
+// comuns no repositório
+func GetCommonGlasses[T contracts.FiberAdapterContract[T]](req func() *getcommonglasses.Output, ctx T) func(T) error {
+	return func(c T) error {
+		output := req()
+		return c.Status(output.Status).JSON(output)
+	}
+}
+
 // Adaptador do fiber responsável por salvar o vidro comum no repositório
 func SaveCommonGlasses[T contracts.FiberAdapterContract[T]](req func(savecommonglass.Input) *savecommonglass.Output, ctx T) func(T) error {
 	return func(c T) error {
 		input := savecommonglass.Input{}
+		c.BodyParser(&input)
+
+		output := req(input)
+		return c.Status(output.Status).JSON(output)
+	}
+}
+
+// Adaptador do fiber responsável por atualizar os campos alterados de um vidro temperado no repositório
+func PatchCommonGlasses[T contracts.FiberAdapterContract[T]](req func(patchcommonglass.Input) *patchcommonglass.Output, ctx T) func(T) error {
+	return func(c T) error {
+		input := patchcommonglass.Input{}
+		c.BodyParser(&input)
+
+		output := req(input)
+		return c.Status(output.Status).JSON(output)
+	}
+}
+
+// Adaptador do fiber responsável por deletar o vidro comum no repositório
+func DeleteCommonGlass[T contracts.FiberAdapterContract[T]](req func(deletecommonglass.Input) *deletecommonglass.Output, ctx T) func(T) error {
+	return func(c T) error {
+		input := deletecommonglass.Input{}
 		c.BodyParser(&input)
 
 		output := req(input)

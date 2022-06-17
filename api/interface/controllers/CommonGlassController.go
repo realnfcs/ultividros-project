@@ -2,7 +2,10 @@ package controllers
 
 import (
 	"github.com/realnfcs/ultividros-project/api/domain/repository"
+	"github.com/realnfcs/ultividros-project/api/domain/usecases/commonglasses/deletecommonglass"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/commonglasses/getcommonglass"
+	"github.com/realnfcs/ultividros-project/api/domain/usecases/commonglasses/getcommonglasses"
+	"github.com/realnfcs/ultividros-project/api/domain/usecases/commonglasses/patchcommonglass"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/commonglasses/savecommonglass"
 )
 
@@ -20,10 +23,33 @@ func (c *CommonGlassController) GetCommonGlass(i getcommonglass.Input) *getcommo
 	return output
 }
 
+// Método da controller que comunica com o usecase para a obtenção de dados e pela
+// resposta ao cliente
+func (c *CommonGlassController) GetCommonGlasses() *getcommonglasses.Output {
+	getComnGlss := getcommonglasses.GetCommonGlasses{CommonGlassRepository: c.Repo}
+	output := getComnGlss.Execute()
+	return output
+}
+
 // Método da controller que comunica com o usecase para salvar um objeto de vidro comum
 // de acordo com os dados passados no parâmetro
 func (c *CommonGlassController) SaveCommonGlass(i savecommonglass.Input) *savecommonglass.Output {
 	saveComnGlss := savecommonglass.SaveCommonGlass{CommonGlassRepository: c.Repo}
 	output := saveComnGlss.Execute(i)
+	return output
+}
+
+// Método da controller que comunica com o usacase para atualizar os campos alterados do objeto de
+// acordo com os dados passados no parâmetro
+func (c *CommonGlassController) PatchCommonGlass(i patchcommonglass.Input) *patchcommonglass.Output {
+	patchComnGlss := patchcommonglass.PatchCommonGlass{CommonGlassRepository: c.Repo}
+	output := patchComnGlss.Execute(i)
+	return output
+}
+
+// Método da controller que comunica com o usacase para deletar um objeto
+func (c *CommonGlassController) DeleteCommonGlass(i deletecommonglass.Input) *deletecommonglass.Output {
+	deleteComnGlss := deletecommonglass.DeleteCommonGlass{CommonGlassRepository: c.Repo}
+	output := deleteComnGlss.Execute(i)
 	return output
 }
