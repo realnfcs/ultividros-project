@@ -40,7 +40,7 @@ func TestSaveTemperedGlass(t *testing.T) {
 }
 
 func TestSaveTemperedGlassError(t *testing.T) {
-	t.SkipNow()
+
 	reqBody := map[string]any{}
 
 	body, err := json.Marshal(reqBody)
