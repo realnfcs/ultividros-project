@@ -1,4 +1,4 @@
-// Pacote responsável pela o usecase GetTemperedGlass que executa
+// Pacote responsável pela o usecase DeleteTemperedGlass que executa
 // a ação de deletar um vidro temperado no repositório
 package deletetemperedglass
 

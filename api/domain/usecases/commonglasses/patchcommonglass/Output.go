@@ -1,4 +1,4 @@
-package savetemperedglass
+package patchcommonglass
 
 // Usecase Output Port responsável pelos dados que serão retornados
 type Output struct {

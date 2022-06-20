@@ -1,4 +1,4 @@
-package gettemperedglass
+package getcommonglass
 
 // Usecase Input Port responsável pelos dados que entrarão
 type Input struct {

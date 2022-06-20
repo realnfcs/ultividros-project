@@ -1,6 +1,3 @@
-// Pacote responsável pelos controllers que, neste caso, se comunicam
-// com os Input e Output ports dos usecases e se encontra na camada
-// Interface and Adapters Layer
 package controllers
 
 import (
@@ -35,8 +32,8 @@ func (t *TemperedGlassController) GetTemperedGlasses() *gettemperedglasses.Outpu
 	return output
 }
 
-// Método da controller que comunica com o usecase para salvar um objeto de acordo
-// com os dados passados no parâmetro
+// Método da controller que comunica com o usecase para salvar um objeto de vidro temperado
+// de acordo com os dados passados no parâmetro
 func (t *TemperedGlassController) SaveTemperedGlasses(i savetemperedglass.Input) *savetemperedglass.Output {
 	saveTempGlss := savetemperedglass.SaveTemperedGlass{TemperedGlassRepository: t.Repo}
 	output := saveTempGlss.Execute(i)

@@ -1,3 +1,6 @@
+// Pacote responsável pela o usecase SaveTemperedGlass que executa
+// a ação de salvamento de um vidro temperado e retorna os dado de
+// resposta ao cliente
 package savetemperedglass
 
 import (

@@ -1,6 +1,3 @@
-// Pacote responsável pela o usecase SaveTemperedGlass que executa
-// a ação de salvamento de um vidro temperado e retorna os dado de
-// resposta ao cliente
 package savetemperedglass
 
 import "github.com/realnfcs/ultividros-project/api/domain/entities"
@@ -34,6 +31,7 @@ func (*Input) Init(e entities.TemperedGlass) *Input {
 	}
 }
 
+// Método que converte um input na entidade CommonGlass
 func (i *Input) ConvertToTempGlss() *entities.TemperedGlass {
 	return &entities.TemperedGlass{
 		"",
