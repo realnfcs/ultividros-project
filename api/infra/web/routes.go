@@ -29,5 +29,12 @@ func Routes(app *fiber.App, c *controllers.Controllers, ctx *fiber.Ctx) *fiber.A
 	CommonGlassRoute.Patch("/", adapters.PatchCommonGlasses(comnGlssControll.PatchCommonGlass, ctx))
 	CommonGlassRoute.Delete("/", adapters.DeleteCommonGlass(comnGlssControll.DeleteCommonGlass, ctx))
 
+	// Part Routes Section //
+	partControll := c.PartController
+
+	PartRoute := app.Group("/parts")
+	PartRoute.Get("/", adapters.GetParts(partControll.GetParts, ctx))
+	PartRoute.Post("/", adapters.SavePart(partControll.SavePart, ctx))
+
 	return app
 }

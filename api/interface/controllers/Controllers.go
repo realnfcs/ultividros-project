@@ -9,11 +9,13 @@ import "github.com/realnfcs/ultividros-project/api/domain/repository"
 type Controllers struct {
 	TemperedController TemperedGlassController
 	CommonController   CommonGlassController
+	PartController     PartController
 }
 
-func (c *Controllers) Init(rt repository.TemperedGlassRepository, rc repository.CommonGlassRepository) *Controllers {
+func (c *Controllers) Init(rt repository.TemperedGlassRepository, rc repository.CommonGlassRepository, rp repository.PartRepository) *Controllers {
 	return &Controllers{
 		TemperedController: TemperedGlassController{Repo: rt},
 		CommonController:   CommonGlassController{Repo: rc},
+		PartController:     PartController{Repo: rp},
 	}
 }
