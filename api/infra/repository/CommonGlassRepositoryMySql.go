@@ -67,6 +67,7 @@ func (c *CommonGlassRepositoryMySql) GetCommonGlass(id string) (*entities.Common
 	return commonGlss.TranformToEntity(), 200, nil
 }
 
+// Método que pega todos os vidros comuns no banco de dados e os retorna
 func (c *CommonGlassRepositoryMySql) GetCommonGlasses() (*[]entities.CommonGlass, int, error) {
 
 	commonGlss := []models.CommonGlass{}
@@ -136,5 +137,6 @@ func (c *CommonGlassRepositoryMySql) DeleteCommonGlass(e entities.CommonGlass) (
 	if err != nil {
 		return 400, err
 	}
+
 	return 200, nil
 }
