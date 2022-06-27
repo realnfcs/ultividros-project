@@ -33,8 +33,11 @@ func Routes(app *fiber.App, c *controllers.Controllers, ctx *fiber.Ctx) *fiber.A
 	partControll := c.PartController
 
 	PartRoute := app.Group("/parts")
+	PartRoute.Get("/id=:id", adapters.GetPart(partControll.GetPart, ctx))
 	PartRoute.Get("/", adapters.GetParts(partControll.GetParts, ctx))
 	PartRoute.Post("/", adapters.SavePart(partControll.SavePart, ctx))
+	PartRoute.Patch("/", adapters.PatchPart(partControll.PatchPart, ctx))
+	PartRoute.Delete("/", adapters.DeletePart(partControll.DeletePart, ctx))
 
 	return app
 }

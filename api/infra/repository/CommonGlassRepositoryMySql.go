@@ -137,5 +137,6 @@ func (c *CommonGlassRepositoryMySql) DeleteCommonGlass(e entities.CommonGlass) (
 	if err != nil {
 		return 400, err
 	}
+
 	return 200, nil
 }

@@ -6,7 +6,10 @@ import (
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/commonglasses/getcommonglasses"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/commonglasses/patchcommonglass"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/commonglasses/savecommonglass"
+	"github.com/realnfcs/ultividros-project/api/domain/usecases/parts/deletepart"
+	"github.com/realnfcs/ultividros-project/api/domain/usecases/parts/getpart"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/parts/getparts"
+	"github.com/realnfcs/ultividros-project/api/domain/usecases/parts/patchpart"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/parts/savepart"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/deletetemperedglass"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/gettemperedglass"
@@ -140,6 +143,15 @@ func DeleteCommonGlass[T contracts.FiberAdapterContract[T]](req func(deletecommo
 
 // Parts Section //
 
+func GetPart[T contracts.FiberAdapterContract[T]](req func(getpart.Input) *getpart.Output, ctx T) func(T) error {
+	return func(c T) error {
+		p := c.Params("id")
+		i := getpart.Input{ID: p}
+		output := req(i)
+		return c.Status(output.Status).JSON(output)
+	}
+}
+
 // Adaptador do fiber responsável por trazer ao cliente todos os dados das peças
 // comuns no repositório
 func GetParts[T contracts.FiberAdapterContract[T]](req func() *getparts.Output, ctx T) func(T) error {
@@ -153,6 +165,28 @@ func GetParts[T contracts.FiberAdapterContract[T]](req func() *getparts.Output, 
 func SavePart[T contracts.FiberAdapterContract[T]](req func(savepart.Input) *savepart.Output, ctx T) func(T) error {
 	return func(c T) error {
 		input := savepart.Input{}
+		c.BodyParser(&input)
+
+		output := req(input)
+		return c.Status(output.Status).JSON(output)
+	}
+}
+
+// Adaptador do fiber responsável por atualizar os campos alterados de um vidro temperado no repositório
+func PatchPart[T contracts.FiberAdapterContract[T]](req func(patchpart.Input) *patchpart.Output, ctx T) func(T) error {
+	return func(c T) error {
+		input := patchpart.Input{}
+		c.BodyParser(&input)
+
+		output := req(input)
+		return c.Status(output.Status).JSON(output)
+	}
+}
+
+// Adaptador do fiber responsável por deletar o vidro comum no repositório
+func DeletePart[T contracts.FiberAdapterContract[T]](req func(deletepart.Input) *deletepart.Output, ctx T) func(T) error {
+	return func(c T) error {
+		input := deletepart.Input{}
 		c.BodyParser(&input)
 
 		output := req(input)
