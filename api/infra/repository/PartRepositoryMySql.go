@@ -78,7 +78,7 @@ func (p *PartRepositoryMySql) GetParts() (*[]entities.Part, int, error) {
 	}
 
 	if len(parts) == 0 {
-		return new(models.Part).TranformToSliceOfEntity(parts), 404, errors.New("None common glasses in server")
+		return new(models.Part).TranformToSliceOfEntity(parts), 404, errors.New("None parts in server")
 	}
 
 	return new(models.Part).TranformToSliceOfEntity(parts), 200, nil

@@ -10,12 +10,14 @@ type Controllers struct {
 	TemperedController TemperedGlassController
 	CommonController   CommonGlassController
 	PartController     PartController
+	UserController     UserController
 }
 
-func (c *Controllers) Init(rt repository.TemperedGlassRepository, rc repository.CommonGlassRepository, rp repository.PartRepository) *Controllers {
+func (c *Controllers) Init(rt repository.TemperedGlassRepository, rc repository.CommonGlassRepository, rp repository.PartRepository, ru repository.UserRepository) *Controllers {
 	return &Controllers{
 		TemperedController: TemperedGlassController{Repo: rt},
 		CommonController:   CommonGlassController{Repo: rc},
 		PartController:     PartController{Repo: rp},
+		UserController:     UserController{Repo: ru},
 	}
 }
