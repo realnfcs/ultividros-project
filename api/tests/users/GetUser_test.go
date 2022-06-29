@@ -5,9 +5,9 @@ import (
 	"testing"
 )
 
-func TestGetPart(t *testing.T) {
+func TestGetUser(t *testing.T) {
 
-	res, err := http.Get("http://localhost:3000/parts/id=04c7d0dff4a049f682c7c9d9c995aebc")
+	res, err := http.Get("http://localhost:3000/users/id=b5bc889341ba48549223dcfc325255e5")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -19,9 +19,9 @@ func TestGetPart(t *testing.T) {
 	}
 }
 
-func TestGetPartError(t *testing.T) {
+func TestGetUserError(t *testing.T) {
 
-	res, err := http.Get("http://localhost:3000/parts/id=123")
+	res, err := http.Get("http://localhost:3000/users/id=123")
 	if err != nil {
 		t.Fatal(err)
 	}

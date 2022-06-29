@@ -7,10 +7,10 @@ import (
 	"testing"
 )
 
-func TestDeletePart(t *testing.T) {
+func TestDeleteUser(t *testing.T) {
 
 	reqBody := map[string]any{
-		"id": "3c024f267e5b444c945a97186ec68682",
+		"id": "9a60e6dbdcb643dcb88b471005b93c9c",
 	}
 
 	body, err := json.Marshal(reqBody)
@@ -18,7 +18,7 @@ func TestDeletePart(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	req, err := http.NewRequest("DELETE", "http://localhost:3000/parts", bytes.NewReader(body))
+	req, err := http.NewRequest("DELETE", "http://localhost:3000/users", bytes.NewReader(body))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -40,16 +40,16 @@ func TestDeletePart(t *testing.T) {
 	}
 }
 
-func TestDeletePartError(t *testing.T) {
+func TestDeleteUserError(t *testing.T) {
 
 	reqBody := map[string]any{}
 
 	body, err := json.Marshal(reqBody)
 	if err != nil {
-		t.Fatal(body)
+		t.Fatal(err)
 	}
 
-	req, err := http.NewRequest("DELETE", "http://localhost:3000/parts", bytes.NewReader(body))
+	req, err := http.NewRequest("DELETE", "http://localhost:3000/users", bytes.NewReader(body))
 	if err != nil {
 		t.Fatal(err)
 	}
