@@ -1,4 +1,4 @@
-package getpart
+package getuser
 
 import "github.com/realnfcs/ultividros-project/api/domain/entities"
 
@@ -11,24 +11,22 @@ type Output struct {
 
 // OutpurData respnsável pelo dado da entity em si que será passado pelas camadas externas
 type OutputData struct {
-	Id          string  `json:"id"`
-	Name        string  `json:"name"`
-	Description string  `json:"description"`
-	Price       float32 `json:"price"`
-	Quantity    uint32  `json:"quantity"`
-	ForType     string  `json:"for_type"`
+	Id         string `json:"id"`
+	Name       string `json:"name"`
+	Email      string `json:"email"`
+	Password   string `json:"password"`
+	Occupation string `json:"occupation"`
 }
 
-func (*Output) Init(e *entities.Part, status int, err error) *Output {
+func (*Output) Init(e *entities.User, status int, err error) *Output {
 	if e != nil {
 		return &Output{
 			OutputData{
 				e.Id,
 				e.Name,
-				e.Description,
-				e.Price,
-				e.Quantity,
-				e.ForType,
+				e.Email,
+				e.Password,
+				e.Occupation,
 			},
 			status,
 			"",

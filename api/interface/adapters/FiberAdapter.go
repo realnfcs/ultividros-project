@@ -17,6 +17,11 @@ import (
 	patchtemperedglass "github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/patchtempetedglass"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/savetemperedglass"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/updatetemperedglass"
+	"github.com/realnfcs/ultividros-project/api/domain/usecases/users/deleteuser"
+	"github.com/realnfcs/ultividros-project/api/domain/usecases/users/getuser"
+	"github.com/realnfcs/ultividros-project/api/domain/usecases/users/getusers"
+	"github.com/realnfcs/ultividros-project/api/domain/usecases/users/patchuser"
+	"github.com/realnfcs/ultividros-project/api/domain/usecases/users/saveuser"
 	"github.com/realnfcs/ultividros-project/api/interface/contracts"
 )
 
@@ -143,6 +148,8 @@ func DeleteCommonGlass[T contracts.FiberAdapterContract[T]](req func(deletecommo
 
 // Parts Section //
 
+// Adaptador do fiber responsável pela obtenção de dados da peça no
+// repositório de acordo com o parâmetro e pelo retorno dos mesmos para o cliente
 func GetPart[T contracts.FiberAdapterContract[T]](req func(getpart.Input) *getpart.Output, ctx T) func(T) error {
 	return func(c T) error {
 		p := c.Params("id")
@@ -187,6 +194,61 @@ func PatchPart[T contracts.FiberAdapterContract[T]](req func(patchpart.Input) *p
 func DeletePart[T contracts.FiberAdapterContract[T]](req func(deletepart.Input) *deletepart.Output, ctx T) func(T) error {
 	return func(c T) error {
 		input := deletepart.Input{}
+		c.BodyParser(&input)
+
+		output := req(input)
+		return c.Status(output.Status).JSON(output)
+	}
+}
+
+// User Section //
+
+// Adaptador do fiber responsável pela obtenção de dados do usuário no
+// repositório de acordo com o parâmetro e pelo retorno dos mesmos para o cliente
+func GetUser[T contracts.FiberAdapterContract[T]](req func(getuser.Input) *getuser.Output, ctx T) func(T) error {
+	return func(c T) error {
+		p := c.Params("id")
+		i := getuser.Input{ID: p}
+		output := req(i)
+		return c.Status(output.Status).JSON(output)
+	}
+}
+
+// Adaptador do fiber responsável por trazer ao cliente todos os dados dos
+// usuários no repositório
+func GetUsers[T contracts.FiberAdapterContract[T]](req func() *getusers.Output, ctx T) func(T) error {
+	return func(c T) error {
+		output := req()
+		return c.Status(output.Status).JSON(output)
+	}
+}
+
+// Adaptador do fiber responsável por salvar o usuário no repositório
+func SaveUser[T contracts.FiberAdapterContract[T]](req func(saveuser.Input) *saveuser.Output, ctx T) func(T) error {
+	return func(c T) error {
+		input := saveuser.Input{}
+		c.BodyParser(&input)
+
+		output := req(input)
+		return c.Status(output.Status).JSON(output)
+	}
+}
+
+// Adaptador do fiber responsável por atualizar os campos alterados de um usuário no repositório
+func PatchUser[T contracts.FiberAdapterContract[T]](req func(patchuser.Input) *patchuser.Output, ctx T) func(T) error {
+	return func(c T) error {
+		input := patchuser.Input{}
+		c.BodyParser(&input)
+
+		output := req(input)
+		return c.Status(output.Status).JSON(output)
+	}
+}
+
+// Adaptador do fiber responsável por deletar um usuário no repositório
+func DeleteUser[T contracts.FiberAdapterContract[T]](req func(deleteuser.Input) *deleteuser.Output, ctx T) func(T) error {
+	return func(c T) error {
+		input := deleteuser.Input{}
 		c.BodyParser(&input)
 
 		output := req(input)
