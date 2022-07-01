@@ -22,6 +22,12 @@ type comnGlssId struct {
 	ID string
 }
 
+type ComnGlssArea struct {
+	ID              string
+	WidthAvailable  float32
+	HeightAvailable float32
+}
+
 // Método para iniciar o ORM de acordo com a conexão já estabelecida com
 // o banco de dados MySQL
 func (t *CommonGlassRepositoryMySql) Init() (*CommonGlassRepositoryMySql, error) {
@@ -48,6 +54,30 @@ func (t *CommonGlassRepositoryMySql) Init() (*CommonGlassRepositoryMySql, error)
 
 	return t, nil
 }
+
+// Query Utils Section //
+
+func (c *CommonGlassRepositoryMySql) GetArea(id string) (area map[string]float32, err error) {
+
+	if id == "" {
+		err = errors.New("no id error")
+		return
+	}
+
+	areaQuery := new(ComnGlssArea)
+
+	err = c.GormDb.Model(&entities.CommonGlass{}).First(areaQuery, "id = ?", id).Error
+	if err != nil {
+		return
+	}
+
+	area["width"] = areaQuery.WidthAvailable
+	area["height"] = areaQuery.HeightAvailable
+
+	return
+}
+
+// CRUD Section //
 
 // Método que pega um vidro comum no banco de dados de acordo com o id passado
 // no parâmetro e o retorna
