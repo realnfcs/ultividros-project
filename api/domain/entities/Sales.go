@@ -16,7 +16,7 @@ type Sale struct {
 }
 
 // Essa struct provém as informações dos produtos requisitados na venda,
-// representando os vidros temperados e peças que o cliente poderá comprar
+// representando os vidros temperados, comuns e peças que o cliente poderá comprar
 type ProductsRequest struct {
 	Id           string  `json:"id"`
 	ProductId    string  `json:"product_id"`
@@ -24,6 +24,14 @@ type ProductsRequest struct {
 	ProductPrice float32 `json:"product_price"`
 	ProdtQtyReq  uint32  `json:"prodt_qty_req"`
 	SaleId       string  `json:"sale_id"`
+}
+
+type TempGlssReq struct {
+	ProductsRequest
+}
+
+type PartsReq struct {
+	ProductsRequest
 }
 
 // Essa struct provém as informações mais específicas dos vidros comuns

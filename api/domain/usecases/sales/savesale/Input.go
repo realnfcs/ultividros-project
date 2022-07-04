@@ -8,9 +8,10 @@ import (
 
 // Usecase Input Port responsável pelos dados que entrarão
 type Input struct {
-	ClientId   string            `json:"client_id"`
-	Products   []ProductsRequest `json:"products_request"`
-	CommonGlss []CommonGlssReq   `json:"common_glss"`
+	ClientId   string          `json:"client_id"`
+	Parts      []PartsReq      `json:"parts_req"`
+	TempGlss   []TempGlssReq   `json:"temp_glss_req"`
+	CommonGlss []CommonGlssReq `json:"common_glss_req"`
 }
 
 // Produtos requisitados pelo cliente que virão no input
@@ -23,6 +24,16 @@ type ProductsRequest struct {
 	SaleId       string  `json:"sale_id"`
 }
 
+// Nenhum ou muitos peças requisitados pelo cliente que virão no input
+type PartsReq struct {
+	ProductsRequest
+}
+
+// Nenhum ou muitos vidros temperados requisitados pelo cliente que virão no input
+type TempGlssReq struct {
+	ProductsRequest
+}
+
 // Nenhum ou muitos vidros comuns requisitados pelo cliente que virão no input
 type CommonGlssReq struct {
 	ProductsRequest
@@ -32,27 +43,46 @@ type CommonGlssReq struct {
 
 // Método que converte um input na entidade Sale
 func (i *Input) ConvertToSale() *entities.Sale {
-	prods := make([]string, (len(i.Products) + len(i.CommonGlss)))
+	prods := make([]string, (len(i.Parts) + len(i.CommonGlss) + len(i.TempGlss)))
 
 	var wg sync.WaitGroup
+	channel := make(chan int)
+
+	wg.Add(1)
+
+	channel <- 0
+
+	go func() {
+		if len(i.Parts) != 0 {
+			for _, v := range i.Parts {
+				prods[<-channel] = v.ProductId
+				channel <- <-channel + 1
+			}
+		}
+		wg.Done()
+	}()
 
 	wg.Add(1)
 	go func() {
-		if len(i.Products) != 0 {
-			for i, v := range i.Products {
-				prods[i] = v.ProductId
+		if len(i.TempGlss) != 0 {
+			for _, v := range i.TempGlss {
+				prods[<-channel] = v.ProductId
+				channel <- <-channel + 1
 			}
 		}
 		wg.Done()
 	}()
 
 	if len(i.CommonGlss) != 0 {
-		for i, v := range i.CommonGlss {
-			prods[i] = v.ProductId
+		for _, v := range i.CommonGlss {
+			prods[<-channel] = v.ProductId
+			channel <- <-channel + 1
 		}
 	}
 
 	wg.Wait()
+
+	close(channel)
 
 	return &entities.Sale{
 		"",
@@ -62,26 +92,26 @@ func (i *Input) ConvertToSale() *entities.Sale {
 }
 
 // Método que converte os produtos do input na entidade ProductsRequest
-func (i *Input) ConvertProdInputInProdEnt() *[]entities.ProductsRequest {
+func (i *Input) ConvertTempGlssReqInputInEnt() *[]entities.TempGlssReq {
 
-	if len(i.Products) == 0 {
+	if len(i.TempGlss) == 0 {
 		return nil
 	}
 
-	prods := make([]entities.ProductsRequest, len(i.Products))
+	prods := make([]entities.TempGlssReq, len(i.TempGlss))
 
-	if len(i.Products) > 5 {
+	if len(i.TempGlss) > 5 {
 
 		var wg sync.WaitGroup
 		channel := make(chan int)
 
-		for i, v := range i.Products {
+		channel <- 0
 
-			channel <- i
+		for _, v := range i.TempGlss {
 
 			wg.Add(1)
 
-			go func(ch chan int, p ProductsRequest) {
+			go func(ch chan int, p TempGlssReq) {
 				prods[<-channel].Id = p.Id
 				prods[<-channel].ProductId = p.ProductId
 				prods[<-channel].ProductName = p.ProductName
@@ -101,7 +131,7 @@ func (i *Input) ConvertProdInputInProdEnt() *[]entities.ProductsRequest {
 		return &prods
 	}
 
-	for i, v := range i.Products {
+	for i, v := range i.TempGlss {
 		prods[i].Id = v.Id
 		prods[i].ProductId = v.ProductId
 		prods[i].ProductName = v.ProductName
@@ -114,7 +144,7 @@ func (i *Input) ConvertProdInputInProdEnt() *[]entities.ProductsRequest {
 }
 
 // Método que converte os vidros comuns na entidade ComnGlssReq
-func (i *Input) ConvertComnGlssReqInputInComnGlssReqEnt() *[]entities.CommonGlssReq {
+func (i *Input) ConvertComnGlssReqInputInEnt() *[]entities.CommonGlssReq {
 
 	if len(i.CommonGlss) == 0 {
 		return nil
@@ -168,4 +198,56 @@ func (i *Input) ConvertComnGlssReqInputInComnGlssReqEnt() *[]entities.CommonGlss
 	}
 
 	return &comnGlss
+}
+
+// Método que converte os produtos do input na entidade ProductsRequest
+func (i *Input) ConvertPartReqInputInEnt() *[]entities.PartsReq {
+
+	if len(i.Parts) == 0 {
+		return nil
+	}
+
+	prods := make([]entities.PartsReq, len(i.Parts))
+
+	if len(i.Parts) > 5 {
+
+		var wg sync.WaitGroup
+		channel := make(chan int)
+
+		channel <- 0
+
+		for _, v := range i.Parts {
+
+			wg.Add(1)
+
+			go func(ch chan int, p PartsReq) {
+				prods[<-channel].Id = p.Id
+				prods[<-channel].ProductId = p.ProductId
+				prods[<-channel].ProductName = p.ProductName
+				prods[<-channel].ProductPrice = p.ProductPrice
+				prods[<-channel].ProdtQtyReq = p.ProdtQtyReq
+				prods[<-channel].SaleId = p.SaleId
+
+				wg.Done()
+				channel <- <-channel + 1
+			}(channel, v)
+		}
+
+		wg.Wait()
+
+		close(channel)
+
+		return &prods
+	}
+
+	for i, v := range i.Parts {
+		prods[i].Id = v.Id
+		prods[i].ProductId = v.ProductId
+		prods[i].ProductName = v.ProductName
+		prods[i].ProductPrice = v.ProductPrice
+		prods[i].ProdtQtyReq = v.ProdtQtyReq
+		prods[i].SaleId = v.SaleId
+	}
+
+	return &prods
 }

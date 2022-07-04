@@ -57,6 +57,8 @@ func (t *CommonGlassRepositoryMySql) Init() (*CommonGlassRepositoryMySql, error)
 
 // Query Utils Section //
 
+// Método que pega a área de um vidro comum no banco de dados de acordo com o id passado
+// no parâmetro e o retorna
 func (c *CommonGlassRepositoryMySql) GetArea(id string) (area map[string]float32, err error) {
 
 	if id == "" {

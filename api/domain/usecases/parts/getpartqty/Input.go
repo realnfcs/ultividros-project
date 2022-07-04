@@ -1,4 +1,4 @@
-package gettotalarea
+package getpartqty
 
 // Usecase Input Port responsável pelos dados que entrarão
 type Input struct {

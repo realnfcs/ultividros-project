@@ -17,9 +17,13 @@ type TemperedGlassRepositoryMySql struct {
 	GormDb *gorm.DB
 }
 
-// Struct que auxilia nas querys
-type tempdGlssId struct {
+// Structs que auxiliam nas querys //
+type tempGlssId struct {
 	ID string
+}
+
+type tempGlssQty struct {
+	Qty uint32
 }
 
 // Método para iniciar o ORM de acordo com a conexão já estabelecida com
@@ -49,10 +53,25 @@ func (t *TemperedGlassRepositoryMySql) Init() (*TemperedGlassRepositoryMySql, er
 	return t, nil
 }
 
+// Query Utils Section //
+
+func (t *TemperedGlassRepositoryMySql) GetTempGlssQty(id string) (uint32, error) {
+
+	tempGlss := new(models.TemperedGlass)
+	qty := tempGlssQty{}
+
+	err := t.GormDb.Model(tempGlss).First(&qty, "id = ?", id).Error
+	if err != nil {
+		return 0, err
+	}
+
+	return qty.Qty, nil
+}
+
 // Método para auxiliar nos tests / Método para pegar um id aleatório no repositório (DEMO)
 func (t *TemperedGlassRepositoryMySql) GetRandomId() (string, error) {
 
-	tId := new(tempdGlssId)
+	tId := new(tempGlssId)
 
 	err := t.GormDb.Model(&models.TemperedGlass{}).Take(tId).Error
 	if err != nil {
@@ -61,6 +80,8 @@ func (t *TemperedGlassRepositoryMySql) GetRandomId() (string, error) {
 
 	return tId.ID, nil
 }
+
+// CRUD Section //
 
 // Método que pega um vidro temperado no banco de dados de acordo com o id passado
 // no parâmetro e o retorna
@@ -126,7 +147,7 @@ func (t *TemperedGlassRepositoryMySql) UpdateTemperedGlass(e entities.TemperedGl
 
 	tempGlass := new(models.TemperedGlass).TransformToModel(e)
 
-	id := tempdGlssId{}
+	id := tempGlssId{}
 
 	err := t.GormDb.Model(tempGlass).First(&id, "id = ?", tempGlass.ID).Error
 	if err != nil {
@@ -146,7 +167,7 @@ func (t *TemperedGlassRepositoryMySql) UpdateTemperedGlass(e entities.TemperedGl
 func (t *TemperedGlassRepositoryMySql) PatchTemperedGlass(e entities.TemperedGlass) (string, int, error) {
 	tempGlass := new(models.TemperedGlass).TransformToModel(e)
 
-	id := tempdGlssId{}
+	id := tempGlssId{}
 
 	err := t.GormDb.Model(tempGlass).First(&id, "id = ?", tempGlass.ID).Error
 	if err != nil {

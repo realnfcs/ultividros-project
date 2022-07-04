@@ -17,9 +17,13 @@ type PartRepositoryMySql struct {
 	GormDb *gorm.DB
 }
 
-// Struct que auxilia nas querys
+// Structs que auxiliam nas querys //
 type partId struct {
 	ID string
+}
+
+type partQty struct {
+	Qty uint32
 }
 
 // Método para iniciar o ORM de acordo com a conexão já estabelecida com
@@ -48,6 +52,23 @@ func (p *PartRepositoryMySql) Init() (*PartRepositoryMySql, error) {
 
 	return p, nil
 }
+
+// Query Utils Section //
+
+func (p *PartRepositoryMySql) GetPartQuantity(id string) (uint32, error) {
+
+	part := new(models.Part)
+	qty := partQty{}
+
+	err := p.GormDb.Model(part).First(&qty, "id = ?", id).Error
+	if err != nil {
+		return 0, err
+	}
+
+	return qty.Qty, nil
+}
+
+// CRUD Section //
 
 // Método que pega uma peça no banco de dados de acordo com o id passado
 // no parâmetro e o retorna

@@ -1,4 +1,4 @@
-package gettotalarea
+package gettemperedglassqty
 
 // Usecase Input Port responsável pelos dados que entrarão
 type Input struct {
