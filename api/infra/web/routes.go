@@ -49,5 +49,11 @@ func Routes(app *fiber.App, c *controllers.Controllers, ctx *fiber.Ctx) *fiber.A
 	UserRouter.Patch("/", adapters.PatchUser(userControll.PatchUser, ctx))
 	UserRouter.Delete("/", adapters.DeleteUser(userControll.DeleteUser, ctx))
 
+	// Sale Routes Section //
+	saleControll := c.SaleController
+
+	SaleRouter := app.Group("/sales")
+	SaleRouter.Post("/", adapters.SaveSale(saleControll.SaveSale, ctx))
+
 	return app
 }

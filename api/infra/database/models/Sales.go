@@ -12,15 +12,20 @@ import (
 	"gorm.io/gorm"
 )
 
+// TODO: adicionar os novos campos da sale struct em todos os arquivos que usam a
+// 	     estrutura de dados mencionada
+
 // Essas structs provém as informações base contidas na entidade de vendas
 // porém com mais enfâse nas bibliotecas usadas.
 type Sale struct {
-	ID          string       `json:"id" gorm:"primaryKey"`
-	ClientID    string       `json:"client_id"`
-	ProductsIDs []string     `json:"products_ids"`
-	CreatedAt   time.Time    `json:"created_at"`
-	UpdatedAt   time.Time    `json:"updated_at"`
-	DeletedAt   sql.NullTime `json:"deleted_at" gorm:"index"`
+	ID            string          `json:"id" gorm:"primaryKey"`
+	ClientID      string          `json:"client_id"`
+	CommonGlssReq []CommonGlssReq `json:"common_glss_req"`
+	PartReq       []PartReq       `json:"part_req"`
+	TempGlssReq   []TempGlssReq   `json:"temp_glss_req"`
+	CreatedAt     time.Time       `json:"created_at"`
+	UpdatedAt     time.Time       `json:"updated_at"`
+	DeletedAt     sql.NullTime    `json:"deleted_at" gorm:"index"`
 }
 
 // Método para criar um uuid antes de salvar no banco de dados
@@ -38,9 +43,11 @@ func (m *Sale) BeforeCreate(scope *gorm.DB) error {
 // Método responsável por transformar um Model em uma entidades Sale
 func (m *Sale) TranformToEntity() *entities.Sale {
 	return &entities.Sale{
-		Id:          m.ID,
-		ClientId:    m.ClientID,
-		ProductsIds: m.ProductsIDs,
+		Id:            m.ID,
+		ClientId:      m.ClientID,
+		CommonGlssReq: m.TranformToEntity().CommonGlssReq,
+		PartsReq:      m.TranformToEntity().PartsReq,
+		TempGlssReq:   m.TranformToEntity().TempGlssReq,
 	}
 }
 
@@ -63,7 +70,9 @@ func (*Sale) TransformToSliceOfEntity(m []Sale) *[]entities.Sale {
 
 			sale[<-channel].Id = m[<-channel].ID
 			sale[<-channel].ClientId = m[<-channel].ClientID
-			sale[<-channel].ProductsIds = m[<-channel].ProductsIDs
+			sale[<-channel].CommonGlssReq = m[<-channel].TranformToEntity().CommonGlssReq
+			sale[<-channel].PartsReq = m[<-channel].TranformToEntity().PartsReq
+			sale[<-channel].TempGlssReq = m[<-channel].TranformToEntity().TempGlssReq
 
 			channel <- <-channel + 1
 
@@ -77,7 +86,9 @@ func (*Sale) TransformToSliceOfEntity(m []Sale) *[]entities.Sale {
 			go func() {
 				sale[<-channel+1].Id = m[<-channel+1].ID
 				sale[<-channel+1].ClientId = m[<-channel+1].ClientID
-				sale[<-channel+1].ProductsIds = m[<-channel+1].ProductsIDs
+				sale[<-channel+1].CommonGlssReq = m[<-channel+1].TranformToEntity().CommonGlssReq
+				sale[<-channel+1].PartsReq = m[<-channel+1].TranformToEntity().PartsReq
+				sale[<-channel+1].TempGlssReq = m[<-channel+1].TranformToEntity().TempGlssReq
 
 				channel <- <-channel + 1
 
@@ -96,10 +107,52 @@ func (*Sale) TransformToSliceOfEntity(m []Sale) *[]entities.Sale {
 
 // Método responsável por transformar a entidade Sale em model
 func (m *Sale) TransformToModel(e entities.Sale) *Sale {
+
+	comnGlss := make([]CommonGlssReq, len(e.CommonGlssReq))
+	parts := make([]PartReq, len(e.PartsReq))
+	tempGlss := make([]TempGlssReq, len(e.TempGlssReq))
+
+	if len(e.CommonGlssReq) > 0 {
+		for i, v := range e.CommonGlssReq {
+			comnGlss[i].ID = v.Id
+			comnGlss[i].ProductId = v.ProductId
+			comnGlss[i].ProductName = v.ProductName
+			comnGlss[i].ProductPrice = v.ProductPrice
+			comnGlss[i].ProdtQtyReq = v.ProdtQtyReq
+			comnGlss[i].RequestWidth = v.RequestWidth
+			comnGlss[i].RequestHeight = v.RequestHeight
+			comnGlss[i].SaleID = v.SaleId
+		}
+	}
+
+	if len(e.PartsReq) > 0 {
+		for i, v := range e.PartsReq {
+			parts[i].ID = v.Id
+			parts[i].ProductId = v.ProductId
+			parts[i].ProductName = v.ProductName
+			parts[i].ProductPrice = v.ProductPrice
+			parts[i].ProdtQtyReq = v.ProdtQtyReq
+			parts[i].SaleID = v.SaleId
+		}
+	}
+
+	if len(e.TempGlssReq) > 0 {
+		for i, v := range e.TempGlssReq {
+			tempGlss[i].ID = v.Id
+			tempGlss[i].ProductId = v.ProductId
+			tempGlss[i].ProductName = v.ProductName
+			tempGlss[i].ProductPrice = v.ProductPrice
+			tempGlss[i].ProdtQtyReq = v.ProdtQtyReq
+			tempGlss[i].SaleID = v.SaleId
+		}
+	}
+
 	return &Sale{
 		e.Id,
 		e.ClientId,
-		e.ProductsIds,
+		comnGlss,
+		parts,
+		tempGlss,
 		time.Time{},
 		time.Time{},
 		sql.NullTime{},
@@ -124,9 +177,15 @@ func (*Sale) TransformToSliceOfModel(e []entities.Sale) *[]Sale {
 
 		go func() {
 
-			m[<-channel].ID = e[<-channel].Id
-			m[<-channel].ClientID = e[<-channel].ClientId
-			m[<-channel].ProductsIDs = e[<-channel].ProductsIds
+			m[<-channel].TransformToModel(e[<-channel])
+
+			/*
+				m[<-channel].ID = e[<-channel].Id
+				m[<-channel].ClientID = e[<-channel].ClientId
+				m[<-channel].CommonGlssReq = e[<-channel].CommonGlssReq
+				m[<-channel].PartReq = e[<-channel].PartsReq
+				m[<-channel].TempGlssReq = e[<-channel].TempGlssReq
+			*/
 
 			channel <- <-channel + 1
 
@@ -138,9 +197,16 @@ func (*Sale) TransformToSliceOfModel(e []entities.Sale) *[]Sale {
 			wg.Add(1)
 
 			go func() {
-				m[<-channel+1].ID = e[<-channel+1].Id
-				m[<-channel+1].ClientID = e[<-channel+1].ClientId
-				m[<-channel+1].ProductsIDs = e[<-channel+1].ProductsIds
+
+				m[<-channel+1].TransformToModel(e[<-channel+1])
+
+				/*
+					m[<-channel+1].ID = e[<-channel+1].Id
+					m[<-channel+1].ClientID = e[<-channel+1].ClientId
+					m[<-channel+1].CommonGlssReq = e[<-channel+1].CommonGlssReq
+					m[<-channel+1].PartReq = e[<-channel+1].PartsReq
+					m[<-channel+1].TempGlssReq = e[<-channel+1].TempGlssReq
+				*/
 
 				channel <- <-channel + 1
 

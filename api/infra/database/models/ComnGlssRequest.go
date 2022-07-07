@@ -41,7 +41,7 @@ func (m *CommonGlssReq) TranformToEntity() *entities.CommonGlssReq {
 			ProductName:  m.ProductName,
 			ProductPrice: m.ProductPrice,
 			ProdtQtyReq:  m.ProdtQtyReq,
-			SaleId:       m.SaleId,
+			SaleId:       m.SaleID,
 		},
 		RequestWidth:  m.RequestWidth,
 		RequestHeight: m.RequestHeight,
@@ -70,7 +70,7 @@ func (*CommonGlssReq) TransformToSliceOfEntity(m []CommonGlssReq) *[]entities.Co
 			comnGlss[<-channel].ProductName = m[<-channel].ProductName
 			comnGlss[<-channel].ProductPrice = m[<-channel].ProductPrice
 			comnGlss[<-channel].ProdtQtyReq = m[<-channel].ProdtQtyReq
-			comnGlss[<-channel].SaleId = m[<-channel].SaleId
+			comnGlss[<-channel].SaleId = m[<-channel].SaleID
 			comnGlss[<-channel].RequestWidth = m[<-channel].RequestWidth
 			comnGlss[<-channel].RequestHeight = m[<-channel].RequestHeight
 
@@ -89,7 +89,7 @@ func (*CommonGlssReq) TransformToSliceOfEntity(m []CommonGlssReq) *[]entities.Co
 				comnGlss[<-channel+1].ProductName = m[<-channel+1].ProductName
 				comnGlss[<-channel+1].ProductPrice = m[<-channel+1].ProductPrice
 				comnGlss[<-channel+1].ProdtQtyReq = m[<-channel+1].ProdtQtyReq
-				comnGlss[<-channel+1].SaleId = m[<-channel+1].SaleId
+				comnGlss[<-channel+1].SaleId = m[<-channel+1].SaleID
 				comnGlss[<-channel+1].RequestWidth = m[<-channel+1].RequestWidth
 				comnGlss[<-channel+1].RequestHeight = m[<-channel+1].RequestHeight
 
@@ -149,7 +149,7 @@ func (*CommonGlssReq) TransformToSliceOfModel(e []entities.CommonGlssReq) *[]Com
 			m[<-channel].ProductName = e[<-channel].ProductName
 			m[<-channel].ProductPrice = e[<-channel].ProductPrice
 			m[<-channel].ProdtQtyReq = e[<-channel].ProdtQtyReq
-			m[<-channel].SaleId = e[<-channel].SaleId
+			m[<-channel].SaleID = e[<-channel].SaleId
 			m[<-channel].RequestWidth = e[<-channel].RequestWidth
 			m[<-channel].RequestHeight = e[<-channel].RequestHeight
 
@@ -168,7 +168,7 @@ func (*CommonGlssReq) TransformToSliceOfModel(e []entities.CommonGlssReq) *[]Com
 				m[<-channel+1].ProductName = e[<-channel+1].ProductName
 				m[<-channel+1].ProductPrice = e[<-channel+1].ProductPrice
 				m[<-channel+1].ProdtQtyReq = e[<-channel+1].ProdtQtyReq
-				m[<-channel+1].SaleId = e[<-channel+1].SaleId
+				m[<-channel+1].SaleID = e[<-channel+1].SaleId
 				m[<-channel+1].RequestWidth = e[<-channel+1].RequestWidth
 				m[<-channel+1].RequestHeight = e[<-channel+1].RequestHeight
 

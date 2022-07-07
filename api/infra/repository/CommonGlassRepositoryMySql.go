@@ -59,24 +59,24 @@ func (t *CommonGlassRepositoryMySql) Init() (*CommonGlassRepositoryMySql, error)
 
 // Método que pega a área de um vidro comum no banco de dados de acordo com o id passado
 // no parâmetro e o retorna
-func (c *CommonGlassRepositoryMySql) GetArea(id string) (area map[string]float32, err error) {
+func (c *CommonGlassRepositoryMySql) GetArea(id string) (map[string]float32, error) {
 
 	if id == "" {
-		err = errors.New("no id error")
-		return
+		// err = errors.New("no id error")
+		return nil, errors.New("no id error")
 	}
 
 	areaQuery := new(ComnGlssArea)
 
-	err = c.GormDb.Model(&entities.CommonGlass{}).First(areaQuery, "id = ?", id).Error
+	err := c.GormDb.Model(&entities.CommonGlass{}).First(areaQuery, "id = ?", id).Error
 	if err != nil {
-		return
+		return nil, err
 	}
-
+	area := make(map[string]float32)
 	area["width"] = areaQuery.WidthAvailable
 	area["height"] = areaQuery.HeightAvailable
 
-	return
+	return area, nil
 }
 
 // CRUD Section //

@@ -39,7 +39,7 @@ func (m *TempGlssReq) TranformToEntity() *entities.TempGlssReq {
 			ProductName:  m.ProductName,
 			ProductPrice: m.ProductPrice,
 			ProdtQtyReq:  m.ProdtQtyReq,
-			SaleId:       m.SaleId,
+			SaleId:       m.SaleID,
 		},
 	}
 }
@@ -66,7 +66,7 @@ func (*TempGlssReq) TransformToSliceOfEntity(m []TempGlssReq) *[]entities.TempGl
 			tempGlss[<-channel].ProductName = m[<-channel].ProductName
 			tempGlss[<-channel].ProductPrice = m[<-channel].ProductPrice
 			tempGlss[<-channel].ProdtQtyReq = m[<-channel].ProdtQtyReq
-			tempGlss[<-channel].SaleId = m[<-channel].SaleId
+			tempGlss[<-channel].SaleId = m[<-channel].SaleID
 
 			channel <- <-channel + 1
 
@@ -83,7 +83,7 @@ func (*TempGlssReq) TransformToSliceOfEntity(m []TempGlssReq) *[]entities.TempGl
 				tempGlss[<-channel+1].ProductName = m[<-channel+1].ProductName
 				tempGlss[<-channel+1].ProductPrice = m[<-channel+1].ProductPrice
 				tempGlss[<-channel+1].ProdtQtyReq = m[<-channel+1].ProdtQtyReq
-				tempGlss[<-channel+1].SaleId = m[<-channel+1].SaleId
+				tempGlss[<-channel+1].SaleId = m[<-channel+1].SaleID
 
 				channel <- <-channel + 1
 
@@ -140,7 +140,7 @@ func (*TempGlssReq) TransformToSliceOfModel(e []entities.TempGlssReq) *[]TempGls
 			m[<-channel].ProductName = e[<-channel].ProductName
 			m[<-channel].ProductPrice = e[<-channel].ProductPrice
 			m[<-channel].ProdtQtyReq = e[<-channel].ProdtQtyReq
-			m[<-channel].SaleId = e[<-channel].SaleId
+			m[<-channel].SaleID = e[<-channel].SaleId
 
 			channel <- <-channel + 1
 
@@ -157,7 +157,7 @@ func (*TempGlssReq) TransformToSliceOfModel(e []entities.TempGlssReq) *[]TempGls
 				m[<-channel+1].ProductName = e[<-channel+1].ProductName
 				m[<-channel+1].ProductPrice = e[<-channel+1].ProductPrice
 				m[<-channel+1].ProdtQtyReq = e[<-channel+1].ProdtQtyReq
-				m[<-channel+1].SaleId = e[<-channel+1].SaleId
+				m[<-channel+1].SaleID = e[<-channel+1].SaleId
 
 				channel <- <-channel + 1
 

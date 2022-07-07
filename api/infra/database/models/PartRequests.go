@@ -41,7 +41,7 @@ func (m *PartReq) TranformToEntity() *entities.PartsReq {
 			ProductName:  m.ProductName,
 			ProductPrice: m.ProductPrice,
 			ProdtQtyReq:  m.ProdtQtyReq,
-			SaleId:       m.SaleId,
+			SaleId:       m.SaleID,
 		},
 	}
 }
@@ -68,7 +68,7 @@ func (*PartReq) TransformToSliceOfEntity(m []PartReq) *[]entities.PartsReq {
 			part[<-channel].ProductName = m[<-channel].ProductName
 			part[<-channel].ProductPrice = m[<-channel].ProductPrice
 			part[<-channel].ProdtQtyReq = m[<-channel].ProdtQtyReq
-			part[<-channel].SaleId = m[<-channel].SaleId
+			part[<-channel].SaleId = m[<-channel].SaleID
 
 			channel <- <-channel + 1
 
@@ -85,7 +85,7 @@ func (*PartReq) TransformToSliceOfEntity(m []PartReq) *[]entities.PartsReq {
 				part[<-channel+1].ProductName = m[<-channel+1].ProductName
 				part[<-channel+1].ProductPrice = m[<-channel+1].ProductPrice
 				part[<-channel+1].ProdtQtyReq = m[<-channel+1].ProdtQtyReq
-				part[<-channel+1].SaleId = m[<-channel+1].SaleId
+				part[<-channel+1].SaleId = m[<-channel+1].SaleID
 
 				channel <- <-channel + 1
 
@@ -141,7 +141,7 @@ func (*PartReq) TransformToSliceOfModel(e []entities.PartsReq) *[]PartReq {
 			m[<-channel].ProductName = e[<-channel].ProductName
 			m[<-channel].ProductPrice = e[<-channel].ProductPrice
 			m[<-channel].ProdtQtyReq = e[<-channel].ProdtQtyReq
-			m[<-channel].SaleId = e[<-channel].SaleId
+			m[<-channel].SaleID = e[<-channel].SaleId
 
 			channel <- <-channel + 1
 
@@ -158,7 +158,7 @@ func (*PartReq) TransformToSliceOfModel(e []entities.PartsReq) *[]PartReq {
 				m[<-channel+1].ProductName = e[<-channel+1].ProductName
 				m[<-channel+1].ProductPrice = e[<-channel+1].ProductPrice
 				m[<-channel+1].ProdtQtyReq = e[<-channel+1].ProdtQtyReq
-				m[<-channel+1].SaleId = e[<-channel+1].SaleId
+				m[<-channel+1].SaleID = e[<-channel+1].SaleId
 
 				channel <- <-channel + 1
 

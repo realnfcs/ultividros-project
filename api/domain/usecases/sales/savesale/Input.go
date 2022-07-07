@@ -20,7 +20,7 @@ type ProductsRequest struct {
 	ProductId    string  `json:"product_id"`
 	ProductName  string  `json:"product_name"`
 	ProductPrice float32 `json:"product_price"`
-	ProdtQtyReq  uint32  `json:"prodt_qty_req"`
+	ProdQtyReq   uint32  `json:"prod_qty_req"`
 	SaleId       string  `json:"sale_id"`
 }
 
@@ -43,20 +43,24 @@ type CommonGlssReq struct {
 
 // Método que converte um input na entidade Sale
 func (i *Input) ConvertToSale() *entities.Sale {
-	prods := make([]string, (len(i.Parts) + len(i.CommonGlss) + len(i.TempGlss)))
+
+	comnGlss := make([]entities.CommonGlssReq, len(i.CommonGlss))
+	parts := make([]entities.PartsReq, len(i.Parts))
+	tempGlss := make([]entities.TempGlssReq, len(i.TempGlss))
 
 	var wg sync.WaitGroup
-	channel := make(chan int)
 
 	wg.Add(1)
 
-	channel <- 0
-
 	go func() {
 		if len(i.Parts) != 0 {
-			for _, v := range i.Parts {
-				prods[<-channel] = v.ProductId
-				channel <- <-channel + 1
+			for index, v := range i.Parts {
+				parts[index].Id = v.Id
+				parts[index].ProductId = v.ProductId
+				parts[index].ProductName = v.ProductName
+				parts[index].ProductPrice = v.ProductPrice
+				parts[index].ProdtQtyReq = v.ProdQtyReq
+				parts[index].SaleId = v.SaleId
 			}
 		}
 		wg.Done()
@@ -65,33 +69,43 @@ func (i *Input) ConvertToSale() *entities.Sale {
 	wg.Add(1)
 	go func() {
 		if len(i.TempGlss) != 0 {
-			for _, v := range i.TempGlss {
-				prods[<-channel] = v.ProductId
-				channel <- <-channel + 1
+			for index, v := range i.TempGlss {
+				tempGlss[index].Id = v.Id
+				tempGlss[index].ProductId = v.ProductId
+				tempGlss[index].ProductName = v.ProductName
+				tempGlss[index].ProductPrice = v.ProductPrice
+				tempGlss[index].ProdtQtyReq = v.ProdQtyReq
+				tempGlss[index].SaleId = v.SaleId
 			}
 		}
 		wg.Done()
 	}()
 
 	if len(i.CommonGlss) != 0 {
-		for _, v := range i.CommonGlss {
-			prods[<-channel] = v.ProductId
-			channel <- <-channel + 1
+		for index, v := range i.CommonGlss {
+			comnGlss[index].Id = v.Id
+			comnGlss[index].ProductId = v.ProductId
+			comnGlss[index].ProductName = v.ProductName
+			comnGlss[index].ProductPrice = v.ProductPrice
+			comnGlss[index].ProdtQtyReq = v.ProdQtyReq
+			comnGlss[index].RequestWidth = v.RequestWidth
+			comnGlss[index].RequestHeight = v.RequestHeight
+			comnGlss[index].SaleId = v.SaleId
 		}
 	}
 
 	wg.Wait()
 
-	close(channel)
-
 	return &entities.Sale{
-		"",
-		i.ClientId,
-		prods,
+		Id:            "",
+		ClientId:      i.ClientId,
+		CommonGlssReq: comnGlss,
+		PartsReq:      parts,
+		TempGlssReq:   tempGlss,
 	}
 }
 
-// Método que converte os produtos do input na entidade ProductsRequest
+// Método que converte os produtos do input na entidade de vidros temperados (TempGlssReq)
 func (i *Input) ConvertTempGlssReqInputInEnt() *[]entities.TempGlssReq {
 
 	if len(i.TempGlss) == 0 {
@@ -116,7 +130,7 @@ func (i *Input) ConvertTempGlssReqInputInEnt() *[]entities.TempGlssReq {
 				prods[<-channel].ProductId = p.ProductId
 				prods[<-channel].ProductName = p.ProductName
 				prods[<-channel].ProductPrice = p.ProductPrice
-				prods[<-channel].ProdtQtyReq = p.ProdtQtyReq
+				prods[<-channel].ProdtQtyReq = p.ProdQtyReq
 				prods[<-channel].SaleId = p.SaleId
 
 				wg.Done()
@@ -136,14 +150,14 @@ func (i *Input) ConvertTempGlssReqInputInEnt() *[]entities.TempGlssReq {
 		prods[i].ProductId = v.ProductId
 		prods[i].ProductName = v.ProductName
 		prods[i].ProductPrice = v.ProductPrice
-		prods[i].ProdtQtyReq = v.ProdtQtyReq
+		prods[i].ProdtQtyReq = v.ProdQtyReq
 		prods[i].SaleId = v.SaleId
 	}
 
 	return &prods
 }
 
-// Método que converte os vidros comuns na entidade ComnGlssReq
+// Método que converte os vidros comuns na entidade de vidros comuns (ComnGlssReq)
 func (i *Input) ConvertComnGlssReqInputInEnt() *[]entities.CommonGlssReq {
 
 	if len(i.CommonGlss) == 0 {
@@ -168,7 +182,7 @@ func (i *Input) ConvertComnGlssReqInputInEnt() *[]entities.CommonGlssReq {
 				comnGlss[<-channel].ProductId = c.ProductId
 				comnGlss[<-channel].ProductName = c.ProductName
 				comnGlss[<-channel].ProductPrice = c.ProductPrice
-				comnGlss[<-channel].ProdtQtyReq = c.ProdtQtyReq
+				comnGlss[<-channel].ProdtQtyReq = c.ProdQtyReq
 				comnGlss[<-channel].RequestWidth = c.RequestWidth
 				comnGlss[<-channel].RequestHeight = c.RequestHeight
 				comnGlss[<-channel].SaleId = c.SaleId
@@ -191,7 +205,7 @@ func (i *Input) ConvertComnGlssReqInputInEnt() *[]entities.CommonGlssReq {
 		comnGlss[i].ProductId = v.ProductId
 		comnGlss[i].ProductName = v.ProductName
 		comnGlss[i].ProductPrice = v.ProductPrice
-		comnGlss[i].ProdtQtyReq = v.ProdtQtyReq
+		comnGlss[i].ProdtQtyReq = v.ProdQtyReq
 		comnGlss[i].RequestWidth = v.RequestWidth
 		comnGlss[i].RequestHeight = v.RequestHeight
 		comnGlss[i].SaleId = v.SaleId
@@ -200,7 +214,7 @@ func (i *Input) ConvertComnGlssReqInputInEnt() *[]entities.CommonGlssReq {
 	return &comnGlss
 }
 
-// Método que converte os produtos do input na entidade ProductsRequest
+// Método que converte os produtos do input na entidade de peças (PartsReq)
 func (i *Input) ConvertPartReqInputInEnt() *[]entities.PartsReq {
 
 	if len(i.Parts) == 0 {
@@ -225,7 +239,7 @@ func (i *Input) ConvertPartReqInputInEnt() *[]entities.PartsReq {
 				prods[<-channel].ProductId = p.ProductId
 				prods[<-channel].ProductName = p.ProductName
 				prods[<-channel].ProductPrice = p.ProductPrice
-				prods[<-channel].ProdtQtyReq = p.ProdtQtyReq
+				prods[<-channel].ProdtQtyReq = p.ProdQtyReq
 				prods[<-channel].SaleId = p.SaleId
 
 				wg.Done()
@@ -245,7 +259,7 @@ func (i *Input) ConvertPartReqInputInEnt() *[]entities.PartsReq {
 		prods[i].ProductId = v.ProductId
 		prods[i].ProductName = v.ProductName
 		prods[i].ProductPrice = v.ProductPrice
-		prods[i].ProdtQtyReq = v.ProdtQtyReq
+		prods[i].ProdtQtyReq = v.ProdQtyReq
 		prods[i].SaleId = v.SaleId
 	}
 

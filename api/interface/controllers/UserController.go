@@ -9,7 +9,7 @@ import (
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/users/saveuser"
 )
 
-// Stuct para iniciar a controller dos usuários necessitando
+// Struct para iniciar a controller dos usuários necessitando
 // de um repository para funcionar
 type UserController struct {
 	Repo repository.UserRepository

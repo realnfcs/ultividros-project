@@ -32,8 +32,13 @@ func Fiber() *fiber.App {
 		panic("Cannot inicialize the database")
 	}
 
+	saleRepo, err := new(repository.SaleRepositoryMySql).Init()
+	if err != nil {
+		panic("Cannot inicialize the database")
+	}
+
 	// controllers := controllers.TemperedGlassController{Repo: repo}
-	controllers := new(controllers.Controllers).Init(tempGlassRepo, comnGlassRepo, partRepo, userRepo)
+	controllers := new(controllers.Controllers).Init(tempGlassRepo, comnGlassRepo, partRepo, userRepo, saleRepo)
 	Routes(app, controllers, new(fiber.Ctx))
 
 	return app

@@ -23,7 +23,7 @@ type tempGlssId struct {
 }
 
 type tempGlssQty struct {
-	Qty uint32
+	Quantity uint32
 }
 
 // Método para iniciar o ORM de acordo com a conexão já estabelecida com
@@ -65,7 +65,7 @@ func (t *TemperedGlassRepositoryMySql) GetTempGlssQty(id string) (uint32, error)
 		return 0, err
 	}
 
-	return qty.Qty, nil
+	return qty.Quantity, nil
 }
 
 // Método para auxiliar nos tests / Método para pegar um id aleatório no repositório (DEMO)

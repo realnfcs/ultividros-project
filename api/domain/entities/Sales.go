@@ -1,18 +1,22 @@
 package entities
 
 // Essa struct provém as informações contidas na entidade das vendas
-// Obs.: o campo ProductsId guarda os IDs das requisições de produtos
-// feitos pelos cliente, provendo melhores querys.
-// Ex.: ProductsId["ID1", "ID2", "ID3", ...]
-// 		Cada ID aponta para uma tabela com uma requisição de produto criada
-//		pelo clinte quando esse os requisita, desta forma:
-//		  "ID1" --> ProductsRequest { "ID1", "ProductID1", "Produto A exemplo", ... }
-//		  "ID2" --> ProductsRequest { "ID2", "ProductID2", "Produto B exemplo", ... }
-// 		E cada ProductID aponta para um vidro comum ou temperado ou para uma peça
+// Cada produto requisito pelo cliente será armazendo nesta struct
+// separado por categorias/entities que participam na venda, são eles:
+// 		- Vidros comuns (CommonGlssReq)
+//		- Vidros temperados (TempGlssReq)
+//	 	- Peças (PartsReq)
+// Cada produto seja qualquer um citado a cima corresponde a um produto
+// do repositório porém destinado para a(s) venda(s). Ou seja:
+//		- CommonGlssReq próvem as informações dos vidros comuns
+//		  requeridos na venda pelo cliente e assim funciona também para
+//  	  os outros.
 type Sale struct {
-	Id          string   `json:"id"`
-	ClientId    string   `json:"client_id"`
-	ProductsIds []string `json:"products_ids"`
+	Id            string          `json:"id"`
+	ClientId      string          `json:"client_id"`
+	CommonGlssReq []CommonGlssReq `json:"common_glss_req"`
+	PartsReq      []PartsReq      `json:"parts_req"`
+	TempGlssReq   []TempGlssReq   `json:"temp_glss"`
 }
 
 // Essa struct provém as informações dos produtos requisitados na venda,
