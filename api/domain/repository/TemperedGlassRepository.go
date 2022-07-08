@@ -7,6 +7,8 @@ import "github.com/realnfcs/ultividros-project/api/domain/entities"
 type TemperedGlassRepository interface {
 	GetTempGlssQty(string) (uint32, error)
 
+	ReduceQuantity(string, uint32) error
+
 	GetTemperedGlass(string) (*entities.TemperedGlass, int, error)
 	GetTemperedGlasses() (*[]entities.TemperedGlass, int, error)
 	SaveTemperedGlass(entities.TemperedGlass) (string, int, error)

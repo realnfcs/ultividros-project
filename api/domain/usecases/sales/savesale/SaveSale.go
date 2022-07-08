@@ -5,6 +5,7 @@ package savesale
 
 import (
 	"errors"
+	"sync"
 
 	"github.com/realnfcs/ultividros-project/api/domain/repository"
 )
@@ -24,151 +25,141 @@ func (s *SaveSale) Execute(i Input) *Output {
 	// requerida nos vidros comuns corresponde e se está disponível
 	// para a redução.
 
-	/*
-		var (
-			wg          sync.WaitGroup
-			outPart     *Output
-			outTempGlss *Output
-			outComnGlss *Output
-		)
+	var (
+		wg          sync.WaitGroup
+		outPart     *Output
+		outTempGlss *Output
+		outComnGlss *Output
+	)
 
-		fmt.Println(i)
+	wg.Add(1)
 
-		wg.Add(1)
+	go func() {
 
-		go func(output *Output) *Output {
-			if len(i.Parts) != 0 {
-				for _, v := range i.Parts {
-					qty, err := s.PartRepository.GetPartQuantity(v.Id)
-					if err != nil {
-						output := new(Output).Init("", 400, err)
-						return output
-					}
+		if len(i.Parts) > 0 {
 
-					if v.ProdQtyReq > qty {
-						output := new(Output).Init("", 400, errors.New("Part quantity request as big than quantity in stock"))
-						return output
-					}
+			for _, v := range i.Parts {
+				qty, err := s.PartRepository.GetPartQuantity(v.ProductId)
+
+				if err != nil {
+					outPart = new(Output).Init("", 400, err)
+					wg.Done()
+					return
+				}
+
+				if v.ProdQtyReq > qty {
+					outPart = new(Output).Init("", 400, errors.New("Part quantity request as big than quantity in stock"))
+					wg.Done()
+					return
+				}
+
+				err = s.PartRepository.ReduceQuantity(v.ProductId, v.ProdQtyReq)
+				if err != nil {
+					outPart = new(Output).Init("", 500, err)
+					wg.Done()
+					return
+				}
+			}
+		}
+
+		wg.Done()
+
+		return
+
+	}()
+
+	wg.Add(1)
+
+	go func() {
+
+		if len(i.TempGlss) > 0 {
+			for _, v := range i.TempGlss {
+				qty, err := s.TemperedGlssRepository.GetTempGlssQty(v.ProductId)
+				if err != nil {
+					outTempGlss = new(Output).Init("", 400, err)
+					wg.Done()
+					return
+				}
+
+				if v.ProdQtyReq > qty {
+					outTempGlss = new(Output).Init("", 400, errors.New("Tempered glass quantity request as big than quantity in stock"))
+					wg.Done()
+					return
+				}
+
+				err = s.TemperedGlssRepository.ReduceQuantity(v.ProductId, v.ProdQtyReq)
+				if err != nil {
+					outTempGlss = new(Output).Init("", 500, err)
+					wg.Done()
+					return
 				}
 			}
 
-			return nil
-		}(outPart)
+		}
 
-		wg.Add(1)
+		wg.Done()
 
-		go func(output *Output) *Output {
-			if len(i.TempGlss) != 0 {
-				for _, v := range i.TempGlss {
-					qty, err := s.TemperedGlssRepository.GetTempGlssQty(v.Id)
-					if err != nil {
-						return new(Output).Init("", 400, err)
-					}
+		return
 
-					if v.ProdQtyReq > qty {
-						return new(Output).Init("", 400, errors.New("Tempered glass quantity request as big than quantity in stock"))
-					}
+	}()
+
+	wg.Add(1)
+
+	go func() {
+		if len(i.CommonGlss) > 0 {
+
+			for _, v := range i.CommonGlss {
+
+				area, err := s.CommonGlssRepository.GetArea(v.ProductId)
+
+				if err != nil {
+					outComnGlss = new(Output).Init("", 400, err)
+					wg.Done()
+					return
+				}
+
+				if v.RequestWidth > area["width"] || v.RequestHeight > area["height"] {
+					outComnGlss = new(Output).Init("", 400, errors.New("Common glass width or height request as big than area in stock"))
+					wg.Done()
+					return
+				}
+
+				glassSheetsQtyReq := v.RequestWidth * v.RequestHeight
+				glassSheetsTotalArea := area["width"] * area["height"]
+
+				if glassSheetsQtyReq*float32(v.ProdQtyReq) > glassSheetsTotalArea {
+					outComnGlss = new(Output).Init("", 400, errors.New("Total of quantity area in request in big than area in stock"))
+					wg.Done()
+					return
+				}
+
+				err = s.CommonGlssRepository.ReduceArea(v.ProductId, v.RequestWidth, v.RequestHeight)
+				if err != nil {
+					outComnGlss = new(Output).Init("", 500, err)
+					wg.Done()
+					return
 				}
 			}
-
-			return nil
-		}(outTempGlss)
-
-		wg.Add(1)
-
-		go func(output *Output) *Output {
-			if len(i.CommonGlss) != 0 {
-				for _, v := range i.CommonGlss {
-					area, err := s.CommonGlssRepository.GetArea(v.Id)
-					if err != nil {
-						return new(Output).Init("", 400, err)
-					}
-
-					if v.RequestWidth > area["width"] {
-						return new(Output).Init("", 400, errors.New("Common glass width request as big than width in stock"))
-					}
-
-					if v.RequestHeight > area["height"] {
-						return new(Output).Init("", 400, errors.New("Common glass height request as big than height in stock"))
-					}
-
-					glassSheetsQtyReq := v.RequestWidth * v.RequestHeight
-					glassSheetsTotalArea := area["width"] * area["height"]
-
-					if glassSheetsQtyReq*float32(v.ProdQtyReq) > glassSheetsTotalArea {
-						return new(Output).Init("", 400, errors.New("Total of quantity area in request in big than area in stock"))
-					}
-				}
-			}
-
-			return nil
-		}(outComnGlss)
-
-		wg.Wait()
-
-		if outPart != nil || outTempGlss != nil || outComnGlss != nil {
-			allErros := fmt.Sprintf("1. %v\n2. %v\n3. %v", outPart.Error, outTempGlss.Error, outComnGlss.Error)
-			return new(Output).Init("", 400, errors.New(allErros))
 		}
-	*/
 
-	if len(i.Parts) != 0 {
+		wg.Done()
+		return
+	}()
 
-		for _, v := range i.Parts {
-			qty, err := s.PartRepository.GetPartQuantity(v.ProductId)
+	wg.Wait()
 
-			if err != nil {
-				output := new(Output).Init("", 400, err)
-				return output
-			}
-
-			if v.ProdQtyReq > qty {
-				output := new(Output).Init("", 400, errors.New("Part quantity request as big than quantity in stock"))
-				return output
-			}
-		}
+	if outPart != nil {
+		return outPart
 	}
 
-	if len(i.TempGlss) != 0 {
-		for _, v := range i.TempGlss {
-			qty, err := s.TemperedGlssRepository.GetTempGlssQty(v.ProductId)
-			if err != nil {
-				return new(Output).Init("", 400, err)
-			}
-
-			if v.ProdQtyReq > qty {
-				return new(Output).Init("", 400, errors.New("Tempered glass quantity request as big than quantity in stock"))
-			}
-		}
+	if outComnGlss != nil {
+		return outComnGlss
 	}
 
-	if len(i.CommonGlss) != 0 {
-
-		for _, v := range i.CommonGlss {
-
-			area, err := s.CommonGlssRepository.GetArea(v.ProductId)
-
-			if err != nil {
-				return new(Output).Init("", 400, err)
-			}
-
-			if v.RequestWidth > area["width"] {
-				return new(Output).Init("", 400, errors.New("Common glass width request as big than width in stock"))
-			}
-
-			if v.RequestHeight > area["height"] {
-				return new(Output).Init("", 400, errors.New("Common glass height request as big than height in stock"))
-			}
-
-			glassSheetsQtyReq := v.RequestWidth * v.RequestHeight
-			glassSheetsTotalArea := area["width"] * area["height"]
-
-			if glassSheetsQtyReq*float32(v.ProdQtyReq) > glassSheetsTotalArea {
-				return new(Output).Init("", 400, errors.New("Total of quantity area in request in big than area in stock"))
-			}
-		}
+	if outTempGlss != nil {
+		return outTempGlss
 	}
 
-	id, status, err := s.SaleRepository.SaveSale(*i.ConvertToSale() /*, *i.ConvertPartReqInputInEnt(), *i.ConvertComnGlssReqInputInEnt(), *i.ConvertTempGlssReqInputInEnt()*/)
+	id, status, err := s.SaleRepository.SaveSale(*i.ConvertToSale())
 	return new(Output).Init(id, status, err)
 }

@@ -75,47 +75,13 @@ func (s *SaleRepositoryMySql) Init() (*SaleRepositoryMySql, error) {
 
 // Método que salva uma venda no banco de dados de acordo com os dados passados
 // no parâmetro
-func (s *SaleRepositoryMySql) SaveSale(saleEnt entities.Sale /*, partReq []entities.PartsReq, comnGlssReq []entities.CommonGlssReq, tempGlssReq []entities.TempGlssReq*/) (string, int, error) {
+func (s *SaleRepositoryMySql) SaveSale(saleEnt entities.Sale) (string, int, error) {
 
 	sale := new(models.Sale).TransformToModel(saleEnt)
 
 	if sale.ClientID == "" || (len(sale.CommonGlssReq) <= 0 && len(sale.PartReq) <= 0 && len(sale.TempGlssReq) <= 0) {
 		return sale.ID, 400, errors.New("Empty field error: some field no got a value")
 	}
-	/*
-		if len(partReq) > 0 {
-			for _, v := range partReq {
-				_, status, err := partReqRepo.SavePartReq(v)
-				if err != nil {
-					return sale.ID, status, err
-				}
-
-				// saleEnt.PartsReq[i] = partId
-			}
-		}
-
-		if len(comnGlssReq) > 0 {
-			for _, v := range comnGlssReq {
-				_, status, err := comnGlssReqRepo.SaveComnGlssReq(v)
-				if err != nil {
-					return sale.ID, status, err
-				}
-
-				// saleEnt.CommonGlssReqId[i] = comnGlssReqId
-			}
-		}
-
-		if len(tempGlssReq) > 0 {
-			for _, v := range tempGlssReq {
-				_, status, err := tempGlssReqRepo.SaveTempGlssReq(v)
-				if err != nil {
-					return sale.ID, status, err
-				}
-
-				// saleEnt.TempGlssReqId[i] = tempGlssReqId
-			}
-		}
-	*/
 
 	err := s.GormDb.Create(sale).Error
 	if err != nil {
