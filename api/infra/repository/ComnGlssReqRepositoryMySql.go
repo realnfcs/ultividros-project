@@ -23,9 +23,21 @@ func (p *ComnGlssReqRepository) Init(g *gorm.DB) *ComnGlssReqRepository {
 	return &ComnGlssReqRepository{GormDb: g}
 }
 
+// CRUD Section //
+
 // Método que pega todos os vidros comuns requeridos pelo cliente em
 // uma venda no banco de dados e as retorna
-// func (c *ComnGlssReqRepository) GetComnGlssReqs(string) (*[]entities.TempGlssReq, int, error)
+func (c *ComnGlssReqRepository) GetComnGlssReqs(saleId string) (*[]entities.CommonGlssReq, error) {
+
+	comnGlssReq := []models.CommonGlssReq{}
+
+	err := c.GormDb.Find(&comnGlssReq, "sale_id = ?", saleId).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return new(models.CommonGlssReq).TransformToSliceOfEntity(comnGlssReq), nil
+}
 
 // Método que salva vidros comuns requeridos nas vendas no banco de
 // dados de acordo com os dados passados no parâmetro

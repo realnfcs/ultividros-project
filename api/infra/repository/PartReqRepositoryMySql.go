@@ -14,6 +14,8 @@ type PartReqRepositoryMySql struct {
 	GormDb *gorm.DB
 }
 
+// Query Utils Section //
+
 // Struct que auxilia nas querys
 type partReqId struct {
 	ID string
@@ -23,9 +25,21 @@ func (p *PartReqRepositoryMySql) Init(g *gorm.DB) *PartReqRepositoryMySql {
 	return &PartReqRepositoryMySql{GormDb: g}
 }
 
+// CRUD Section //
+
 // Método que pega todas as peças requeridas pelo cliente em uma venda no
 // banco de dados e as retorna
-// func (p *PartReqRepositoryMySql) GetPartReq(string) (*[]entities.PartsReq, int, error)
+func (p *PartReqRepositoryMySql) GetPartReq(saleId string) (*[]entities.PartsReq, error) {
+
+	partReq := []models.PartReq{}
+
+	err := p.GormDb.Find(&partReq, "sale_id = ?", saleId).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return new(models.PartReq).TransformToSliceOfEntity(partReq), nil
+}
 
 // Método que salva peças requeridas nas vendas no banco de dados de acordo
 // com os dados passados no parâmetro

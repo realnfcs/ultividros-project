@@ -23,9 +23,21 @@ func (p *TempGlssReqRepositoryMySql) Init(g *gorm.DB) *TempGlssReqRepositoryMySq
 	return &TempGlssReqRepositoryMySql{GormDb: g}
 }
 
+// CRUD Section //
+
 // Método que pega todos os vidros temperados requeridos pelo cliente em
 // uma venda no banco de dados e as retorna
-// func (t *TempGlssReqRepositoryMySql) GetTempGlssReqs(string) (*[]entities.TempGlssReq, int, error)
+func (t *TempGlssReqRepositoryMySql) GetTempGlssReqs(saleId string) (*[]entities.TempGlssReq, error) {
+
+	tempGlssReq := []models.TempGlssReq{}
+
+	err := t.GormDb.Find(&tempGlssReq, "id = ?", saleId).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return new(models.TempGlssReq).TransformToSliceOfEntity(tempGlssReq), nil
+}
 
 // Método que salva vidros temperados requeridos nas vendas no banco de
 // dados de acordo com os dados passados no parâmetro
