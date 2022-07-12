@@ -71,7 +71,55 @@ func (s *SaleRepositoryMySql) Init() (*SaleRepositoryMySql, error) {
 }
 
 // Método que pega todas as vendas no banco de dados e as retorna
-// func (s *SaleRepositoryMySql) GetSales() (*[]entities.Sale, int, error)
+func (s *SaleRepositoryMySql) GetSales() (*[]entities.Sale, int, error) {
+
+	sales := []models.Sale{}
+	comnGlss := []models.CommonGlssReq{}
+	partReq := []models.PartReq{}
+	tempGlss := []models.TempGlssReq{}
+
+	err := s.GormDb.Find(&sales).Error
+	if err != nil {
+		return nil, 500, err
+	}
+
+	err = s.GormDb.Find(&comnGlss).Error
+	if err != nil {
+		return nil, 500, err
+	}
+
+	err = s.GormDb.Find(&partReq).Error
+	if err != nil {
+		return nil, 500, err
+	}
+
+	err = s.GormDb.Find(&tempGlss).Error
+	if err != nil {
+		return nil, 500, err
+	}
+
+	for i, v := range sales {
+		for _, value := range comnGlss {
+			if value.SaleID == v.ID {
+				sales[i].CommonGlssReq = append(sales[i].CommonGlssReq, value)
+			}
+		}
+
+		for _, value := range partReq {
+			if value.SaleID == v.ID {
+				sales[i].PartReq = append(sales[i].PartReq, value)
+			}
+		}
+
+		for _, value := range tempGlss {
+			if value.SaleID == v.ID {
+				sales[i].TempGlssReq = append(sales[i].TempGlssReq, value)
+			}
+		}
+	}
+
+	return new(models.Sale).TransformToSliceOfEntity(sales), 200, nil
+}
 
 // Método que salva uma venda no banco de dados de acordo com os dados passados
 // no parâmetro

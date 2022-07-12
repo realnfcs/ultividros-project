@@ -42,12 +42,47 @@ func (m *Sale) BeforeCreate(scope *gorm.DB) error {
 
 // Método responsável por transformar um Model em uma entidades Sale
 func (m *Sale) TranformToEntity() *entities.Sale {
+
+	comnGlss := make([]entities.CommonGlssReq, len(m.CommonGlssReq))
+	partReq := make([]entities.PartsReq, len(m.PartReq))
+	tempGlss := make([]entities.TempGlssReq, len(m.TempGlssReq))
+
+	for i, v := range m.CommonGlssReq {
+		comnGlss[i].Id = v.ID
+		comnGlss[i].ProductId = v.ProductId
+		comnGlss[i].ProductName = v.ProductName
+		comnGlss[i].ProductPrice = v.ProductPrice
+		comnGlss[i].ProdtQtyReq = v.ProdtQtyReq
+		comnGlss[i].ProdtQtyReq = v.ProdtQtyReq
+		comnGlss[i].RequestWidth = v.RequestWidth
+		comnGlss[i].RequestHeight = v.RequestHeight
+		comnGlss[i].SaleId = v.SaleID
+	}
+
+	for i, v := range m.PartReq {
+		partReq[i].Id = v.ID
+		partReq[i].ProductId = v.ProductId
+		partReq[i].ProductName = v.ProductName
+		partReq[i].ProductPrice = v.ProductPrice
+		partReq[i].ProdtQtyReq = v.ProdtQtyReq
+		partReq[i].SaleId = v.SaleID
+	}
+
+	for i, v := range m.TempGlssReq {
+		tempGlss[i].Id = v.ID
+		tempGlss[i].ProductId = v.ProductId
+		tempGlss[i].ProductName = v.ProductName
+		tempGlss[i].ProductPrice = v.ProductPrice
+		tempGlss[i].ProdtQtyReq = v.ProdtQtyReq
+		tempGlss[i].SaleId = v.SaleID
+	}
+
 	return &entities.Sale{
 		Id:            m.ID,
 		ClientId:      m.ClientID,
-		CommonGlssReq: m.TranformToEntity().CommonGlssReq,
-		PartsReq:      m.TranformToEntity().PartsReq,
-		TempGlssReq:   m.TranformToEntity().TempGlssReq,
+		CommonGlssReq: comnGlss,
+		PartsReq:      partReq,
+		TempGlssReq:   tempGlss,
 	}
 }
 
@@ -56,50 +91,9 @@ func (*Sale) TransformToSliceOfEntity(m []Sale) *[]entities.Sale {
 
 	sale := make([]entities.Sale, len(m))
 
-	var wg sync.WaitGroup
-
-	channel := make(chan int)
-
-	channel <- 0
-
-	for range m {
-
-		wg.Add(1)
-
-		go func() {
-
-			sale[<-channel].Id = m[<-channel].ID
-			sale[<-channel].ClientId = m[<-channel].ClientID
-			sale[<-channel].CommonGlssReq = m[<-channel].TranformToEntity().CommonGlssReq
-			sale[<-channel].PartsReq = m[<-channel].TranformToEntity().PartsReq
-			sale[<-channel].TempGlssReq = m[<-channel].TranformToEntity().TempGlssReq
-
-			channel <- <-channel + 1
-
-			wg.Done()
-		}()
-
-		if index := <-channel + 1; len(m)-1 > index {
-
-			wg.Add(1)
-
-			go func() {
-				sale[<-channel+1].Id = m[<-channel+1].ID
-				sale[<-channel+1].ClientId = m[<-channel+1].ClientID
-				sale[<-channel+1].CommonGlssReq = m[<-channel+1].TranformToEntity().CommonGlssReq
-				sale[<-channel+1].PartsReq = m[<-channel+1].TranformToEntity().PartsReq
-				sale[<-channel+1].TempGlssReq = m[<-channel+1].TranformToEntity().TempGlssReq
-
-				channel <- <-channel + 1
-
-				wg.Done()
-			}()
-		}
-
-		wg.Wait()
+	for i, v := range m {
+		sale[i] = *v.TranformToEntity()
 	}
-
-	close(channel)
 
 	return &sale
 

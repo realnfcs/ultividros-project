@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"github.com/realnfcs/ultividros-project/api/domain/repository"
+	"github.com/realnfcs/ultividros-project/api/domain/usecases/sales/getsales"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/sales/savesale"
 )
 
@@ -12,6 +13,14 @@ type SaleController struct {
 	CommonGlssRepository   repository.CommonGlassRepository
 	PartRepository         repository.PartRepository
 	TemperedGlssRepository repository.TemperedGlassRepository
+}
+
+// Método da controller que comunica com o usecase para a obtenção de dados e pela
+// resposta ao cliente
+func (s *SaleController) GetSales() *getsales.Output {
+	getSales := getsales.GetSales{SaleRepository: s.Repo}
+	output := getSales.Execute()
+	return output
 }
 
 // Método da controller que comunica com o usecase para salvar um objeto de venda
