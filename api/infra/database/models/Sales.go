@@ -12,9 +12,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// TODO: adicionar os novos campos da sale struct em todos os arquivos que usam a
-// 	     estrutura de dados mencionada
-
 // Essas structs provém as informações base contidas na entidade de vendas
 // porém com mais enfâse nas bibliotecas usadas.
 type Sale struct {
@@ -47,35 +44,57 @@ func (m *Sale) TranformToEntity() *entities.Sale {
 	partReq := make([]entities.PartsReq, len(m.PartReq))
 	tempGlss := make([]entities.TempGlssReq, len(m.TempGlssReq))
 
-	for i, v := range m.CommonGlssReq {
-		comnGlss[i].Id = v.ID
-		comnGlss[i].ProductId = v.ProductId
-		comnGlss[i].ProductName = v.ProductName
-		comnGlss[i].ProductPrice = v.ProductPrice
-		comnGlss[i].ProdtQtyReq = v.ProdtQtyReq
-		comnGlss[i].ProdtQtyReq = v.ProdtQtyReq
-		comnGlss[i].RequestWidth = v.RequestWidth
-		comnGlss[i].RequestHeight = v.RequestHeight
-		comnGlss[i].SaleId = v.SaleID
+	var wg sync.WaitGroup
+
+	if len(m.CommonGlssReq) > 0 {
+		wg.Add(1)
+		go func() {
+			for i, v := range m.CommonGlssReq {
+				comnGlss[i].Id = v.ID
+				comnGlss[i].ProductId = v.ProductId
+				comnGlss[i].ProductName = v.ProductName
+				comnGlss[i].ProductPrice = v.ProductPrice
+				comnGlss[i].ProdtQtyReq = v.ProdtQtyReq
+				comnGlss[i].ProdtQtyReq = v.ProdtQtyReq
+				comnGlss[i].RequestWidth = v.RequestWidth
+				comnGlss[i].RequestHeight = v.RequestHeight
+				comnGlss[i].SaleId = v.SaleID
+			}
+			wg.Done()
+		}()
 	}
 
-	for i, v := range m.PartReq {
-		partReq[i].Id = v.ID
-		partReq[i].ProductId = v.ProductId
-		partReq[i].ProductName = v.ProductName
-		partReq[i].ProductPrice = v.ProductPrice
-		partReq[i].ProdtQtyReq = v.ProdtQtyReq
-		partReq[i].SaleId = v.SaleID
+	if len(m.PartReq) > 0 {
+		wg.Add(1)
+		go func() {
+			for i, v := range m.PartReq {
+				partReq[i].Id = v.ID
+				partReq[i].ProductId = v.ProductId
+				partReq[i].ProductName = v.ProductName
+				partReq[i].ProductPrice = v.ProductPrice
+				partReq[i].ProdtQtyReq = v.ProdtQtyReq
+				partReq[i].SaleId = v.SaleID
+			}
+			wg.Done()
+		}()
 	}
 
-	for i, v := range m.TempGlssReq {
-		tempGlss[i].Id = v.ID
-		tempGlss[i].ProductId = v.ProductId
-		tempGlss[i].ProductName = v.ProductName
-		tempGlss[i].ProductPrice = v.ProductPrice
-		tempGlss[i].ProdtQtyReq = v.ProdtQtyReq
-		tempGlss[i].SaleId = v.SaleID
+	if len(m.TempGlssReq) > 0 {
+		wg.Add(1)
+		go func() {
+			for i, v := range m.TempGlssReq {
+				tempGlss[i].Id = v.ID
+				tempGlss[i].ProductId = v.ProductId
+				tempGlss[i].ProductName = v.ProductName
+				tempGlss[i].ProductPrice = v.ProductPrice
+				tempGlss[i].ProdtQtyReq = v.ProdtQtyReq
+				tempGlss[i].SaleId = v.SaleID
+			}
+			wg.Done()
+		}()
 	}
+
+	wg.Wait()
 
 	return &entities.Sale{
 		Id:            m.ID,
@@ -173,14 +192,6 @@ func (*Sale) TransformToSliceOfModel(e []entities.Sale) *[]Sale {
 
 			m[<-channel].TransformToModel(e[<-channel])
 
-			/*
-				m[<-channel].ID = e[<-channel].Id
-				m[<-channel].ClientID = e[<-channel].ClientId
-				m[<-channel].CommonGlssReq = e[<-channel].CommonGlssReq
-				m[<-channel].PartReq = e[<-channel].PartsReq
-				m[<-channel].TempGlssReq = e[<-channel].TempGlssReq
-			*/
-
 			channel <- <-channel + 1
 
 			wg.Done()
@@ -193,14 +204,6 @@ func (*Sale) TransformToSliceOfModel(e []entities.Sale) *[]Sale {
 			go func() {
 
 				m[<-channel+1].TransformToModel(e[<-channel+1])
-
-				/*
-					m[<-channel+1].ID = e[<-channel+1].Id
-					m[<-channel+1].ClientID = e[<-channel+1].ClientId
-					m[<-channel+1].CommonGlssReq = e[<-channel+1].CommonGlssReq
-					m[<-channel+1].PartReq = e[<-channel+1].PartsReq
-					m[<-channel+1].TempGlssReq = e[<-channel+1].TempGlssReq
-				*/
 
 				channel <- <-channel + 1
 

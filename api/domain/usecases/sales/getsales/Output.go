@@ -1,7 +1,7 @@
 package getsales
 
 import (
-	"fmt"
+	"sync"
 
 	"github.com/realnfcs/ultividros-project/api/domain/entities"
 )
@@ -50,6 +50,8 @@ func (*Output) Init(i *[]entities.Sale, status int, err error) *Output {
 
 	output := make([]OutputData, len(*i))
 
+	var wg sync.WaitGroup
+
 	if i == nil {
 		return &Output{output, status, err.Error()}
 	}
@@ -64,51 +66,72 @@ func (*Output) Init(i *[]entities.Sale, status int, err error) *Output {
 
 		comnGlss := make([]CommonGlssReq, len(v.CommonGlssReq))
 
-		for index, value := range v.CommonGlssReq {
-			if value.SaleId == v.Id {
-				comnGlss[index].Id = value.Id
-				comnGlss[index].ProductId = value.ProductId
-				comnGlss[index].ProductName = value.ProductName
-				comnGlss[index].ProductPrice = value.ProductPrice
-				comnGlss[index].ProdtQtyReq = value.ProdtQtyReq
-				comnGlss[index].RequestWidth = value.RequestWidth
-				comnGlss[index].RequestHeight = value.RequestHeight
-				comnGlss[index].SaleId = value.SaleId
-			}
+		if len(v.CommonGlssReq) > 0 {
+			wg.Add(1)
+
+			go func() {
+				for index, value := range v.CommonGlssReq {
+					if value.SaleId == v.Id {
+						comnGlss[index].Id = value.Id
+						comnGlss[index].ProductId = value.ProductId
+						comnGlss[index].ProductName = value.ProductName
+						comnGlss[index].ProductPrice = value.ProductPrice
+						comnGlss[index].ProdtQtyReq = value.ProdtQtyReq
+						comnGlss[index].RequestWidth = value.RequestWidth
+						comnGlss[index].RequestHeight = value.RequestHeight
+						comnGlss[index].SaleId = value.SaleId
+					}
+				}
+				wg.Done()
+			}()
 		}
 
 		partsReq := make([]PartsReq, len(v.PartsReq))
 
-		for index, value := range v.PartsReq {
-			if value.SaleId == v.Id {
-				partsReq[index].Id = value.Id
-				partsReq[index].ProductId = value.ProductId
-				partsReq[index].ProductName = value.ProductName
-				partsReq[index].ProductPrice = value.ProductPrice
-				partsReq[index].ProdtQtyReq = value.ProdtQtyReq
-				partsReq[index].SaleId = value.SaleId
-			}
+		if len(v.PartsReq) > 0 {
+			wg.Add(1)
+
+			go func() {
+				for index, value := range v.PartsReq {
+					if value.SaleId == v.Id {
+						partsReq[index].Id = value.Id
+						partsReq[index].ProductId = value.ProductId
+						partsReq[index].ProductName = value.ProductName
+						partsReq[index].ProductPrice = value.ProductPrice
+						partsReq[index].ProdtQtyReq = value.ProdtQtyReq
+						partsReq[index].SaleId = value.SaleId
+					}
+				}
+				wg.Done()
+			}()
 		}
 
 		tempGlss := make([]TempGlssReq, len(v.TempGlssReq))
 
-		for index, value := range v.TempGlssReq {
-			if value.SaleId == v.Id {
-				tempGlss[index].Id = value.Id
-				tempGlss[index].ProductId = value.ProductId
-				tempGlss[index].ProductName = value.ProductName
-				tempGlss[index].ProductPrice = value.ProductPrice
-				tempGlss[index].ProdtQtyReq = value.ProdtQtyReq
-				tempGlss[index].SaleId = value.SaleId
-			}
+		if len(v.TempGlssReq) > 0 {
+			wg.Add(1)
+
+			go func() {
+				for index, value := range v.TempGlssReq {
+					if value.SaleId == v.Id {
+						tempGlss[index].Id = value.Id
+						tempGlss[index].ProductId = value.ProductId
+						tempGlss[index].ProductName = value.ProductName
+						tempGlss[index].ProductPrice = value.ProductPrice
+						tempGlss[index].ProdtQtyReq = value.ProdtQtyReq
+						tempGlss[index].SaleId = value.SaleId
+					}
+				}
+				wg.Done()
+			}()
 		}
+
+		wg.Wait()
 
 		output[i].CommonGlssReq = comnGlss
 		output[i].PartsReq = partsReq
 		output[i].TempGlssReq = tempGlss
 	}
-
-	fmt.Println(output)
 
 	return &Output{output, status, ""}
 }
