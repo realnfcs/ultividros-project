@@ -53,6 +53,7 @@ func Routes(app *fiber.App, c *controllers.Controllers, ctx *fiber.Ctx) *fiber.A
 	saleControll := c.SaleController
 
 	SaleRouter := app.Group("/sales")
+	SaleRouter.Get("/id=:id", adapters.GetSale(saleControll.GetSale, ctx))
 	SaleRouter.Get("/", adapters.GetSales(saleControll.GetSales, ctx))
 	SaleRouter.Post("/", adapters.SaveSale(saleControll.SaveSale, ctx))
 

@@ -11,6 +11,7 @@ import (
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/parts/getparts"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/parts/patchpart"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/parts/savepart"
+	"github.com/realnfcs/ultividros-project/api/domain/usecases/sales/getsale"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/sales/getsales"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/sales/savesale"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/deletetemperedglass"
@@ -259,6 +260,16 @@ func DeleteUser[T contracts.FiberAdapterContract[T]](req func(deleteuser.Input) 
 }
 
 // Sale Section //
+
+func GetSale[T contracts.FiberAdapterContract[T]](req func(getsale.Input) *getsale.Output, ctx T) func(T) error {
+	return func(c T) error {
+		p := c.Params("id")
+		input := getsale.Input{ID: p}
+
+		output := req(input)
+		return c.Status(output.Status).JSON(output)
+	}
+}
 
 // Adaptador do fiber responsável por trazer ao cliente todos os dados das
 // vendas no repositório

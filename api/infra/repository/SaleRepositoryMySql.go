@@ -70,6 +70,44 @@ func (s *SaleRepositoryMySql) Init() (*SaleRepositoryMySql, error) {
 	return s, nil
 }
 
+// CRUD Section //
+
+// Método que pega uma venda e seus produtos requeridos no banco de dados de
+// acordo com o id passado no parâmetro e o retorna
+func (s *SaleRepositoryMySql) GetSale(id string) (*entities.Sale, int, error) {
+
+	sale := new(models.Sale)
+	comnGlssReq := []models.CommonGlssReq{}
+	partReq := []models.PartReq{}
+	tempGlssReq := []models.TempGlssReq{}
+
+	err := s.GormDb.First(sale, "id = ?", id).Error
+	if err != nil {
+		return nil, 404, err
+	}
+
+	err = s.GormDb.Find(&comnGlssReq, "sale_id = ?", id).Error
+	if err != nil {
+		return nil, 404, err
+	}
+
+	err = s.GormDb.Find(&partReq, "sale_id = ?", id).Error
+	if err != nil {
+		return nil, 404, err
+	}
+
+	err = s.GormDb.Find(&tempGlssReq, "sale_id = ?", id).Error
+	if err != nil {
+		return nil, 404, err
+	}
+
+	sale.CommonGlssReq = comnGlssReq
+	sale.PartReq = partReq
+	sale.TempGlssReq = tempGlssReq
+
+	return sale.TranformToEntity(), 200, nil
+}
+
 // Método que pega todas as vendas no banco de dados e as retorna
 func (s *SaleRepositoryMySql) GetSales() (*[]entities.Sale, int, error) {
 
