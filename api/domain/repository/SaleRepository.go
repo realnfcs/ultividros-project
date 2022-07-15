@@ -8,5 +8,8 @@ type SaleRepository interface {
 	GetSale(string) (*entities.Sale, int, error)
 	GetSales() (*[]entities.Sale, int, error)
 	SaveSale(entities.Sale) (string, int, error)
+<<<<<<< HEAD
 	PatchSale(entities.Sale) (string, int, error)
+=======
+>>>>>>> refs/remotes/origin/sales-and-requests-alpha
 }
