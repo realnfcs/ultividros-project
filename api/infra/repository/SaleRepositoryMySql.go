@@ -176,3 +176,7 @@ func (s *SaleRepositoryMySql) SaveSale(saleEnt entities.Sale) (string, int, erro
 
 	return sale.ID, 201, nil
 }
+
+// Método que atualiza os campos de uma venda e seus produtos de acordo com os dados
+// passados no parâmetro
+func (s *SaleRepositoryMySql) PatchSale(e entities.Sale) (string, int, error)
