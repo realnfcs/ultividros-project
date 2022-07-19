@@ -21,6 +21,8 @@ type ProductsRequest struct {
 	ProductName  string  `json:"product_name"`
 	ProductPrice float32 `json:"product_price"`
 	ProdQtyReq   uint32  `json:"prod_qty_req"`
+	WasCancelled bool    `json:"was_cancelled"`
+	WasConfirmed bool    `json:"was_confimed"`
 	SaleId       string  `json:"sale_id"`
 }
 
@@ -60,6 +62,8 @@ func (i *Input) ConvertToSale() *entities.Sale {
 				parts[index].ProductName = v.ProductName
 				parts[index].ProductPrice = v.ProductPrice
 				parts[index].ProdtQtyReq = v.ProdQtyReq
+				parts[index].WasCancelled = v.WasCancelled
+				parts[index].WasConfirmed = v.WasConfirmed
 				parts[index].SaleId = v.SaleId
 			}
 		}
@@ -75,6 +79,8 @@ func (i *Input) ConvertToSale() *entities.Sale {
 				tempGlss[index].ProductName = v.ProductName
 				tempGlss[index].ProductPrice = v.ProductPrice
 				tempGlss[index].ProdtQtyReq = v.ProdQtyReq
+				tempGlss[index].WasCancelled = v.WasCancelled
+				tempGlss[index].WasConfirmed = v.WasConfirmed
 				tempGlss[index].SaleId = v.SaleId
 			}
 		}
@@ -88,6 +94,8 @@ func (i *Input) ConvertToSale() *entities.Sale {
 			comnGlss[index].ProductName = v.ProductName
 			comnGlss[index].ProductPrice = v.ProductPrice
 			comnGlss[index].ProdtQtyReq = v.ProdQtyReq
+			comnGlss[index].WasCancelled = v.WasCancelled
+			comnGlss[index].WasConfirmed = v.WasConfirmed
 			comnGlss[index].RequestWidth = v.RequestWidth
 			comnGlss[index].RequestHeight = v.RequestHeight
 			comnGlss[index].SaleId = v.SaleId
@@ -131,6 +139,8 @@ func (i *Input) ConvertTempGlssReqInputInEnt() *[]entities.TempGlssReq {
 				prods[<-channel].ProductName = p.ProductName
 				prods[<-channel].ProductPrice = p.ProductPrice
 				prods[<-channel].ProdtQtyReq = p.ProdQtyReq
+				prods[<-channel].WasCancelled = p.WasCancelled
+				prods[<-channel].WasConfirmed = p.WasConfirmed
 				prods[<-channel].SaleId = p.SaleId
 
 				wg.Done()
@@ -151,6 +161,8 @@ func (i *Input) ConvertTempGlssReqInputInEnt() *[]entities.TempGlssReq {
 		prods[i].ProductName = v.ProductName
 		prods[i].ProductPrice = v.ProductPrice
 		prods[i].ProdtQtyReq = v.ProdQtyReq
+		prods[i].WasCancelled = v.WasCancelled
+		prods[i].WasConfirmed = v.WasConfirmed
 		prods[i].SaleId = v.SaleId
 	}
 
@@ -183,6 +195,8 @@ func (i *Input) ConvertComnGlssReqInputInEnt() *[]entities.CommonGlssReq {
 				comnGlss[<-channel].ProductName = c.ProductName
 				comnGlss[<-channel].ProductPrice = c.ProductPrice
 				comnGlss[<-channel].ProdtQtyReq = c.ProdQtyReq
+				comnGlss[<-channel].WasCancelled = c.WasCancelled
+				comnGlss[<-channel].WasConfirmed = c.WasConfirmed
 				comnGlss[<-channel].RequestWidth = c.RequestWidth
 				comnGlss[<-channel].RequestHeight = c.RequestHeight
 				comnGlss[<-channel].SaleId = c.SaleId
@@ -206,6 +220,8 @@ func (i *Input) ConvertComnGlssReqInputInEnt() *[]entities.CommonGlssReq {
 		comnGlss[i].ProductName = v.ProductName
 		comnGlss[i].ProductPrice = v.ProductPrice
 		comnGlss[i].ProdtQtyReq = v.ProdQtyReq
+		comnGlss[i].WasCancelled = v.WasCancelled
+		comnGlss[i].WasConfirmed = v.WasConfirmed
 		comnGlss[i].RequestWidth = v.RequestWidth
 		comnGlss[i].RequestHeight = v.RequestHeight
 		comnGlss[i].SaleId = v.SaleId
@@ -240,6 +256,8 @@ func (i *Input) ConvertPartReqInputInEnt() *[]entities.PartsReq {
 				prods[<-channel].ProductName = p.ProductName
 				prods[<-channel].ProductPrice = p.ProductPrice
 				prods[<-channel].ProdtQtyReq = p.ProdQtyReq
+				prods[<-channel].WasCancelled = p.WasCancelled
+				prods[<-channel].WasConfirmed = p.WasConfirmed
 				prods[<-channel].SaleId = p.SaleId
 
 				wg.Done()
@@ -260,6 +278,8 @@ func (i *Input) ConvertPartReqInputInEnt() *[]entities.PartsReq {
 		prods[i].ProductName = v.ProductName
 		prods[i].ProductPrice = v.ProductPrice
 		prods[i].ProdtQtyReq = v.ProdQtyReq
+		prods[i].WasCancelled = v.WasCancelled
+		prods[i].WasConfirmed = v.WasConfirmed
 		prods[i].SaleId = v.SaleId
 	}
 

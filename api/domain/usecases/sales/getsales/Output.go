@@ -29,6 +29,8 @@ type ProductsRequest struct {
 	ProductName  string  `json:"product_name"`
 	ProductPrice float32 `json:"product_price"`
 	ProdtQtyReq  uint32  `json:"prodt_qty_req"`
+	WasCancelled bool    `json:"was_cancelled"`
+	WasConfirmed bool    `json:"was_confimed"`
 	SaleId       string  `json:"sale_id"`
 }
 
@@ -77,6 +79,8 @@ func (*Output) Init(i *[]entities.Sale, status int, err error) *Output {
 						comnGlss[index].ProductName = value.ProductName
 						comnGlss[index].ProductPrice = value.ProductPrice
 						comnGlss[index].ProdtQtyReq = value.ProdtQtyReq
+						comnGlss[index].WasCancelled = value.WasCancelled
+						comnGlss[index].WasConfirmed = value.WasConfirmed
 						comnGlss[index].RequestWidth = value.RequestWidth
 						comnGlss[index].RequestHeight = value.RequestHeight
 						comnGlss[index].SaleId = value.SaleId
@@ -99,6 +103,8 @@ func (*Output) Init(i *[]entities.Sale, status int, err error) *Output {
 						partsReq[index].ProductName = value.ProductName
 						partsReq[index].ProductPrice = value.ProductPrice
 						partsReq[index].ProdtQtyReq = value.ProdtQtyReq
+						partsReq[index].WasCancelled = value.WasCancelled
+						partsReq[index].WasConfirmed = value.WasConfirmed
 						partsReq[index].SaleId = value.SaleId
 					}
 				}
@@ -119,6 +125,8 @@ func (*Output) Init(i *[]entities.Sale, status int, err error) *Output {
 						tempGlss[index].ProductName = value.ProductName
 						tempGlss[index].ProductPrice = value.ProductPrice
 						tempGlss[index].ProdtQtyReq = value.ProdtQtyReq
+						tempGlss[index].WasCancelled = value.WasCancelled
+						tempGlss[index].WasConfirmed = value.WasConfirmed
 						tempGlss[index].SaleId = value.SaleId
 					}
 				}

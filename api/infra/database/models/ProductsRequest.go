@@ -13,6 +13,8 @@ type ProductsRequest struct {
 	ProductName  string       `json:"product_name"`
 	ProductPrice float32      `json:"product_price"`
 	ProdtQtyReq  uint32       `json:"prodt_qty_req"`
+	WasCancelled bool         `json:"was_cancelled"`
+	WasConfirmed bool         `json:"was_confimed"`
 	SaleID       string       `json:"sale_id" gorm:"size:191"`
 	CreatedAt    time.Time    `json:"created_at"`
 	UpdatedAt    time.Time    `json:"updated_at"`

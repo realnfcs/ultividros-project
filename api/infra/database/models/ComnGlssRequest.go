@@ -41,6 +41,8 @@ func (m *CommonGlssReq) TranformToEntity() *entities.CommonGlssReq {
 			ProductName:  m.ProductName,
 			ProductPrice: m.ProductPrice,
 			ProdtQtyReq:  m.ProdtQtyReq,
+			WasCancelled: m.WasCancelled,
+			WasConfirmed: m.WasConfirmed,
 			SaleId:       m.SaleID,
 		},
 		RequestWidth:  m.RequestWidth,
@@ -70,6 +72,8 @@ func (*CommonGlssReq) TransformToSliceOfEntity(m []CommonGlssReq) *[]entities.Co
 			comnGlss[<-channel].ProductName = m[<-channel].ProductName
 			comnGlss[<-channel].ProductPrice = m[<-channel].ProductPrice
 			comnGlss[<-channel].ProdtQtyReq = m[<-channel].ProdtQtyReq
+			comnGlss[<-channel].WasCancelled = m[<-channel].WasCancelled
+			comnGlss[<-channel].WasConfirmed = m[<-channel].WasConfirmed
 			comnGlss[<-channel].SaleId = m[<-channel].SaleID
 			comnGlss[<-channel].RequestWidth = m[<-channel].RequestWidth
 			comnGlss[<-channel].RequestHeight = m[<-channel].RequestHeight
@@ -89,6 +93,8 @@ func (*CommonGlssReq) TransformToSliceOfEntity(m []CommonGlssReq) *[]entities.Co
 				comnGlss[<-channel+1].ProductName = m[<-channel+1].ProductName
 				comnGlss[<-channel+1].ProductPrice = m[<-channel+1].ProductPrice
 				comnGlss[<-channel+1].ProdtQtyReq = m[<-channel+1].ProdtQtyReq
+				comnGlss[<-channel+1].WasCancelled = m[<-channel+1].WasCancelled
+				comnGlss[<-channel+1].WasConfirmed = m[<-channel+1].WasConfirmed
 				comnGlss[<-channel+1].SaleId = m[<-channel+1].SaleID
 				comnGlss[<-channel+1].RequestWidth = m[<-channel+1].RequestWidth
 				comnGlss[<-channel+1].RequestHeight = m[<-channel+1].RequestHeight
@@ -116,6 +122,8 @@ func (m *CommonGlssReq) TransformToModel(e entities.CommonGlssReq) *CommonGlssRe
 			e.ProductName,
 			e.ProductPrice,
 			e.ProdtQtyReq,
+			e.WasCancelled,
+			e.WasConfirmed,
 			e.SaleId,
 			time.Time{},
 			time.Time{},
@@ -149,6 +157,8 @@ func (*CommonGlssReq) TransformToSliceOfModel(e []entities.CommonGlssReq) *[]Com
 			m[<-channel].ProductName = e[<-channel].ProductName
 			m[<-channel].ProductPrice = e[<-channel].ProductPrice
 			m[<-channel].ProdtQtyReq = e[<-channel].ProdtQtyReq
+			m[<-channel].WasCancelled = e[<-channel].WasCancelled
+			m[<-channel].WasConfirmed = e[<-channel].WasConfirmed
 			m[<-channel].SaleID = e[<-channel].SaleId
 			m[<-channel].RequestWidth = e[<-channel].RequestWidth
 			m[<-channel].RequestHeight = e[<-channel].RequestHeight
@@ -168,6 +178,8 @@ func (*CommonGlssReq) TransformToSliceOfModel(e []entities.CommonGlssReq) *[]Com
 				m[<-channel+1].ProductName = e[<-channel+1].ProductName
 				m[<-channel+1].ProductPrice = e[<-channel+1].ProductPrice
 				m[<-channel+1].ProdtQtyReq = e[<-channel+1].ProdtQtyReq
+				m[<-channel+1].WasCancelled = e[<-channel+1].WasCancelled
+				m[<-channel+1].WasConfirmed = e[<-channel+1].WasConfirmed
 				m[<-channel+1].SaleID = e[<-channel+1].SaleId
 				m[<-channel+1].RequestWidth = e[<-channel+1].RequestWidth
 				m[<-channel+1].RequestHeight = e[<-channel+1].RequestHeight

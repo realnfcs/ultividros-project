@@ -41,6 +41,8 @@ func (m *PartReq) TranformToEntity() *entities.PartsReq {
 			ProductName:  m.ProductName,
 			ProductPrice: m.ProductPrice,
 			ProdtQtyReq:  m.ProdtQtyReq,
+			WasCancelled: m.WasCancelled,
+			WasConfirmed: m.WasConfirmed,
 			SaleId:       m.SaleID,
 		},
 	}
@@ -68,6 +70,8 @@ func (*PartReq) TransformToSliceOfEntity(m []PartReq) *[]entities.PartsReq {
 			part[<-channel].ProductName = m[<-channel].ProductName
 			part[<-channel].ProductPrice = m[<-channel].ProductPrice
 			part[<-channel].ProdtQtyReq = m[<-channel].ProdtQtyReq
+			part[<-channel].WasCancelled = m[<-channel].WasCancelled
+			part[<-channel].WasConfirmed = m[<-channel].WasConfirmed
 			part[<-channel].SaleId = m[<-channel].SaleID
 
 			channel <- <-channel + 1
@@ -85,6 +89,8 @@ func (*PartReq) TransformToSliceOfEntity(m []PartReq) *[]entities.PartsReq {
 				part[<-channel+1].ProductName = m[<-channel+1].ProductName
 				part[<-channel+1].ProductPrice = m[<-channel+1].ProductPrice
 				part[<-channel+1].ProdtQtyReq = m[<-channel+1].ProdtQtyReq
+				part[<-channel+1].WasCancelled = m[<-channel+1].WasCancelled
+				part[<-channel+1].WasConfirmed = m[<-channel+1].WasConfirmed
 				part[<-channel+1].SaleId = m[<-channel+1].SaleID
 
 				channel <- <-channel + 1
@@ -110,6 +116,8 @@ func (m *PartReq) TransformToModel(e entities.PartsReq) *PartReq {
 			e.ProductName,
 			e.ProductPrice,
 			e.ProdtQtyReq,
+			e.WasCancelled,
+			e.WasConfirmed,
 			e.SaleId,
 			time.Time{},
 			time.Time{},
@@ -141,6 +149,8 @@ func (*PartReq) TransformToSliceOfModel(e []entities.PartsReq) *[]PartReq {
 			m[<-channel].ProductName = e[<-channel].ProductName
 			m[<-channel].ProductPrice = e[<-channel].ProductPrice
 			m[<-channel].ProdtQtyReq = e[<-channel].ProdtQtyReq
+			m[<-channel].WasCancelled = e[<-channel].WasCancelled
+			m[<-channel].WasConfirmed = e[<-channel].WasConfirmed
 			m[<-channel].SaleID = e[<-channel].SaleId
 
 			channel <- <-channel + 1
@@ -158,6 +168,8 @@ func (*PartReq) TransformToSliceOfModel(e []entities.PartsReq) *[]PartReq {
 				m[<-channel+1].ProductName = e[<-channel+1].ProductName
 				m[<-channel+1].ProductPrice = e[<-channel+1].ProductPrice
 				m[<-channel+1].ProdtQtyReq = e[<-channel+1].ProdtQtyReq
+				m[<-channel+1].WasCancelled = e[<-channel+1].WasCancelled
+				m[<-channel+1].WasConfirmed = e[<-channel+1].WasConfirmed
 				m[<-channel+1].SaleID = e[<-channel+1].SaleId
 
 				channel <- <-channel + 1

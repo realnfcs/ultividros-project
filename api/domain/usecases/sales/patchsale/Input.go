@@ -22,6 +22,8 @@ type ProductsRequest struct {
 	ProductName  string  `json:"product_name"`
 	ProductPrice float32 `json:"product_price"`
 	ProdtQtyReq  uint32  `json:"prodt_qty_req"`
+	WasCancelled bool    `json:"was_cancelled"`
+	WasConfirmed bool    `json:"was_confimed"`
 	SaleId       string  `json:"sale_id"`
 }
 
@@ -58,6 +60,8 @@ func (*Input) Init(e entities.Sale) *Input {
 				comnGlssReq[i].ProductName = v.ProductName
 				comnGlssReq[i].ProductPrice = v.ProductPrice
 				comnGlssReq[i].ProdtQtyReq = v.ProdtQtyReq
+				comnGlssReq[i].WasCancelled = v.WasCancelled
+				comnGlssReq[i].WasConfirmed = v.WasConfirmed
 				comnGlssReq[i].RequestWidth = v.RequestWidth
 				comnGlssReq[i].RequestHeight = v.RequestHeight
 				comnGlssReq[i].SaleId = v.SaleId
@@ -79,6 +83,8 @@ func (*Input) Init(e entities.Sale) *Input {
 				partReq[i].ProductName = v.ProductName
 				partReq[i].ProductPrice = v.ProductPrice
 				partReq[i].ProdtQtyReq = v.ProdtQtyReq
+				partReq[i].WasCancelled = v.WasCancelled
+				partReq[i].WasConfirmed = v.WasConfirmed
 				partReq[i].SaleId = v.SaleId
 			}
 
@@ -98,6 +104,8 @@ func (*Input) Init(e entities.Sale) *Input {
 				tempGlssReq[i].ProductName = v.ProductName
 				tempGlssReq[i].ProductPrice = v.ProductPrice
 				tempGlssReq[i].ProdtQtyReq = v.ProdtQtyReq
+				tempGlssReq[i].WasCancelled = v.WasCancelled
+				tempGlssReq[i].WasConfirmed = v.WasConfirmed
 				tempGlssReq[i].SaleId = v.SaleId
 			}
 
@@ -131,6 +139,8 @@ func (i *Input) ConvertToSale() *entities.Sale {
 				comnGlssReq[i].ProductName = v.ProductName
 				comnGlssReq[i].ProductPrice = v.ProductPrice
 				comnGlssReq[i].ProdtQtyReq = v.ProdtQtyReq
+				comnGlssReq[i].WasCancelled = v.WasCancelled
+				comnGlssReq[i].WasConfirmed = v.WasConfirmed
 				comnGlssReq[i].RequestWidth = v.RequestWidth
 				comnGlssReq[i].RequestHeight = v.RequestHeight
 				comnGlssReq[i].SaleId = v.SaleId
@@ -152,6 +162,8 @@ func (i *Input) ConvertToSale() *entities.Sale {
 				partReq[i].ProductName = v.ProductName
 				partReq[i].ProductPrice = v.ProductPrice
 				partReq[i].ProdtQtyReq = v.ProdtQtyReq
+				partReq[i].WasCancelled = v.WasCancelled
+				partReq[i].WasConfirmed = v.WasConfirmed
 				partReq[i].SaleId = v.SaleId
 			}
 
@@ -171,6 +183,8 @@ func (i *Input) ConvertToSale() *entities.Sale {
 				tempGlssReq[i].ProductName = v.ProductName
 				tempGlssReq[i].ProductPrice = v.ProductPrice
 				tempGlssReq[i].ProdtQtyReq = v.ProdtQtyReq
+				tempGlssReq[i].WasCancelled = v.WasCancelled
+				tempGlssReq[i].WasConfirmed = v.WasConfirmed
 				tempGlssReq[i].SaleId = v.SaleId
 			}
 
