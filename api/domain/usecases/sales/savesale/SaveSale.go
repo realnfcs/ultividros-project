@@ -118,22 +118,25 @@ func (s *SaveSale) Execute(i Input) *Output {
 					return
 				}
 
-				if v.RequestWidth > area["width"] || v.RequestHeight > area["height"] {
+				widthRequest := v.RequestWidth * float32(v.ProdQtyReq)
+				heightRequest := v.RequestHeight * float32(v.ProdQtyReq)
+
+				if (widthRequest) > area["width"] || heightRequest > area["height"] {
 					outComnGlss = new(Output).Init("", 400, errors.New("Common glass width or height request as big than area in stock"))
 					wg.Done()
 					return
 				}
 
-				glassSheetsQtyReq := v.RequestWidth * v.RequestHeight
+				glassSheetsQtyReq := widthRequest * heightRequest
 				glassSheetsTotalArea := area["width"] * area["height"]
 
-				if glassSheetsQtyReq*float32(v.ProdQtyReq) > glassSheetsTotalArea {
+				if glassSheetsQtyReq > glassSheetsTotalArea {
 					outComnGlss = new(Output).Init("", 400, errors.New("Total of quantity area in request in big than area in stock"))
 					wg.Done()
 					return
 				}
 
-				err = s.CommonGlssRepository.ReduceArea(v.ProductId, v.RequestWidth, v.RequestHeight)
+				err = s.CommonGlssRepository.ReduceArea(v.ProductId, widthRequest, heightRequest)
 				if err != nil {
 					outComnGlss = new(Output).Init("", 500, err)
 					wg.Done()

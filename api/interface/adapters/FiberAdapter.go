@@ -13,6 +13,7 @@ import (
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/parts/savepart"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/sales/getsale"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/sales/getsales"
+	"github.com/realnfcs/ultividros-project/api/domain/usecases/sales/patchsale"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/sales/savesale"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/deletetemperedglass"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/gettemperedglass"
@@ -284,6 +285,17 @@ func GetSales[T contracts.FiberAdapterContract[T]](req func() *getsales.Output, 
 func SaveSale[T contracts.FiberAdapterContract[T]](req func(savesale.Input) *savesale.Output, ctx T) func(T) error {
 	return func(c T) error {
 		input := savesale.Input{}
+		c.BodyParser(&input)
+
+		output := req(input)
+		return c.Status(output.Status).JSON(output)
+	}
+}
+
+// Adaptador do fiber responsável por atualizar os campos alterados de uma venda no repositório
+func PatchSale[T contracts.FiberAdapterContract[T]](req func(patchsale.Input) *patchsale.Output, ctx T) func(T) error {
+	return func(c T) error {
+		input := patchsale.Input{}
 		c.BodyParser(&input)
 
 		output := req(input)

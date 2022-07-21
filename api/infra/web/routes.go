@@ -56,6 +56,7 @@ func Routes(app *fiber.App, c *controllers.Controllers, ctx *fiber.Ctx) *fiber.A
 	SaleRouter.Get("/id=:id", adapters.GetSale(saleControll.GetSale, ctx))
 	SaleRouter.Get("/", adapters.GetSales(saleControll.GetSales, ctx))
 	SaleRouter.Post("/", adapters.SaveSale(saleControll.SaveSale, ctx))
+	SaleRouter.Patch("/", adapters.PatchSale(saleControll.PatchSale, ctx))
 
 	return app
 }

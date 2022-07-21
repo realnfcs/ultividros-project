@@ -4,6 +4,7 @@ import (
 	"github.com/realnfcs/ultividros-project/api/domain/repository"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/sales/getsale"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/sales/getsales"
+	"github.com/realnfcs/ultividros-project/api/domain/usecases/sales/patchsale"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/sales/savesale"
 )
 
@@ -37,5 +38,13 @@ func (s *SaleController) GetSales() *getsales.Output {
 func (s *SaleController) SaveSale(i savesale.Input) *savesale.Output {
 	saveSale := savesale.SaveSale{SaleRepository: s.Repo, CommonGlssRepository: s.CommonGlssRepository, PartRepository: s.PartRepository, TemperedGlssRepository: s.TemperedGlssRepository}
 	output := saveSale.Execute(i)
+	return output
+}
+
+// Método da controller que comunica com o usacase para atualizar os campos alterados do objeto de
+// acordo com os dados passados no parâmetro
+func (s *SaleController) PatchSale(i patchsale.Input) *patchsale.Output {
+	patchSale := patchsale.PatchSale{SaleRepository: s.Repo, CommonGlssRepository: s.CommonGlssRepository, PartRepository: s.PartRepository, TemperedGlssRepository: s.TemperedGlssRepository}
+	output := patchSale.Execute(i)
 	return output
 }

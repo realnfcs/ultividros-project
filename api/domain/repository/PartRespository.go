@@ -7,6 +7,7 @@ import "github.com/realnfcs/ultividros-project/api/domain/entities"
 type PartRepository interface {
 	GetPartQuantity(string) (uint32, error)
 
+	IncreaseQuantity(string, uint32) error
 	ReduceQuantity(string, uint32) error
 
 	GetPart(string) (*entities.Part, int, error)

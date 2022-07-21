@@ -192,6 +192,8 @@ func (i *Input) ConvertToSale() *entities.Sale {
 		}()
 	}
 
+	wg.Wait()
+
 	return &entities.Sale{
 		Id:            i.Id,
 		ClientId:      i.ClientId,

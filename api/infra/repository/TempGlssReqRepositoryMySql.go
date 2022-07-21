@@ -23,6 +23,56 @@ func (p *TempGlssReqRepositoryMySql) Init(g *gorm.DB) *TempGlssReqRepositoryMySq
 	return &TempGlssReqRepositoryMySql{GormDb: g}
 }
 
+func (t *TempGlssReqRepositoryMySql) CancelATempGlssRequest(id string) error {
+
+	tempGlssReq := new(models.TempGlssReq)
+
+	err := t.GormDb.First(tempGlssReq, "id = ?", id).Error
+	if err != nil {
+		return err
+	}
+
+	if tempGlssReq == nil {
+		return errors.New("an object in this id don't exist")
+	}
+
+	if tempGlssReq.WasConfirmed != false {
+		return errors.New("can't cancel a confirmed request of tempered glass")
+	}
+
+	err = t.GormDb.Model(tempGlssReq).Where("id = ?", id).Omit("created_at").Update("was_cancelled", true).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (t *TempGlssReqRepositoryMySql) ConfirmATempGlssRequest(id string) error {
+
+	tempGlssReq := new(models.TempGlssReq)
+
+	err := t.GormDb.First(tempGlssReq, "id = ?", id).Error
+	if err != nil {
+		return err
+	}
+
+	if tempGlssReq == nil {
+		return errors.New("an object in this id don't exist")
+	}
+
+	if tempGlssReq.WasCancelled != false {
+		return errors.New("can't confirm a cancelled request of tempered glass")
+	}
+
+	err = t.GormDb.Model(tempGlssReq).Where("id = ?", id).Omit("created_at").Update("was_confirmed", true).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // CRUD Section //
 
 // Método que pega todos os vidros temperados requeridos pelo cliente em

@@ -25,6 +25,56 @@ func (p *PartReqRepositoryMySql) Init(g *gorm.DB) *PartReqRepositoryMySql {
 	return &PartReqRepositoryMySql{GormDb: g}
 }
 
+func (p *PartReqRepositoryMySql) CancelAPartRequest(id string) error {
+
+	partReq := new(models.PartReq)
+
+	err := p.GormDb.First(partReq, "id = ?", id).Error
+	if err != nil {
+		return err
+	}
+
+	if partReq == nil {
+		return errors.New("an object in this id don't exist")
+	}
+
+	if partReq.WasConfirmed != false {
+		return errors.New("can't cancel a confirmed request of part")
+	}
+
+	err = p.GormDb.Model(partReq).Where("id = ?", id).Omit("created_at").Update("was_cancelled", true).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (p *PartReqRepositoryMySql) ConfirmAPartRequest(id string) error {
+
+	partReq := new(models.PartReq)
+
+	err := p.GormDb.First(partReq, "id = ?", id).Error
+	if err != nil {
+		return err
+	}
+
+	if partReq == nil {
+		return errors.New("an object in this id don't exist")
+	}
+
+	if partReq.WasCancelled != false {
+		return errors.New("can't confirm a cancelled request of part")
+	}
+
+	err = p.GormDb.Model(partReq).Where("id = ?", id).Omit("created_at").Update("was_confirmed", true).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // CRUD Section //
 
 // Método que pega todas as peças requeridas pelo cliente em uma venda no

@@ -83,6 +83,32 @@ func (t *TemperedGlassRepositoryMySql) GetRandomId() (string, error) {
 
 // Model Utils Section //
 
+// Método que aumenta a quantidade em estoque de um vidro temperado identificado pelo
+// id passado como parâmetro
+func (t *TemperedGlassRepositoryMySql) IncreaseQuantity(id string, qtyReq uint32) error {
+
+	if id == "" || qtyReq <= 0 {
+		return errors.New("id or qty request don't have a value")
+	}
+
+	tempGlss := new(models.TemperedGlass)
+	qty := new(tempGlssQty)
+
+	err := t.GormDb.Model(tempGlss).First(qty, "id = ?", id).Error
+	if err != nil {
+		return err
+	}
+
+	newQty := qty.Quantity + qtyReq
+
+	err = t.GormDb.Model(tempGlss).Where("id = ?", id).Omit("created_at").Update("quantity", newQty).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // Método que reduz a quantidade em estoque de um vidro temperado identificado pelo
 // id passado como parâmetro
 func (t *TemperedGlassRepositoryMySql) ReduceQuantity(id string, qtyReq uint32) error {

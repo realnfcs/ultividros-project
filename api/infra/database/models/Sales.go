@@ -56,6 +56,8 @@ func (m *Sale) TranformToEntity() *entities.Sale {
 				comnGlss[i].ProductPrice = v.ProductPrice
 				comnGlss[i].ProdtQtyReq = v.ProdtQtyReq
 				comnGlss[i].ProdtQtyReq = v.ProdtQtyReq
+				comnGlss[i].WasCancelled = v.WasCancelled
+				comnGlss[i].WasConfirmed = v.WasConfirmed
 				comnGlss[i].RequestWidth = v.RequestWidth
 				comnGlss[i].RequestHeight = v.RequestHeight
 				comnGlss[i].SaleId = v.SaleID
@@ -73,6 +75,8 @@ func (m *Sale) TranformToEntity() *entities.Sale {
 				partReq[i].ProductName = v.ProductName
 				partReq[i].ProductPrice = v.ProductPrice
 				partReq[i].ProdtQtyReq = v.ProdtQtyReq
+				partReq[i].WasCancelled = v.WasCancelled
+				partReq[i].WasConfirmed = v.WasConfirmed
 				partReq[i].SaleId = v.SaleID
 			}
 			wg.Done()
@@ -88,6 +92,8 @@ func (m *Sale) TranformToEntity() *entities.Sale {
 				tempGlss[i].ProductName = v.ProductName
 				tempGlss[i].ProductPrice = v.ProductPrice
 				tempGlss[i].ProdtQtyReq = v.ProdtQtyReq
+				tempGlss[i].WasCancelled = v.WasCancelled
+				tempGlss[i].WasConfirmed = v.WasConfirmed
 				tempGlss[i].SaleId = v.SaleID
 			}
 			wg.Done()
@@ -132,6 +138,8 @@ func (m *Sale) TransformToModel(e entities.Sale) *Sale {
 			comnGlss[i].ProductName = v.ProductName
 			comnGlss[i].ProductPrice = v.ProductPrice
 			comnGlss[i].ProdtQtyReq = v.ProdtQtyReq
+			comnGlss[i].WasCancelled = v.WasCancelled
+			comnGlss[i].WasConfirmed = v.WasConfirmed
 			comnGlss[i].RequestWidth = v.RequestWidth
 			comnGlss[i].RequestHeight = v.RequestHeight
 			comnGlss[i].SaleID = v.SaleId
@@ -145,6 +153,8 @@ func (m *Sale) TransformToModel(e entities.Sale) *Sale {
 			parts[i].ProductName = v.ProductName
 			parts[i].ProductPrice = v.ProductPrice
 			parts[i].ProdtQtyReq = v.ProdtQtyReq
+			parts[i].WasCancelled = v.WasCancelled
+			parts[i].WasConfirmed = v.WasConfirmed
 			parts[i].SaleID = v.SaleId
 		}
 	}
@@ -156,6 +166,8 @@ func (m *Sale) TransformToModel(e entities.Sale) *Sale {
 			tempGlss[i].ProductName = v.ProductName
 			tempGlss[i].ProductPrice = v.ProductPrice
 			tempGlss[i].ProdtQtyReq = v.ProdtQtyReq
+			tempGlss[i].WasCancelled = v.WasCancelled
+			tempGlss[i].WasConfirmed = v.WasConfirmed
 			tempGlss[i].SaleID = v.SaleId
 		}
 	}

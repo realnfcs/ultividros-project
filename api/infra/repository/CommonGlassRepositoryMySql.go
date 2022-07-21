@@ -81,6 +81,38 @@ func (c *CommonGlassRepositoryMySql) GetArea(id string) (map[string]float32, err
 
 // Model Utils Section //
 
+// Método que aumenta a quantidade em estoque de um vidro temperado identificado pelo
+// id passado como parâmetro
+func (c *CommonGlassRepositoryMySql) IncreaseArea(id string, width, height float32) error {
+
+	if id == "" || width <= 0 || height <= 0 {
+		return errors.New("id, width or height request don't have a value")
+	}
+
+	comnGlss := new(models.CommonGlass)
+	areaQuery := new(ComnGlssArea)
+
+	err := c.GormDb.Model(comnGlss).First(areaQuery, "id = ?", id).Error
+	if err != nil {
+		return err
+	}
+
+	newWidth := areaQuery.WidthAvailable + width
+	newHeight := areaQuery.HeightAvailable + height
+
+	updateFields := map[string]any{
+		"width_available":  newWidth,
+		"height_available": newHeight,
+	}
+
+	err = c.GormDb.Model(comnGlss).Where("id = ?", id).Omit("created_at").Updates(updateFields).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // Método que reduz a quantidade em estoque de um vidro temperado identificado pelo
 // id passado como parâmetro
 func (c *CommonGlassRepositoryMySql) ReduceArea(id string, width, height float32) error {

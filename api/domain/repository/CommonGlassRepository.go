@@ -7,6 +7,7 @@ import "github.com/realnfcs/ultividros-project/api/domain/entities"
 type CommonGlassRepository interface {
 	GetArea(string) (map[string]float32, error)
 
+	IncreaseArea(string, float32, float32) error
 	ReduceArea(string, float32, float32) error
 
 	GetCommonGlass(string) (*entities.CommonGlass, int, error)

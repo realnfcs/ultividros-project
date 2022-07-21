@@ -70,6 +70,8 @@ func (s *SaleRepositoryMySql) Init() (*SaleRepositoryMySql, error) {
 	return s, nil
 }
 
+// Methos of Products Request Section //
+
 // CRUD Section //
 
 // Método que pega uma venda e seus produtos requeridos no banco de dados de
@@ -179,4 +181,80 @@ func (s *SaleRepositoryMySql) SaveSale(saleEnt entities.Sale) (string, int, erro
 
 // Método que atualiza os campos de uma venda e seus produtos de acordo com os dados
 // passados no parâmetro
-func (s *SaleRepositoryMySql) PatchSale(e entities.Sale) (string, int, error)
+func (s *SaleRepositoryMySql) PatchSale(e entities.Sale) (string, int, error) {
+
+	sale := new(models.Sale).TransformToModel(e)
+
+	if sale.ID == "" || sale.ClientID == "" || (len(sale.CommonGlssReq) <= 0 && len(sale.PartReq) <= 0 && len(sale.TempGlssReq) <= 0) {
+		return sale.ID, 400, errors.New("Empty field error: some important field no got a value")
+	}
+
+	if len(sale.CommonGlssReq) > 0 {
+
+		for _, v := range sale.CommonGlssReq {
+
+			if v.WasCancelled != false {
+				err := comnGlssReqRepo.CancelAComnGlssRequest(v.ID)
+				if err != nil {
+					return sale.ID, 500, err
+				}
+				continue
+			}
+
+			if v.WasConfirmed != false {
+				err := comnGlssReqRepo.ConfirmAComnGlssRequest(v.ID)
+				if err != nil {
+					return sale.ID, 500, err
+				}
+				continue
+			}
+		}
+	}
+
+	if len(sale.PartReq) > 0 {
+
+		for _, v := range sale.PartReq {
+
+			if v.WasCancelled != false {
+				err := partReqRepo.CancelAPartRequest(v.ID)
+				if err != nil {
+					return sale.ID, 500, err
+				}
+				continue
+			}
+
+			if v.WasConfirmed != false {
+				err := partReqRepo.ConfirmAPartRequest(v.ID)
+				if err != nil {
+					return sale.ID, 500, err
+				}
+				continue
+			}
+		}
+	}
+
+	if len(sale.TempGlssReq) > 0 {
+
+		for _, v := range sale.TempGlssReq {
+
+			if v.WasCancelled != false {
+				err := tempGlssReqRepo.CancelATempGlssRequest(v.ID)
+				if err != nil {
+					return sale.ID, 500, err
+				}
+				continue
+			}
+
+			if v.WasConfirmed != false {
+				err := tempGlssReqRepo.ConfirmATempGlssRequest(v.ID)
+				if err != nil {
+					return sale.ID, 500, err
+				}
+				continue
+			}
+
+		}
+	}
+
+	return sale.ID, 200, nil
+}
