@@ -15,11 +15,11 @@ type Input struct {
 // Método que converte um input em uma entidade de peça
 func (i *Input) ConvertToPart() *entities.Part {
 	return &entities.Part{
-		i.Id,
-		i.Name,
-		i.Description,
-		i.Price,
-		i.Quantity,
-		i.ForType,
+		Id:          i.Id,
+		Name:        i.Name,
+		Description: i.Description,
+		Price:       i.Price,
+		Quantity:    i.Quantity,
+		ForType:     i.ForType,
 	}
 }

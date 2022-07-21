@@ -17,6 +17,7 @@ type Sale struct {
 	CommonGlssReq []CommonGlssReq `json:"common_glss_req"`
 	PartsReq      []PartsReq      `json:"parts_req"`
 	TempGlssReq   []TempGlssReq   `json:"temp_glss"`
+	IsActive      bool            `json:"is_active"`
 }
 
 // Essa struct provém as informações dos produtos requisitados na venda,

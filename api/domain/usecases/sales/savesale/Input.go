@@ -12,6 +12,7 @@ type Input struct {
 	Parts      []PartsReq      `json:"parts_req"`
 	TempGlss   []TempGlssReq   `json:"temp_glss_req"`
 	CommonGlss []CommonGlssReq `json:"common_glss_req"`
+	IsActive   bool            `json:"is_active"`
 }
 
 // Produtos requisitados pelo cliente que virão no input
@@ -110,6 +111,7 @@ func (i *Input) ConvertToSale() *entities.Sale {
 		CommonGlssReq: comnGlss,
 		PartsReq:      parts,
 		TempGlssReq:   tempGlss,
+		IsActive:      i.IsActive,
 	}
 }
 

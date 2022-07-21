@@ -21,6 +21,7 @@ type OutputData struct {
 	CommonGlssReq []CommonGlssReq `json:"common_glss_req"`
 	PartsReq      []PartsReq      `json:"parts_req"`
 	TempGlssReq   []TempGlssReq   `json:"temp_glss"`
+	IsActive      bool            `json:"is_active"`
 }
 
 type ProductsRequest struct {
@@ -65,6 +66,7 @@ func (*Output) Init(i *[]entities.Sale, status int, err error) *Output {
 	for i, v := range *i {
 		output[i].Id = v.Id
 		output[i].ClientId = v.ClientId
+		output[i].IsActive = v.IsActive
 
 		comnGlss := make([]CommonGlssReq, len(v.CommonGlssReq))
 

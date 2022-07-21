@@ -20,6 +20,7 @@ type OutputData struct {
 	CommonGlssReq []CommonGlssReq `json:"common_glss_req"`
 	PartsReq      []PartsReq      `json:"parts_req"`
 	TempGlssReq   []TempGlssReq   `json:"temp_glss"`
+	IsActive      bool            `json:"is_active"`
 }
 
 // Informações contidas dentro do OutputData
@@ -122,6 +123,7 @@ func (*Output) Init(e *entities.Sale, status int, err error) *Output {
 				CommonGlssReq: comnGlssReq,
 				PartsReq:      partReq,
 				TempGlssReq:   tempGlssReq,
+				IsActive:      e.IsActive,
 			},
 			Status: status,
 			Err:    "",

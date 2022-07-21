@@ -258,3 +258,20 @@ func (s *SaleRepositoryMySql) PatchSale(e entities.Sale) (string, int, error) {
 
 	return sale.ID, 200, nil
 }
+
+func (s *SaleRepositoryMySql) CloseSale(e entities.Sale) (string, int, error) {
+
+	sale := new(models.Sale)
+
+	err := s.GormDb.First(sale, "id = ?", e.Id).Error
+	if err != nil {
+		return e.Id, 404, err
+	}
+
+	err = s.GormDb.Model(sale).Where("id = ?", sale.ID).Omit("created_at").Update("is_active", false).Error
+	if err != nil {
+		return sale.ID, 500, err
+	}
+
+	return sale.ID, 200, nil
+}

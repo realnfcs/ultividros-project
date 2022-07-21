@@ -9,4 +9,5 @@ type SaleRepository interface {
 	GetSales() (*[]entities.Sale, int, error)
 	SaveSale(entities.Sale) (string, int, error)
 	PatchSale(entities.Sale) (string, int, error)
+	CloseSale(entities.Sale) (string, int, error)
 }

@@ -20,6 +20,7 @@ type Sale struct {
 	CommonGlssReq []CommonGlssReq `json:"common_glss_req"`
 	PartReq       []PartReq       `json:"part_req"`
 	TempGlssReq   []TempGlssReq   `json:"temp_glss_req"`
+	IsActive      bool            `json:"is_active" gorm:"default:true"`
 	CreatedAt     time.Time       `json:"created_at"`
 	UpdatedAt     time.Time       `json:"updated_at"`
 	DeletedAt     sql.NullTime    `json:"deleted_at" gorm:"index"`
@@ -108,6 +109,7 @@ func (m *Sale) TranformToEntity() *entities.Sale {
 		CommonGlssReq: comnGlss,
 		PartsReq:      partReq,
 		TempGlssReq:   tempGlss,
+		IsActive:      m.IsActive,
 	}
 }
 
@@ -178,6 +180,7 @@ func (m *Sale) TransformToModel(e entities.Sale) *Sale {
 		comnGlss,
 		parts,
 		tempGlss,
+		e.IsActive,
 		time.Time{},
 		time.Time{},
 		sql.NullTime{},
