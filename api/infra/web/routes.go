@@ -58,6 +58,7 @@ func Routes(app *fiber.App, c *controllers.Controllers, ctx *fiber.Ctx) *fiber.A
 	SaleRouter.Post("/", adapters.SaveSale(saleControll.SaveSale, ctx))
 	SaleRouter.Patch("/", adapters.PatchSale(saleControll.PatchSale, ctx))
 	SaleRouter.Patch("/close", adapters.CloseSale(saleControll.CloseSale, ctx))
+	SaleRouter.Delete("/", adapters.DeleteSale(saleControll.DeleteSale, ctx))
 
 	return app
 }

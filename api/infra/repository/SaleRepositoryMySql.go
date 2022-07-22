@@ -275,3 +275,49 @@ func (s *SaleRepositoryMySql) CloseSale(e entities.Sale) (string, int, error) {
 
 	return sale.ID, 200, nil
 }
+
+// Método que exclui uma venda e seus produtos requeridos no banco de dados de acordo com os dados passados
+// no parâmetro
+func (s *SaleRepositoryMySql) DeleteSale(e entities.Sale) (int, error) {
+
+	sale := new(models.Sale).TransformToModel(e)
+
+	err := s.GormDb.First(sale, "id = ?", sale.ID).Error
+	if err != nil {
+		return 404, err
+	}
+
+	if len(sale.CommonGlssReq) > 0 {
+		for _, v := range sale.CommonGlssReq {
+			err = s.GormDb.Delete(&v).Error
+			if err != nil {
+				return 404, err
+			}
+		}
+	}
+
+	if len(sale.PartReq) > 0 {
+		for _, v := range sale.PartReq {
+			err = s.GormDb.Delete(&v).Error
+			if err != nil {
+				return 404, err
+			}
+		}
+	}
+
+	if len(sale.TempGlssReq) > 0 {
+		for _, v := range sale.TempGlssReq {
+			err = s.GormDb.Delete(&v).Error
+			if err != nil {
+				return 404, err
+			}
+		}
+	}
+
+	err = s.GormDb.Delete(sale).Error
+	if err != nil {
+		return 500, err
+	}
+
+	return 200, nil
+}

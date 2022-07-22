@@ -12,6 +12,7 @@ import (
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/parts/patchpart"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/parts/savepart"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/sales/closesale"
+	"github.com/realnfcs/ultividros-project/api/domain/usecases/sales/deletesale"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/sales/getsale"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/sales/getsales"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/sales/patchsale"
@@ -308,6 +309,17 @@ func PatchSale[T contracts.FiberAdapterContract[T]](req func(patchsale.Input) *p
 func CloseSale[T contracts.FiberAdapterContract[T]](req func(closesale.Input) *closesale.Output, ctx T) func(T) error {
 	return func(c T) error {
 		input := closesale.Input{}
+		c.BodyParser(&input)
+
+		output := req(input)
+		return c.Status(output.Status).JSON(output)
+	}
+}
+
+// Adaptador do fiber responsável por deletar uma venda no repositório
+func DeleteSale[T contracts.FiberAdapterContract[T]](req func(deletesale.Input) *deletesale.Output, ctx T) func(T) error {
+	return func(c T) error {
+		input := deletesale.Input{}
 		c.BodyParser(&input)
 
 		output := req(input)

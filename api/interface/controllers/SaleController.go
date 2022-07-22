@@ -3,6 +3,7 @@ package controllers
 import (
 	"github.com/realnfcs/ultividros-project/api/domain/repository"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/sales/closesale"
+	"github.com/realnfcs/ultividros-project/api/domain/usecases/sales/deletesale"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/sales/getsale"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/sales/getsales"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/sales/patchsale"
@@ -55,5 +56,12 @@ func (s *SaleController) PatchSale(i patchsale.Input) *patchsale.Output {
 func (s *SaleController) CloseSale(i closesale.Input) *closesale.Output {
 	closeSale := closesale.CloseSale{SaleRepository: s.Repo}
 	output := closeSale.Execute(i)
+	return output
+}
+
+// Método da controller que comunica com o usacase para deletar um objeto
+func (s *SaleController) DeleteSale(i deletesale.Input) *deletesale.Output {
+	deleteSale := deletesale.DeleteSale{SaleRepository: s.Repo}
+	output := deleteSale.Execute(i)
 	return output
 }
