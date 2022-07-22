@@ -17,9 +17,13 @@ type PartRepositoryMySql struct {
 	GormDb *gorm.DB
 }
 
-// Struct que auxilia nas querys
+// Structs que auxiliam nas querys //
 type partId struct {
 	ID string
+}
+
+type partQty struct {
+	Quantity uint32
 }
 
 // Método para iniciar o ORM de acordo com a conexão já estabelecida com
@@ -48,6 +52,79 @@ func (p *PartRepositoryMySql) Init() (*PartRepositoryMySql, error) {
 
 	return p, nil
 }
+
+// Query Utils Section //
+
+// Método que retorna a quantidade em estoque da peça identificada pelo
+// id passado como parâmetro
+func (p *PartRepositoryMySql) GetPartQuantity(id string) (uint32, error) {
+
+	part := new(models.Part)
+	qty := partQty{}
+
+	err := p.GormDb.Model(part).First(&qty, "id = ?", id).Error
+	if err != nil {
+		return 0, err
+	}
+
+	return qty.Quantity, nil
+}
+
+// Model Utils Section //
+
+// Método que aumenta a quantidade em estoque de uma peça identificada pelo
+// id passado como parâmetro
+func (p *PartRepositoryMySql) IncreaseQuantity(id string, qtyReq uint32) error {
+
+	if id == "" || qtyReq <= 0 {
+		return errors.New("id or qty request don't have a value")
+	}
+
+	part := new(models.Part)
+	qty := new(partQty)
+
+	err := p.GormDb.Model(part).First(qty, "id = ?", id).Error
+	if err != nil {
+		return err
+	}
+
+	newQty := qty.Quantity + qtyReq
+
+	err = p.GormDb.Model(part).Where("id = ?", id).Omit("created_at").Update("quantity", newQty).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// Método que reduz a quantidade em estoque de uma peça identificada pelo
+// id passado como parâmetro
+func (p *PartRepositoryMySql) ReduceQuantity(id string, qtyReq uint32) error {
+
+	if id == "" || qtyReq <= 0 {
+		return errors.New("id or qty request don't have a value")
+	}
+
+	part := new(models.Part)
+	qty := new(partQty)
+
+	err := p.GormDb.Model(part).First(qty, "id = ?", id).Error
+	if err != nil {
+		return err
+	}
+
+	newQty := qty.Quantity - qtyReq
+
+	err = p.GormDb.Model(part).Where("id = ?", id).Omit("created_at").Update("quantity", newQty).Error
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// CRUD Section //
 
 // Método que pega uma peça no banco de dados de acordo com o id passado
 // no parâmetro e o retorna

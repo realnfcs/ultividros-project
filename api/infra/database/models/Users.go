@@ -107,9 +107,10 @@ func (m *User) TransformToModel(e entities.User) *User {
 // Método que transfoma um Slice de entidades em Slice de models Users
 func (*User) TransformToSliceOfModel(e []entities.User) *[]User {
 
-	var m []User
-
-	var wg sync.WaitGroup
+	var (
+		m  []User
+		wg sync.WaitGroup
+	)
 
 	for i, v := range e {
 

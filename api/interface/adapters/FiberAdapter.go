@@ -11,6 +11,12 @@ import (
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/parts/getparts"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/parts/patchpart"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/parts/savepart"
+	"github.com/realnfcs/ultividros-project/api/domain/usecases/sales/closesale"
+	"github.com/realnfcs/ultividros-project/api/domain/usecases/sales/deletesale"
+	"github.com/realnfcs/ultividros-project/api/domain/usecases/sales/getsale"
+	"github.com/realnfcs/ultividros-project/api/domain/usecases/sales/getsales"
+	"github.com/realnfcs/ultividros-project/api/domain/usecases/sales/patchsale"
+	"github.com/realnfcs/ultividros-project/api/domain/usecases/sales/savesale"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/deletetemperedglass"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/gettemperedglass"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/temperedglasses/gettemperedglasses"
@@ -249,6 +255,71 @@ func PatchUser[T contracts.FiberAdapterContract[T]](req func(patchuser.Input) *p
 func DeleteUser[T contracts.FiberAdapterContract[T]](req func(deleteuser.Input) *deleteuser.Output, ctx T) func(T) error {
 	return func(c T) error {
 		input := deleteuser.Input{}
+		c.BodyParser(&input)
+
+		output := req(input)
+		return c.Status(output.Status).JSON(output)
+	}
+}
+
+// Sale Section //
+
+func GetSale[T contracts.FiberAdapterContract[T]](req func(getsale.Input) *getsale.Output, ctx T) func(T) error {
+	return func(c T) error {
+		p := c.Params("id")
+		input := getsale.Input{ID: p}
+
+		output := req(input)
+		return c.Status(output.Status).JSON(output)
+	}
+}
+
+// Adaptador do fiber responsável por trazer ao cliente todos os dados das
+// vendas no repositório
+func GetSales[T contracts.FiberAdapterContract[T]](req func() *getsales.Output, ctx T) func(T) error {
+	return func(c T) error {
+		output := req()
+		return c.Status(output.Status).JSON(output)
+	}
+}
+
+// Adaptador do fiber responsável por salvar uma venda no repositório
+func SaveSale[T contracts.FiberAdapterContract[T]](req func(savesale.Input) *savesale.Output, ctx T) func(T) error {
+	return func(c T) error {
+		input := savesale.Input{}
+		c.BodyParser(&input)
+
+		output := req(input)
+		return c.Status(output.Status).JSON(output)
+	}
+}
+
+// Adaptador do fiber responsável por atualizar os campos alterados de uma venda no repositório
+func PatchSale[T contracts.FiberAdapterContract[T]](req func(patchsale.Input) *patchsale.Output, ctx T) func(T) error {
+	return func(c T) error {
+		input := patchsale.Input{}
+		c.BodyParser(&input)
+
+		output := req(input)
+		return c.Status(output.Status).JSON(output)
+	}
+}
+
+// Adaptador do fiber responsável por finalizar uma venda no repositório
+func CloseSale[T contracts.FiberAdapterContract[T]](req func(closesale.Input) *closesale.Output, ctx T) func(T) error {
+	return func(c T) error {
+		input := closesale.Input{}
+		c.BodyParser(&input)
+
+		output := req(input)
+		return c.Status(output.Status).JSON(output)
+	}
+}
+
+// Adaptador do fiber responsável por deletar uma venda no repositório
+func DeleteSale[T contracts.FiberAdapterContract[T]](req func(deletesale.Input) *deletesale.Output, ctx T) func(T) error {
+	return func(c T) error {
+		input := deletesale.Input{}
 		c.BodyParser(&input)
 
 		output := req(input)
