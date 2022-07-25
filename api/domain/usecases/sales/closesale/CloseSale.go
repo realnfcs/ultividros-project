@@ -16,6 +16,10 @@ type CloseSale struct {
 
 func (c *CloseSale) Execute(i Input) *Output {
 
+	if i.Id == "" || i.ClientId == "" {
+		return new(Output).Init(i.Id, 400, errors.New("id of sale or client don't have a value"))
+	}
+
 	if !i.IsActive {
 		return new(Output).Init(i.Id, 400, errors.New("this sale is already closed"))
 	}

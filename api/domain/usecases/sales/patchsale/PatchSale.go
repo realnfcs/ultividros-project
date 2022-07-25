@@ -34,12 +34,16 @@ func (p *PatchSale) Execute(i Input) *Output {
 
 			for _, v := range i.PartsReq {
 
-				if v.WasCancelled != false && v.WasConfirmed != false {
+				if v.Id == "" || v.ProductId == "" || v.ProdtQtyReq <= 0 || v.SaleId == "" {
+					outPart = new(Output).Init(i.Id, 400, errors.New("some field don't have a value"))
+				}
+
+				if v.WasCancelled && v.WasConfirmed {
 					outPart = new(Output).Init(i.Id, 400, errors.New("receive a confirmed and cancelled request"))
 					break
 				}
 
-				if v.WasCancelled != false {
+				if v.WasCancelled {
 
 					err := p.PartRepository.IncreaseQuantity(v.ProductId, v.ProdtQtyReq)
 					if err != nil {
@@ -61,12 +65,16 @@ func (p *PatchSale) Execute(i Input) *Output {
 		go func() {
 			for _, v := range i.CommonGlssReq {
 
-				if v.WasCancelled != false && v.WasConfirmed != false {
+				if v.Id == "" || v.ProductId == "" || v.ProdtQtyReq == 0 || v.SaleId == "" || v.RequestHeight <= 0 || v.RequestWidth <= 0 {
+					outComnGlss = new(Output).Init(i.Id, 400, errors.New("some field don't get a value"))
+				}
+
+				if v.WasCancelled && v.WasConfirmed {
 					outComnGlss = new(Output).Init(i.Id, 400, errors.New("receive a confirmed and cancelled request"))
 					break
 				}
 
-				if v.WasCancelled != false {
+				if v.WasCancelled {
 
 					widthRequest := v.RequestWidth * float32(v.ProdtQtyReq)
 					heightRequest := v.RequestHeight * float32(v.ProdtQtyReq)
@@ -93,12 +101,16 @@ func (p *PatchSale) Execute(i Input) *Output {
 		go func() {
 			for _, v := range i.TempGlssReq {
 
-				if v.WasCancelled != false && v.WasConfirmed != false {
+				if v.Id == "" || v.ProductId == "" || v.ProdtQtyReq <= 0 || v.SaleId == "" {
+					outPart = new(Output).Init(i.Id, 400, errors.New("some field don't have a value"))
+				}
+
+				if v.WasCancelled && v.WasConfirmed {
 					outTempGlss = new(Output).Init(i.Id, 400, errors.New("receive a confirmed and cancelled request"))
 					break
 				}
 
-				if v.WasCancelled != false {
+				if v.WasCancelled {
 					err := p.TemperedGlssRepository.IncreaseQuantity(v.ProductId, v.ProdtQtyReq)
 					if err != nil {
 						outTempGlss = new(Output).Init(i.Id, 500, err)

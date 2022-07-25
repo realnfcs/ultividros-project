@@ -39,6 +39,13 @@ func (s *SaveSale) Execute(i Input) *Output {
 		if len(i.Parts) > 0 {
 
 			for _, v := range i.Parts {
+
+				if v.ProductId == "" || v.ProductName == "" || v.ProductPrice == 0 || v.ProdQtyReq == 0 {
+					outPart = new(Output).Init("", 400, errors.New("some field no get a value"))
+					wg.Done()
+					return
+				}
+
 				qty, err := s.PartRepository.GetPartQuantity(v.ProductId)
 
 				if err != nil {
@@ -48,7 +55,7 @@ func (s *SaveSale) Execute(i Input) *Output {
 				}
 
 				if v.ProdQtyReq > qty {
-					outPart = new(Output).Init("", 400, errors.New("Part quantity request as big than quantity in stock"))
+					outPart = new(Output).Init("", 400, errors.New("part quantity request as big than quantity in stock"))
 					wg.Done()
 					return
 				}
@@ -64,8 +71,6 @@ func (s *SaveSale) Execute(i Input) *Output {
 
 		wg.Done()
 
-		return
-
 	}()
 
 	wg.Add(1)
@@ -74,6 +79,11 @@ func (s *SaveSale) Execute(i Input) *Output {
 
 		if len(i.TempGlss) > 0 {
 			for _, v := range i.TempGlss {
+
+				if v.ProductId == "" || v.ProductName == "" || v.ProductPrice == 0 || v.ProdQtyReq == 0 {
+					outPart = new(Output).Init("", 400, errors.New("some field no get a value"))
+				}
+
 				qty, err := s.TemperedGlssRepository.GetTempGlssQty(v.ProductId)
 				if err != nil {
 					outTempGlss = new(Output).Init("", 400, err)
@@ -82,7 +92,7 @@ func (s *SaveSale) Execute(i Input) *Output {
 				}
 
 				if v.ProdQtyReq > qty {
-					outTempGlss = new(Output).Init("", 400, errors.New("Tempered glass quantity request as big than quantity in stock"))
+					outTempGlss = new(Output).Init("", 400, errors.New("tempered glass quantity request as big than quantity in stock"))
 					wg.Done()
 					return
 				}
@@ -99,8 +109,6 @@ func (s *SaveSale) Execute(i Input) *Output {
 
 		wg.Done()
 
-		return
-
 	}()
 
 	wg.Add(1)
@@ -109,6 +117,10 @@ func (s *SaveSale) Execute(i Input) *Output {
 		if len(i.CommonGlss) > 0 {
 
 			for _, v := range i.CommonGlss {
+
+				if v.ProductId == "" || v.ProductName == "" || v.ProductPrice == 0 || v.ProdQtyReq == 0 || v.RequestWidth == 0 || v.RequestHeight == 0 {
+					outPart = new(Output).Init("", 400, errors.New("some field no get a value"))
+				}
 
 				area, err := s.CommonGlssRepository.GetArea(v.ProductId)
 
@@ -122,7 +134,7 @@ func (s *SaveSale) Execute(i Input) *Output {
 				heightRequest := v.RequestHeight * float32(v.ProdQtyReq)
 
 				if (widthRequest) > area["width"] || heightRequest > area["height"] {
-					outComnGlss = new(Output).Init("", 400, errors.New("Common glass width or height request as big than area in stock"))
+					outComnGlss = new(Output).Init("", 400, errors.New("common glass width or height request as big than area in stock"))
 					wg.Done()
 					return
 				}
@@ -131,7 +143,7 @@ func (s *SaveSale) Execute(i Input) *Output {
 				glassSheetsTotalArea := area["width"] * area["height"]
 
 				if glassSheetsQtyReq > glassSheetsTotalArea {
-					outComnGlss = new(Output).Init("", 400, errors.New("Total of quantity area in request in big than area in stock"))
+					outComnGlss = new(Output).Init("", 400, errors.New("total of quantity area in request in big than area in stock"))
 					wg.Done()
 					return
 				}
@@ -146,7 +158,6 @@ func (s *SaveSale) Execute(i Input) *Output {
 		}
 
 		wg.Done()
-		return
 	}()
 
 	wg.Wait()
