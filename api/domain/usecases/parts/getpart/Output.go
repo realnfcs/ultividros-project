@@ -9,7 +9,7 @@ type Output struct {
 	Err        string `json:"error"`
 }
 
-// OutpurData respnsável pelo dado da entity em si que será passado pelas camadas externas
+// OutpurData responsável pelo dado da entity em si que será passado pelas camadas externas
 type OutputData struct {
 	Id          string  `json:"id"`
 	Name        string  `json:"name"`
