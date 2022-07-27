@@ -5,6 +5,7 @@ import (
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/users/deleteuser"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/users/getuser"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/users/getusers"
+	"github.com/realnfcs/ultividros-project/api/domain/usecases/users/login"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/users/patchuser"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/users/saveuser"
 )
@@ -51,5 +52,12 @@ func (u *UserController) PatchUser(i patchuser.Input) *patchuser.Output {
 func (u *UserController) DeleteUser(i deleteuser.Input) *deleteuser.Output {
 	deleteUser := deleteuser.DeleteUser{UserRepository: u.Repo}
 	output := deleteUser.Execute(i)
+	return output
+}
+
+// Método da controller que executa a ação de login do usuário
+func (u *UserController) Login(i login.Input) *login.Output {
+	loginUser := login.Login{UserRepository: u.Repo}
+	output := loginUser.Execute(i)
 	return output
 }

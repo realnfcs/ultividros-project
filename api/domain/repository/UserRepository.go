@@ -10,4 +10,5 @@ type UserRepository interface {
 	SaveUser(entities.User) (string, int, error)
 	PatchUser(entities.User) (string, int, error)
 	DeleteUser(entities.User) (int, error)
+	Login(string, string) (string, int, error)
 }

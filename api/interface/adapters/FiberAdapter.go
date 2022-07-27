@@ -26,6 +26,7 @@ import (
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/users/deleteuser"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/users/getuser"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/users/getusers"
+	"github.com/realnfcs/ultividros-project/api/domain/usecases/users/login"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/users/patchuser"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/users/saveuser"
 	"github.com/realnfcs/ultividros-project/api/interface/contracts"
@@ -255,6 +256,17 @@ func PatchUser[T contracts.FiberAdapterContract[T]](req func(patchuser.Input) *p
 func DeleteUser[T contracts.FiberAdapterContract[T]](req func(deleteuser.Input) *deleteuser.Output, ctx T) func(T) error {
 	return func(c T) error {
 		input := deleteuser.Input{}
+		c.BodyParser(&input)
+
+		output := req(input)
+		return c.Status(output.Status).JSON(output)
+	}
+}
+
+// Adaptador do fiber responsável pela ação de login do usuário
+func Login[T contracts.FiberAdapterContract[T]](req func(login.Input) *login.Output, ctx T) func(T) error {
+	return func(c T) error {
+		input := login.Input{}
 		c.BodyParser(&input)
 
 		output := req(input)
