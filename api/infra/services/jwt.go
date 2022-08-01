@@ -33,7 +33,7 @@ func NewJWTService() *jwtService {
 // Struct responsável por guardar as informações em si de quem
 // criou o token JWT
 type Claim struct {
-	sum string `json:"sum"`
+	Sub string `json:"sub"`
 	jwt.StandardClaims
 }
 

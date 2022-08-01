@@ -5,9 +5,11 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	jwtware "github.com/gofiber/jwt/v3"
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/joho/godotenv"
 )
 
+// Middleware do fiber responsável pela validação do token JWT
 func JWTAuth() func(ctx *fiber.Ctx) error {
 	err := godotenv.Load()
 	if err != nil {
@@ -28,4 +30,16 @@ func JWTAuth() func(ctx *fiber.Ctx) error {
 			})
 		},
 	})
+}
+
+// Middleware do fiber responsável por pegar os dados do token JWT
+// e passar para o próximo handler
+// Para pegar os dados, usa-se ctx.Locals("<campo do token>")
+func JWTdata() func(*fiber.Ctx) error {
+	return func(ctx *fiber.Ctx) error {
+		user := ctx.Locals("user").(*jwt.Token)
+		claims := user.Claims.(jwt.MapClaims)
+		ctx.Locals("id", claims["sub"])
+		return ctx.Next()
+	}
 }
