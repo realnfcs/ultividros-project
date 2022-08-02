@@ -23,6 +23,10 @@ type userId struct {
 	ID string
 }
 
+type userOccupation struct {
+	Occupation string
+}
+
 // Método para iniciar o ORM de acordo com a conexão já estabelecida com
 // o banco de dados MySQL
 func (u *UserRepositoryMySql) Init() (*UserRepositoryMySql, error) {
@@ -48,6 +52,22 @@ func (u *UserRepositoryMySql) Init() (*UserRepositoryMySql, error) {
 	config.SetConnMaxLifetime(time.Hour)
 
 	return u, nil
+}
+
+// Método responsável pela verificação de cargo do usuário em questão
+// identificado pelo id passado por parâmetro, retornando true caso
+// seja admin ou moderador e voltando false quando for um usuário comum
+func (u *UserRepositoryMySql) VerifyOccupation(id string) (bool, error) {
+
+	user := new(models.User)
+	occupation := new(userOccupation)
+
+	err := u.GormDb.Model(user).First(occupation, "id = ?", id).Error
+	if err != nil {
+		return false, err
+	}
+
+	return occupation.Occupation == "moderator" || occupation.Occupation == "admin", nil
 }
 
 // Método que pega um usuário no banco de dados de acordo com o id passado

@@ -13,6 +13,7 @@ type Input struct {
 	Milimeter       float32 `json:"milimeter"`
 	HeightAvailable float32 `json:"height_available"`
 	WidthAvailable  float32 `json:"width_available"`
+	UserId          string  `json:"user_id"`
 }
 
 func (*Input) Init(e entities.CommonGlass) *Input {
@@ -26,20 +27,21 @@ func (*Input) Init(e entities.CommonGlass) *Input {
 		e.Milimeter,
 		e.HeightAvailable,
 		e.WidthAvailable,
+		"",
 	}
 }
 
 // Método responsável em converter um input em uma entidade de vidro comum
 func (i *Input) ConvertToComnGlss() *entities.CommonGlass {
 	return &entities.CommonGlass{
-		i.ID,
-		i.Name,
-		i.Description,
-		i.Price,
-		i.Type,
-		i.Color,
-		i.Milimeter,
-		i.HeightAvailable,
-		i.WidthAvailable,
+		Id:              i.ID,
+		Name:            i.Name,
+		Description:     i.Description,
+		Price:           i.Price,
+		Type:            i.Type,
+		Color:           i.Color,
+		Milimeter:       i.Milimeter,
+		HeightAvailable: i.HeightAvailable,
+		WidthAvailable:  i.WidthAvailable,
 	}
 }

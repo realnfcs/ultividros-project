@@ -12,7 +12,8 @@ import (
 // Stuct para iniciar a controller das peças necessitando
 // de um repository para funcionar
 type PartController struct {
-	Repo repository.PartRepository
+	Repo           repository.PartRepository
+	UserRepository repository.UserRepository
 }
 
 // Método da controller que comunica com o usecase para a obtenção de dados de uma
@@ -34,7 +35,7 @@ func (p *PartController) GetParts() *getparts.Output {
 // Método da controller que comunica com o usecase para salvar um objeto peça
 // de acordo com os dados passados no parâmetro
 func (p *PartController) SavePart(i savepart.Input) *savepart.Output {
-	savePart := savepart.SavePart{PartRepository: p.Repo}
+	savePart := savepart.SavePart{PartRepository: p.Repo, UserRepository: p.UserRepository}
 	output := savePart.Execute(i)
 	return output
 }
@@ -42,14 +43,14 @@ func (p *PartController) SavePart(i savepart.Input) *savepart.Output {
 // Método da controller que comunica com o usacase para atualizar os campos alterados do objeto de
 // acordo com os dados passados no parâmetro
 func (p *PartController) PatchPart(i patchpart.Input) *patchpart.Output {
-	patchPart := patchpart.PatchPart{PartRepository: p.Repo}
+	patchPart := patchpart.PatchPart{PartRepository: p.Repo, UserRepository: p.UserRepository}
 	output := patchPart.Execute(i)
 	return output
 }
 
 // Método da controller que comunica com o usacase para deletar um objeto
 func (p *PartController) DeletePart(i deletepart.Input) *deletepart.Output {
-	deletePart := deletepart.DeletePart{PartRepository: p.Repo}
+	deletePart := deletepart.DeletePart{PartRepository: p.Repo, UserRepository: p.UserRepository}
 	output := deletePart.Execute(i)
 	return output
 }

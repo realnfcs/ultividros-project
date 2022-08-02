@@ -10,6 +10,7 @@ type Input struct {
 	Price       float32 `json:"price"`
 	Quantity    uint32  `json:"quantity"`
 	ForType     string  `json:"for_type"`
+	UserId      string  `json:"user_id"`
 }
 
 func (*Input) Init(e entities.Part) *Input {
@@ -20,6 +21,7 @@ func (*Input) Init(e entities.Part) *Input {
 		e.Price,
 		e.Quantity,
 		e.ForType,
+		"",
 	}
 }
 

@@ -12,7 +12,8 @@ import (
 // Stuct para iniciar a controller dos vidros comuns necessitando
 // de um repository para funcionar
 type CommonGlassController struct {
-	Repo repository.CommonGlassRepository
+	Repo           repository.CommonGlassRepository
+	UserRepository repository.UserRepository
 }
 
 // Método da controller que comunica com o usecase para a obtenção de dados de um
@@ -34,7 +35,7 @@ func (c *CommonGlassController) GetCommonGlasses() *getcommonglasses.Output {
 // Método da controller que comunica com o usecase para salvar um objeto de vidro comum
 // de acordo com os dados passados no parâmetro
 func (c *CommonGlassController) SaveCommonGlass(i savecommonglass.Input) *savecommonglass.Output {
-	saveComnGlss := savecommonglass.SaveCommonGlass{CommonGlassRepository: c.Repo}
+	saveComnGlss := savecommonglass.SaveCommonGlass{CommonGlassRepository: c.Repo, UserRepository: c.UserRepository}
 	output := saveComnGlss.Execute(i)
 	return output
 }
@@ -42,14 +43,14 @@ func (c *CommonGlassController) SaveCommonGlass(i savecommonglass.Input) *saveco
 // Método da controller que comunica com o usacase para atualizar os campos alterados do objeto de
 // acordo com os dados passados no parâmetro
 func (c *CommonGlassController) PatchCommonGlass(i patchcommonglass.Input) *patchcommonglass.Output {
-	patchComnGlss := patchcommonglass.PatchCommonGlass{CommonGlassRepository: c.Repo}
+	patchComnGlss := patchcommonglass.PatchCommonGlass{CommonGlassRepository: c.Repo, UserRepository: c.UserRepository}
 	output := patchComnGlss.Execute(i)
 	return output
 }
 
 // Método da controller que comunica com o usacase para deletar um objeto
 func (c *CommonGlassController) DeleteCommonGlass(i deletecommonglass.Input) *deletecommonglass.Output {
-	deleteComnGlss := deletecommonglass.DeleteCommonGlass{CommonGlassRepository: c.Repo}
+	deleteComnGlss := deletecommonglass.DeleteCommonGlass{CommonGlassRepository: c.Repo, UserRepository: c.UserRepository}
 	output := deleteComnGlss.Execute(i)
 	return output
 }
