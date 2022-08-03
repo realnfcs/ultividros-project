@@ -11,6 +11,7 @@ import (
 // Usecase responsável por deletar uma venda no repositório
 type DeleteSale struct {
 	SaleRepository repository.SaleRepository
+	UserRepository repository.UserRepository
 }
 
 func (d *DeleteSale) Execute(i Input) *Output {
@@ -23,6 +24,15 @@ func (d *DeleteSale) Execute(i Input) *Output {
 
 	if i.IsActive {
 		return new(Output).Init(400, errors.New("can't delete a unfinished sale"))
+	}
+
+	clientAuth, err := d.SaleRepository.ClientAuthentication(i.Id, i.ClientId)
+	if err != nil {
+		return new(Output).Init(500, err)
+	}
+
+	if !clientAuth {
+		return new(Output).Init(400, errors.New("client unmatched"))
 	}
 
 	status, err := d.SaleRepository.DeleteSale(*i.ConvertToSale())

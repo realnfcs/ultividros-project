@@ -14,10 +14,10 @@ type Input struct {
 // Método que converte um input em uma entidade de usuário
 func (i *Input) ConvertToUser() *entities.User {
 	return &entities.User{
-		i.Id,
-		i.Name,
-		i.Email,
-		i.Password,
-		i.Occupation,
+		Id:         i.Id,
+		Name:       i.Name,
+		Email:      i.Email,
+		Password:   i.Password,
+		Occupation: i.Occupation,
 	}
 }

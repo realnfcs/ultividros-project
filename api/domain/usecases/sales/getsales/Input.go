@@ -1,7 +1,6 @@
-package getsale
+package getsales
 
 // Usecase Input Port responsável pelos dados que entrarão
 type Input struct {
-	ID       string
-	ClientId string
+	ClientId string `json:"client_id"`
 }

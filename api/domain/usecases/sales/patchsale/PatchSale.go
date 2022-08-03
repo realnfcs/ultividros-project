@@ -5,7 +5,6 @@ package patchsale
 
 import (
 	"errors"
-	"fmt"
 	"sync"
 
 	"github.com/realnfcs/ultividros-project/api/domain/repository"
@@ -16,6 +15,7 @@ type PatchSale struct {
 	CommonGlssRepository   repository.CommonGlassRepository
 	PartRepository         repository.PartRepository
 	TemperedGlssRepository repository.TemperedGlassRepository
+	UserRepository         repository.UserRepository
 }
 
 func (p *PatchSale) Execute(i Input) *Output {
@@ -31,7 +31,14 @@ func (p *PatchSale) Execute(i Input) *Output {
 		return new(Output).Init(i.Id, 400, errors.New("some important fields don't have a value"))
 	}
 
-	fmt.Println("PASS")
+	clientAuth, err := p.SaleRepository.ClientAuthentication(i.Id, i.ClientId)
+	if err != nil {
+		return new(Output).Init(i.Id, 500, err)
+	}
+
+	if !clientAuth {
+		return new(Output).Init(i.Id, 400, errors.New("client unmatched"))
+	}
 
 	if len(i.PartsReq) > 0 {
 
@@ -52,8 +59,6 @@ func (p *PatchSale) Execute(i Input) *Output {
 
 				if v.WasCancelled {
 
-					fmt.Println("PASS")
-
 					err := p.PartRepository.IncreaseQuantity(v.ProductId, v.ProdtQtyReq)
 					if err != nil {
 						outPart = new(Output).Init(i.Id, 500, err)
@@ -66,8 +71,6 @@ func (p *PatchSale) Execute(i Input) *Output {
 		}()
 
 	}
-
-	fmt.Println("PASS")
 
 	if len(i.CommonGlssReq) > 0 {
 
@@ -87,8 +90,6 @@ func (p *PatchSale) Execute(i Input) *Output {
 
 				if v.WasCancelled {
 
-					fmt.Println("PASS")
-
 					widthRequest := v.RequestWidth * float32(v.ProdtQtyReq)
 					heightRequest := v.RequestHeight * float32(v.ProdtQtyReq)
 
@@ -106,8 +107,6 @@ func (p *PatchSale) Execute(i Input) *Output {
 		}()
 
 	}
-
-	fmt.Println("PASS")
 
 	if len(i.TempGlssReq) > 0 {
 
@@ -131,8 +130,6 @@ func (p *PatchSale) Execute(i Input) *Output {
 						outTempGlss = new(Output).Init(i.Id, 500, err)
 						break
 					}
-					fmt.Println("PASS")
-
 				}
 
 			}
@@ -154,8 +151,6 @@ func (p *PatchSale) Execute(i Input) *Output {
 	if outTempGlss != nil {
 		return outTempGlss
 	}
-
-	fmt.Println("PASS")
 
 	id, status, err := p.SaleRepository.PatchSale(*i.ConvertToSale())
 	return new(Output).Init(id, status, err)

@@ -17,6 +17,7 @@ type SaveSale struct {
 	CommonGlssRepository   repository.CommonGlassRepository
 	PartRepository         repository.PartRepository
 	TemperedGlssRepository repository.TemperedGlassRepository
+	UserRepository         repository.UserRepository
 }
 
 func (s *SaveSale) Execute(i Input) *Output {
