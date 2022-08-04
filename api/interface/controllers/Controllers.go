@@ -20,6 +20,6 @@ func (c *Controllers) Init(rt repository.TemperedGlassRepository, rc repository.
 		CommonController:   CommonGlassController{Repo: rc, UserRepository: ru},
 		PartController:     PartController{Repo: rp, UserRepository: ru},
 		UserController:     UserController{Repo: ru},
-		SaleController:     SaleController{Repo: rs, CommonGlssRepository: rc, PartRepository: rp, TemperedGlssRepository: rt, UserRepository: ru},
+		SaleController:     SaleController{Repo: rs, CommonGlssRepository: rc, PartRepository: rp, TemperedGlssRepository: rt},
 	}
 }

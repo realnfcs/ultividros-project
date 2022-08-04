@@ -9,7 +9,6 @@ import (
 
 type GetSale struct {
 	SaleRepository repository.SaleRepository
-	UserRepository repository.UserRepository
 }
 
 // Usecase responsável pela obtenção de uma única venda de um

@@ -12,7 +12,6 @@ import (
 // Usecase responsável por finalizar uma venda no repositório
 type CloseSale struct {
 	SaleRepository repository.SaleRepository
-	UserRepository repository.UserRepository
 }
 
 func (c *CloseSale) Execute(i Input) *Output {

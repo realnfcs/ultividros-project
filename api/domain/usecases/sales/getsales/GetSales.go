@@ -12,7 +12,6 @@ import (
 // junto com os produtos requeridos
 type GetSales struct {
 	SaleRepository repository.SaleRepository
-	UserRepository repository.UserRepository
 }
 
 func (g *GetSales) Execute(i Input) *Output {

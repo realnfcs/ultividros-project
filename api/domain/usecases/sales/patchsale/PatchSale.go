@@ -15,7 +15,6 @@ type PatchSale struct {
 	CommonGlssRepository   repository.CommonGlassRepository
 	PartRepository         repository.PartRepository
 	TemperedGlssRepository repository.TemperedGlassRepository
-	UserRepository         repository.UserRepository
 }
 
 func (p *PatchSale) Execute(i Input) *Output {

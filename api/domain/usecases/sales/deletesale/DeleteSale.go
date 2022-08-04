@@ -11,7 +11,6 @@ import (
 // Usecase responsável por deletar uma venda no repositório
 type DeleteSale struct {
 	SaleRepository repository.SaleRepository
-	UserRepository repository.UserRepository
 }
 
 func (d *DeleteSale) Execute(i Input) *Output {
