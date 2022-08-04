@@ -24,10 +24,10 @@ func (*Input) Init(e entities.User) *Input {
 // Método responsável em converter um input em uma entidade de peça
 func (i *Input) ConvertToUser() *entities.User {
 	return &entities.User{
-		i.Id,
-		i.Name,
-		i.Email,
-		i.Password,
-		i.Occupation,
+		Id:         i.Id,
+		Name:       i.Name,
+		Email:      i.Email,
+		Password:   i.Password,
+		Occupation: i.Occupation,
 	}
 }

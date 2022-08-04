@@ -51,17 +51,13 @@ type CommonGlssReq struct {
 
 func (*Output) Init(i *[]entities.Sale, status int, err error) *Output {
 
+	if i == nil || err != nil {
+		return &Output{[]OutputData{}, status, err.Error()}
+	}
+
 	output := make([]OutputData, len(*i))
 
 	var wg sync.WaitGroup
-
-	if i == nil {
-		return &Output{output, status, err.Error()}
-	}
-
-	if err != nil {
-		return &Output{output, status, err.Error()}
-	}
 
 	for i, v := range *i {
 		output[i].Id = v.Id

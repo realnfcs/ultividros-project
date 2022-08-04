@@ -205,5 +205,3 @@ func (i *Input) ConvertToSale() *entities.Sale {
 		IsActive:      i.IsActive,
 	}
 }
-
-// Método que converte um input em uma entidade de peça

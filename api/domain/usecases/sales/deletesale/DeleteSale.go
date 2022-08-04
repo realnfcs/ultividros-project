@@ -25,6 +25,15 @@ func (d *DeleteSale) Execute(i Input) *Output {
 		return new(Output).Init(400, errors.New("can't delete a unfinished sale"))
 	}
 
+	clientAuth, err := d.SaleRepository.ClientAuthentication(i.Id, i.ClientId)
+	if err != nil {
+		return new(Output).Init(500, err)
+	}
+
+	if !clientAuth {
+		return new(Output).Init(400, errors.New("client unmatched"))
+	}
+
 	status, err := d.SaleRepository.DeleteSale(*i.ConvertToSale())
 	return new(Output).Init(status, err)
 }
