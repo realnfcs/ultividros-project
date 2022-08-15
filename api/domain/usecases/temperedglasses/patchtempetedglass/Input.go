@@ -15,6 +15,7 @@ type Input struct {
 	Milimeter   float32 `json:"milimeter"`
 	Height      float32 `json:"height"`
 	Width       float32 `json:"width"`
+	UserId      string  `json:"user_id"`
 }
 
 func (*Input) Init(e entities.TemperedGlass) *Input {
@@ -30,22 +31,23 @@ func (*Input) Init(e entities.TemperedGlass) *Input {
 		e.Milimeter,
 		e.Height,
 		e.Width,
+		"",
 	}
 }
 
 // Método responsável em converter um input em uma entidade de vidro temperado
 func (i *Input) ConvertToTempGlss() *entities.TemperedGlass {
 	return &entities.TemperedGlass{
-		i.ID,
-		i.Name,
-		i.Description,
-		i.Price,
-		i.Quantity,
-		i.Type,
-		i.Color,
-		i.GlassSheets,
-		i.Milimeter,
-		i.Height,
-		i.Width,
+		Id:          i.ID,
+		Name:        i.Name,
+		Description: i.Description,
+		Price:       i.Price,
+		Quantity:    i.Quantity,
+		Type:        i.Type,
+		Color:       i.Color,
+		GlassSheets: i.GlassSheets,
+		Milimeter:   i.Milimeter,
+		Height:      i.Height,
+		Width:       i.Width,
 	}
 }

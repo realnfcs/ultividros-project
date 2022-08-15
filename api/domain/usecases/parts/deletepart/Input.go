@@ -10,6 +10,7 @@ type Input struct {
 	Price       float32 `json:"price"`
 	Quantity    uint32  `json:"quantity"`
 	ForType     string  `json:"for_type"`
+	UserId      string  `json:"user_id"`
 }
 
 // Método que converte um input em uma entidade de peça

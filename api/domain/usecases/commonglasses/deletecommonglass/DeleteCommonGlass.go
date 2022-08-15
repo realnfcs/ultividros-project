@@ -2,14 +2,29 @@
 // a ação de deletar um vidro comum no repositório
 package deletecommonglass
 
-import "github.com/realnfcs/ultividros-project/api/domain/repository"
+import (
+	"errors"
 
-// Usecase responsável por deletar um vidro temperado no repositório
+	"github.com/realnfcs/ultividros-project/api/domain/repository"
+)
+
+// Usecase responsável por deletar um vidro comum no repositório
 type DeleteCommonGlass struct {
 	CommonGlassRepository repository.CommonGlassRepository
+	UserRepository        repository.UserRepository
 }
 
 func (d *DeleteCommonGlass) Execute(i Input) *Output {
+
+	ocup, err := d.UserRepository.VerifyOccupation(i.UserId)
+	if err != nil {
+		return new(Output).Init(400, err)
+	}
+
+	if !ocup {
+		return new(Output).Init(401, errors.New("unauthorized"))
+	}
+
 	status, err := d.CommonGlassRepository.DeleteCommonGlass(*i.ConvertToComnGlss())
 	return new(Output).Init(status, err)
 }

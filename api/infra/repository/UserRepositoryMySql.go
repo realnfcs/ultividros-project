@@ -7,6 +7,7 @@ import (
 	"github.com/realnfcs/ultividros-project/api/domain/entities"
 	"github.com/realnfcs/ultividros-project/api/infra/database/models"
 	databasemysql "github.com/realnfcs/ultividros-project/api/infra/database/mysql"
+	"github.com/realnfcs/ultividros-project/api/infra/services"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -20,6 +21,10 @@ type UserRepositoryMySql struct {
 // Struct que auxilia nas querys
 type userId struct {
 	ID string
+}
+
+type userOccupation struct {
+	Occupation string
 }
 
 // Método para iniciar o ORM de acordo com a conexão já estabelecida com
@@ -49,6 +54,22 @@ func (u *UserRepositoryMySql) Init() (*UserRepositoryMySql, error) {
 	return u, nil
 }
 
+// Método responsável pela verificação de cargo do usuário em questão
+// identificado pelo id passado por parâmetro, retornando true caso
+// seja admin ou moderador e voltando false quando for um usuário comum
+func (u *UserRepositoryMySql) VerifyOccupation(id string) (bool, error) {
+
+	user := new(models.User)
+	occupation := new(userOccupation)
+
+	err := u.GormDb.Model(user).First(occupation, "id = ?", id).Error
+	if err != nil {
+		return false, err
+	}
+
+	return occupation.Occupation == "moderator" || occupation.Occupation == "admin", nil
+}
+
 // Método que pega um usuário no banco de dados de acordo com o id passado
 // no parâmetro e o retorna
 func (u *UserRepositoryMySql) GetUser(id string) (*entities.User, int, error) {
@@ -58,10 +79,6 @@ func (u *UserRepositoryMySql) GetUser(id string) (*entities.User, int, error) {
 	err := u.GormDb.First(user, "id = ?", id).Error
 	if err != nil {
 		return nil, 404, err
-	}
-
-	if user == nil {
-		return nil, 500, errors.New("Internal error")
 	}
 
 	return user.TranformToEntity(), 200, nil
@@ -91,8 +108,10 @@ func (u *UserRepositoryMySql) SaveUser(e entities.User) (string, int, error) {
 	user := new(models.User).TransformToModel(e)
 
 	if user.Name == "" || user.Email == "" || user.Password == "" || user.Occupation == "" {
-		return user.ID, 400, errors.New("Empty field error: some field no got a value")
+		return user.ID, 400, errors.New("empty field error: some field no got a value")
 	}
+
+	user.Password = services.SHA256Encoder(user.Password)
 
 	err := u.GormDb.Create(user).Error
 	if err != nil {
@@ -140,4 +159,27 @@ func (u *UserRepositoryMySql) DeleteUser(e entities.User) (int, error) {
 	}
 
 	return 200, nil
+}
+
+// Método que recebe um email e uma senha, verifica se é existente e volta um
+// token caso tudo esteja certo finalizando a ação de login de um usuário
+func (u *UserRepositoryMySql) Login(email, password string) (string, int, error) {
+
+	user := new(models.User)
+
+	err := u.GormDb.Where("email = ?", email).First(user).Error
+	if err != nil {
+		return "", 404, err
+	}
+
+	if user.Password != services.SHA256Encoder(password) {
+		return "", 401, errors.New("invalid credentials")
+	}
+
+	token, err := services.NewJWTService().GenerateToken(user.ID)
+	if err != nil {
+		return "", 500, err
+	}
+
+	return token, 200, nil
 }

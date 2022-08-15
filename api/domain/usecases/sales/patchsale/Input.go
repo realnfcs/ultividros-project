@@ -45,7 +45,7 @@ type CommonGlssReq struct {
 	RequestHeight float32 `json:"request_height"`
 }
 
-func (*Input) Init(e entities.Sale) *Input {
+func (*Input) Init(e entities.Sale, userId string) *Input {
 
 	var wg sync.WaitGroup
 

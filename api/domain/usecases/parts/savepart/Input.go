@@ -9,6 +9,7 @@ type Input struct {
 	Price       float32 `json:"price"`
 	Quantity    uint32  `json:"quantity"`
 	ForType     string  `json:"for_type"`
+	UserId      string  `json:"user_id"`
 }
 
 func (*Input) Init(e entities.Part) *Input {
@@ -18,17 +19,18 @@ func (*Input) Init(e entities.Part) *Input {
 		e.Price,
 		e.Quantity,
 		e.ForType,
+		"",
 	}
 }
 
 // Método que converte um input na entidade Part
 func (i *Input) ConvertToPart() *entities.Part {
 	return &entities.Part{
-		"",
-		i.Name,
-		i.Description,
-		i.Price,
-		i.Quantity,
-		i.ForType,
+		Id:          "",
+		Name:        i.Name,
+		Description: i.Description,
+		Price:       i.Price,
+		Quantity:    i.Quantity,
+		ForType:     i.ForType,
 	}
 }

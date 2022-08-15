@@ -26,6 +26,7 @@ import (
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/users/deleteuser"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/users/getuser"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/users/getusers"
+	"github.com/realnfcs/ultividros-project/api/domain/usecases/users/login"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/users/patchuser"
 	"github.com/realnfcs/ultividros-project/api/domain/usecases/users/saveuser"
 	"github.com/realnfcs/ultividros-project/api/interface/contracts"
@@ -58,6 +59,7 @@ func SaveTemperedGlasses[T contracts.FiberAdapterContract[T]](req func(savetempe
 	return func(c T) error {
 		input := savetemperedglass.Input{}
 		c.BodyParser(&input)
+		input.UserId = c.Locals("id").(string)
 
 		output := req(input)
 		return c.Status(output.Status).JSON(output)
@@ -69,6 +71,7 @@ func UpdateTemperedGlasses[T contracts.FiberAdapterContract[T]](req func(updatet
 	return func(c T) error {
 		input := updatetemperedglass.Input{}
 		c.BodyParser(&input)
+		input.UserId = c.Locals("id").(string)
 
 		output := req(input)
 		return c.Status(output.Status).JSON(output)
@@ -80,6 +83,7 @@ func PatchTemperedGlasses[T contracts.FiberAdapterContract[T]](req func(patchtem
 	return func(c T) error {
 		input := patchtemperedglass.Input{}
 		c.BodyParser(&input)
+		input.UserId = c.Locals("id").(string)
 
 		output := req(input)
 		return c.Status(output.Status).JSON(output)
@@ -91,6 +95,7 @@ func DeleteTemperedGlass[T contracts.FiberAdapterContract[T]](req func(deletetem
 	return func(c T) error {
 		input := deletetemperedglass.Input{}
 		c.BodyParser(&input)
+		input.UserId = c.Locals("id").(string)
 
 		output := req(input)
 		return c.Status(output.Status).JSON(output)
@@ -124,6 +129,7 @@ func SaveCommonGlasses[T contracts.FiberAdapterContract[T]](req func(savecommong
 	return func(c T) error {
 		input := savecommonglass.Input{}
 		c.BodyParser(&input)
+		input.UserId = c.Locals("id").(string)
 
 		output := req(input)
 		return c.Status(output.Status).JSON(output)
@@ -135,6 +141,7 @@ func PatchCommonGlasses[T contracts.FiberAdapterContract[T]](req func(patchcommo
 	return func(c T) error {
 		input := patchcommonglass.Input{}
 		c.BodyParser(&input)
+		input.UserId = c.Locals("id").(string)
 
 		output := req(input)
 		return c.Status(output.Status).JSON(output)
@@ -146,6 +153,7 @@ func DeleteCommonGlass[T contracts.FiberAdapterContract[T]](req func(deletecommo
 	return func(c T) error {
 		input := deletecommonglass.Input{}
 		c.BodyParser(&input)
+		input.UserId = c.Locals("id").(string)
 
 		output := req(input)
 		return c.Status(output.Status).JSON(output)
@@ -179,6 +187,7 @@ func SavePart[T contracts.FiberAdapterContract[T]](req func(savepart.Input) *sav
 	return func(c T) error {
 		input := savepart.Input{}
 		c.BodyParser(&input)
+		input.UserId = c.Locals("id").(string)
 
 		output := req(input)
 		return c.Status(output.Status).JSON(output)
@@ -190,6 +199,7 @@ func PatchPart[T contracts.FiberAdapterContract[T]](req func(patchpart.Input) *p
 	return func(c T) error {
 		input := patchpart.Input{}
 		c.BodyParser(&input)
+		input.UserId = c.Locals("id").(string)
 
 		output := req(input)
 		return c.Status(output.Status).JSON(output)
@@ -201,6 +211,7 @@ func DeletePart[T contracts.FiberAdapterContract[T]](req func(deletepart.Input) 
 	return func(c T) error {
 		input := deletepart.Input{}
 		c.BodyParser(&input)
+		input.UserId = c.Locals("id").(string)
 
 		output := req(input)
 		return c.Status(output.Status).JSON(output)
@@ -245,6 +256,7 @@ func PatchUser[T contracts.FiberAdapterContract[T]](req func(patchuser.Input) *p
 	return func(c T) error {
 		input := patchuser.Input{}
 		c.BodyParser(&input)
+		input.Id = c.Locals("id").(string)
 
 		output := req(input)
 		return c.Status(output.Status).JSON(output)
@@ -255,6 +267,18 @@ func PatchUser[T contracts.FiberAdapterContract[T]](req func(patchuser.Input) *p
 func DeleteUser[T contracts.FiberAdapterContract[T]](req func(deleteuser.Input) *deleteuser.Output, ctx T) func(T) error {
 	return func(c T) error {
 		input := deleteuser.Input{}
+		c.BodyParser(&input)
+		input.Id = c.Locals("id").(string)
+
+		output := req(input)
+		return c.Status(output.Status).JSON(output)
+	}
+}
+
+// Adaptador do fiber responsável pela ação de login do usuário
+func Login[T contracts.FiberAdapterContract[T]](req func(login.Input) *login.Output, ctx T) func(T) error {
+	return func(c T) error {
+		input := login.Input{}
 		c.BodyParser(&input)
 
 		output := req(input)
@@ -268,6 +292,7 @@ func GetSale[T contracts.FiberAdapterContract[T]](req func(getsale.Input) *getsa
 	return func(c T) error {
 		p := c.Params("id")
 		input := getsale.Input{ID: p}
+		input.ClientId = c.Locals("id").(string)
 
 		output := req(input)
 		return c.Status(output.Status).JSON(output)
@@ -276,9 +301,11 @@ func GetSale[T contracts.FiberAdapterContract[T]](req func(getsale.Input) *getsa
 
 // Adaptador do fiber responsável por trazer ao cliente todos os dados das
 // vendas no repositório
-func GetSales[T contracts.FiberAdapterContract[T]](req func() *getsales.Output, ctx T) func(T) error {
+func GetSales[T contracts.FiberAdapterContract[T]](req func(getsales.Input) *getsales.Output, ctx T) func(T) error {
 	return func(c T) error {
-		output := req()
+		input := getsales.Input{ClientId: c.Locals("id").(string)}
+
+		output := req(input)
 		return c.Status(output.Status).JSON(output)
 	}
 }
@@ -288,6 +315,7 @@ func SaveSale[T contracts.FiberAdapterContract[T]](req func(savesale.Input) *sav
 	return func(c T) error {
 		input := savesale.Input{}
 		c.BodyParser(&input)
+		input.ClientId = c.Locals("id").(string)
 
 		output := req(input)
 		return c.Status(output.Status).JSON(output)
@@ -299,6 +327,7 @@ func PatchSale[T contracts.FiberAdapterContract[T]](req func(patchsale.Input) *p
 	return func(c T) error {
 		input := patchsale.Input{}
 		c.BodyParser(&input)
+		input.ClientId = c.Locals("id").(string)
 
 		output := req(input)
 		return c.Status(output.Status).JSON(output)
@@ -310,6 +339,7 @@ func CloseSale[T contracts.FiberAdapterContract[T]](req func(closesale.Input) *c
 	return func(c T) error {
 		input := closesale.Input{}
 		c.BodyParser(&input)
+		input.ClientId = c.Locals("id").(string)
 
 		output := req(input)
 		return c.Status(output.Status).JSON(output)
@@ -321,6 +351,7 @@ func DeleteSale[T contracts.FiberAdapterContract[T]](req func(deletesale.Input) 
 	return func(c T) error {
 		input := deletesale.Input{}
 		c.BodyParser(&input)
+		input.ClientId = c.Locals("id").(string)
 
 		output := req(input)
 		return c.Status(output.Status).JSON(output)

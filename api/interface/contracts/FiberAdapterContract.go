@@ -5,4 +5,5 @@ package contracts
 type FiberAdapterContract[T any] interface {
 	Adapters
 	Status(int) T
+	Locals(key string, value ...interface{}) interface{}
 }

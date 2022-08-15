@@ -13,7 +13,8 @@ import (
 // Stuct para iniciar a controller dos vidros temperados necessitando
 // de um repository para funcionar
 type TemperedGlassController struct {
-	Repo repository.TemperedGlassRepository
+	Repo           repository.TemperedGlassRepository
+	UserRepository repository.UserRepository
 }
 
 // Método da controller que comunica com o usecase para a obtenção de dados de um
@@ -35,7 +36,7 @@ func (t *TemperedGlassController) GetTemperedGlasses() *gettemperedglasses.Outpu
 // Método da controller que comunica com o usecase para salvar um objeto de vidro temperado
 // de acordo com os dados passados no parâmetro
 func (t *TemperedGlassController) SaveTemperedGlasses(i savetemperedglass.Input) *savetemperedglass.Output {
-	saveTempGlss := savetemperedglass.SaveTemperedGlass{TemperedGlassRepository: t.Repo}
+	saveTempGlss := savetemperedglass.SaveTemperedGlass{TemperedGlassRepository: t.Repo, UserRepository: t.UserRepository}
 	output := saveTempGlss.Execute(i)
 	return output
 }
@@ -43,7 +44,7 @@ func (t *TemperedGlassController) SaveTemperedGlasses(i savetemperedglass.Input)
 // Método da controller que comunica com o usacase para atualizar os campos do objeto de
 // acordo com os dados passados no parâmetro
 func (t *TemperedGlassController) UpdateTemperedGlasses(i updatetemperedglass.Input) *updatetemperedglass.Output {
-	updateTempGlss := updatetemperedglass.UpdateTemperedGlass{TemperedGlassRepository: t.Repo}
+	updateTempGlss := updatetemperedglass.UpdateTemperedGlass{TemperedGlassRepository: t.Repo, UserRepository: t.UserRepository}
 	output := updateTempGlss.Execute(i)
 	return output
 }
@@ -51,14 +52,14 @@ func (t *TemperedGlassController) UpdateTemperedGlasses(i updatetemperedglass.In
 // Método da controller que comunica com o usacase para atualizar os campos alterados do objeto de
 // acordo com os dados passados no parâmetro
 func (t *TemperedGlassController) PatchTemperedGlasses(i patchtemperedglass.Input) *patchtemperedglass.Output {
-	patchTempGlss := patchtemperedglass.PatchTemperedGlass{TemperedGlassRepository: t.Repo}
+	patchTempGlss := patchtemperedglass.PatchTemperedGlass{TemperedGlassRepository: t.Repo, UserRepository: t.UserRepository}
 	output := patchTempGlss.Execute(i)
 	return output
 }
 
 // Método da controller que comunica com o usacase para deletar um objeto
 func (t *TemperedGlassController) DeleteTemperedGlass(i deletetemperedglass.Input) *deletetemperedglass.Output {
-	deleteTempGlss := deletetemperedglass.DeleteTemperedGlass{TemperedGlassRepository: t.Repo}
+	deleteTempGlss := deletetemperedglass.DeleteTemperedGlass{TemperedGlassRepository: t.Repo, UserRepository: t.UserRepository}
 	output := deleteTempGlss.Execute(i)
 	return output
 }

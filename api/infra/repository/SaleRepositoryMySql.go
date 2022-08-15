@@ -18,8 +18,8 @@ type SaleRepositoryMySql struct {
 }
 
 // Struct que auxilia nas querys
-type saleId struct {
-	ID string
+type clientId struct {
+	ClientID string
 }
 
 var (
@@ -54,36 +54,55 @@ func (s *SaleRepositoryMySql) Init() (*SaleRepositoryMySql, error) {
 
 	partReqRepo = new(PartReqRepositoryMySql).Init(s.GormDb)
 	if partReqRepo == nil {
-		return nil, errors.New("Can't inicialize partReq repository")
+		return nil, errors.New("can't inicialize partReq repository")
 	}
 
 	tempGlssReqRepo = new(TempGlssReqRepositoryMySql).Init(s.GormDb)
 	if tempGlssReqRepo == nil {
-		return nil, errors.New("Can't inicialize tempGlssReq repository")
+		return nil, errors.New("can't inicialize tempGlssReq repository")
 	}
 
 	comnGlssReqRepo = new(ComnGlssReqRepository).Init(s.GormDb)
 	if comnGlssReqRepo == nil {
-		return nil, errors.New("Can't inicialize comnGlssReq repository")
+		return nil, errors.New("can't inicialize comnGlssReq repository")
 	}
 
 	return s, nil
 }
 
-// Methos of Products Request Section //
+// Methods of Sale Section //
+
+// Método responsável em verificar se o id do cliente passado como parâmetro
+// corresponde com o id do cliente salvo na venda do repositório
+func (s *SaleRepositoryMySql) ClientAuthentication(saleId string, userId string) (bool, error) {
+
+	sale := new(models.Sale)
+	clientId := new(clientId)
+
+	err := s.GormDb.Model(sale).First(clientId, "id = ?", saleId).Error
+	if err != nil {
+		return false, err
+	}
+
+	return clientId.ClientID == userId, nil
+}
 
 // CRUD Section //
 
 // Método que pega uma venda e seus produtos requeridos no banco de dados de
 // acordo com o id passado no parâmetro e o retorna
-func (s *SaleRepositoryMySql) GetSale(id string) (*entities.Sale, int, error) {
+func (s *SaleRepositoryMySql) GetSale(id string, userId string) (*entities.Sale, int, error) {
+
+	if id == "" || userId == "" {
+		return nil, 404, errors.New("id or user id no got a value")
+	}
 
 	sale := new(models.Sale)
 	comnGlssReq := []models.CommonGlssReq{}
 	partReq := []models.PartReq{}
 	tempGlssReq := []models.TempGlssReq{}
 
-	err := s.GormDb.First(sale, "id = ?", id).Error
+	err := s.GormDb.Where("client_id = ?", userId).First(sale, "id = ?", id).Error
 	if err != nil {
 		return nil, 404, err
 	}
@@ -111,14 +130,14 @@ func (s *SaleRepositoryMySql) GetSale(id string) (*entities.Sale, int, error) {
 }
 
 // Método que pega todas as vendas no banco de dados e as retorna
-func (s *SaleRepositoryMySql) GetSales() (*[]entities.Sale, int, error) {
+func (s *SaleRepositoryMySql) GetSales(userId string) (*[]entities.Sale, int, error) {
 
 	sales := []models.Sale{}
 	comnGlss := []models.CommonGlssReq{}
 	partReq := []models.PartReq{}
 	tempGlss := []models.TempGlssReq{}
 
-	err := s.GormDb.Find(&sales).Error
+	err := s.GormDb.Where("client_id = ?", userId).Find(&sales).Error
 	if err != nil {
 		return nil, 500, err
 	}
@@ -168,7 +187,7 @@ func (s *SaleRepositoryMySql) SaveSale(saleEnt entities.Sale) (string, int, erro
 	sale := new(models.Sale).TransformToModel(saleEnt)
 
 	if sale.ClientID == "" || (len(sale.CommonGlssReq) <= 0 && len(sale.PartReq) <= 0 && len(sale.TempGlssReq) <= 0) {
-		return sale.ID, 400, errors.New("Empty field error: some field no got a value")
+		return sale.ID, 400, errors.New("empty field error: some field no got a value")
 	}
 
 	err := s.GormDb.Create(sale).Error
@@ -186,14 +205,14 @@ func (s *SaleRepositoryMySql) PatchSale(e entities.Sale) (string, int, error) {
 	sale := new(models.Sale).TransformToModel(e)
 
 	if sale.ID == "" || sale.ClientID == "" || (len(sale.CommonGlssReq) <= 0 && len(sale.PartReq) <= 0 && len(sale.TempGlssReq) <= 0) {
-		return sale.ID, 400, errors.New("Empty field error: some important field no got a value")
+		return sale.ID, 400, errors.New("empty field error: some important field no got a value")
 	}
 
 	if len(sale.CommonGlssReq) > 0 {
 
 		for _, v := range sale.CommonGlssReq {
 
-			if v.WasCancelled != false {
+			if v.WasCancelled {
 				err := comnGlssReqRepo.CancelAComnGlssRequest(v.ID)
 				if err != nil {
 					return sale.ID, 500, err
@@ -201,7 +220,7 @@ func (s *SaleRepositoryMySql) PatchSale(e entities.Sale) (string, int, error) {
 				continue
 			}
 
-			if v.WasConfirmed != false {
+			if v.WasConfirmed {
 				err := comnGlssReqRepo.ConfirmAComnGlssRequest(v.ID)
 				if err != nil {
 					return sale.ID, 500, err
@@ -215,7 +234,7 @@ func (s *SaleRepositoryMySql) PatchSale(e entities.Sale) (string, int, error) {
 
 		for _, v := range sale.PartReq {
 
-			if v.WasCancelled != false {
+			if v.WasCancelled {
 				err := partReqRepo.CancelAPartRequest(v.ID)
 				if err != nil {
 					return sale.ID, 500, err
@@ -223,7 +242,7 @@ func (s *SaleRepositoryMySql) PatchSale(e entities.Sale) (string, int, error) {
 				continue
 			}
 
-			if v.WasConfirmed != false {
+			if v.WasConfirmed {
 				err := partReqRepo.ConfirmAPartRequest(v.ID)
 				if err != nil {
 					return sale.ID, 500, err
@@ -237,7 +256,7 @@ func (s *SaleRepositoryMySql) PatchSale(e entities.Sale) (string, int, error) {
 
 		for _, v := range sale.TempGlssReq {
 
-			if v.WasCancelled != false {
+			if v.WasCancelled {
 				err := tempGlssReqRepo.CancelATempGlssRequest(v.ID)
 				if err != nil {
 					return sale.ID, 500, err
@@ -245,7 +264,7 @@ func (s *SaleRepositoryMySql) PatchSale(e entities.Sale) (string, int, error) {
 				continue
 			}
 
-			if v.WasConfirmed != false {
+			if v.WasConfirmed {
 				err := tempGlssReqRepo.ConfirmATempGlssRequest(v.ID)
 				if err != nil {
 					return sale.ID, 500, err
