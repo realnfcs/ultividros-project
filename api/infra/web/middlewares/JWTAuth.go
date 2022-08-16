@@ -7,6 +7,7 @@ import (
 	jwtware "github.com/gofiber/jwt/v3"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/joho/godotenv"
+	"github.com/realnfcs/ultividros-project/api/infra/services"
 )
 
 // Middleware do fiber responsável pela validação do token JWT
@@ -30,6 +31,31 @@ func JWTAuth() func(ctx *fiber.Ctx) error {
 			})
 		},
 	})
+}
+
+// TODO: deve-se criar um novo fluxo com cookies, desde a criação dele com o login até
+// a sua exclusão na hora do logout
+// Middleware do fiber para validação do token JWT (por meio de fluxo de cookies)
+func JWTAuthCookie() func(*fiber.Ctx) error {
+	return func(ctx *fiber.Ctx) error {
+		// const BearerSchema = "Bearer "
+		// jwt := ctx.Cookies("jwt")
+		// token := jwt[len(BearerSchema):]
+		token := ctx.Cookies("jwt")
+		if token == "" {
+			return ctx.Status(fiber.StatusNetworkAuthenticationRequired).JSON(fiber.Map{
+				"error": "JWT token don't exist",
+			})
+		}
+
+		if !services.NewJWTService().ValidateToken(token) {
+			return ctx.Status(fiber.StatusNetworkAuthenticationRequired).JSON(fiber.Map{
+				"error": "invalid token",
+			})
+		}
+
+		return ctx.Next()
+	}
 }
 
 // Middleware do fiber responsável por pegar os dados do token JWT
