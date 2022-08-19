@@ -49,7 +49,7 @@ func Routes(app *fiber.App, c *controllers.Controllers, ctx *fiber.Ctx) *fiber.A
 	UserRouter.Post("/", adapters.SaveUser(userControll.SaveUser, ctx))
 	UserRouter.Patch("/", middlewares.JWTAuth(), middlewares.JWTdata(), adapters.PatchUser(userControll.PatchUser, ctx))
 	UserRouter.Delete("/", middlewares.JWTAuth(), middlewares.JWTdata(), adapters.DeleteUser(userControll.DeleteUser, ctx))
-	UserRouter.Post("/login", adapters.Login(userControll.Login, ctx))
+	UserRouter.Post("/login", adapters.Login(userControll.Login, ctx), middlewares.CreateCookie())
 
 	// Sale Routes Section //
 	saleControll := c.SaleController

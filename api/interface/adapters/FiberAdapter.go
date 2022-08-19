@@ -282,7 +282,13 @@ func Login[T contracts.FiberAdapterContract[T]](req func(login.Input) *login.Out
 		c.BodyParser(&input)
 
 		output := req(input)
-		return c.Status(output.Status).JSON(output)
+		if output.Err != "" {
+			return c.Status(output.Status).JSON(output)
+		}
+
+		c.Locals("token", output.Token)
+
+		return c.Next()
 	}
 }
 
