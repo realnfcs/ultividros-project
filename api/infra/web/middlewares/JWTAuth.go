@@ -41,7 +41,7 @@ func JWTAuthCookie() func(*fiber.Ctx) error {
 		// const BearerSchema = "Bearer "
 		// jwt := ctx.Cookies("jwt")
 		// token := jwt[len(BearerSchema):]
-		token := ctx.Cookies("jwt")
+		token := ctx.Cookies("jwt_token")
 		if token == "" {
 			return ctx.Status(fiber.StatusNetworkAuthenticationRequired).JSON(fiber.Map{
 				"error": "JWT token don't exist",
@@ -53,6 +53,23 @@ func JWTAuthCookie() func(*fiber.Ctx) error {
 				"error": "invalid token",
 			})
 		}
+
+		godotenv.Load()
+
+		claims := jwt.MapClaims{}
+		t, err := jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (interface{}, error) {
+			return []byte(os.Getenv("JWT_SECRET_KEY")), nil
+		})
+
+		if err != nil {
+			return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+				"error": err,
+			})
+		}
+
+		claim := t.Claims.(jwt.MapClaims)
+
+		ctx.Locals("id", claim["sub"])
 
 		return ctx.Next()
 	}
