@@ -6,6 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+// Função/Handler que cria um cookie com o token JWT passado pelo último handler
 func CreateCookie() func(*fiber.Ctx) error {
 	return func(c *fiber.Ctx) error {
 		token := c.Locals("token")
